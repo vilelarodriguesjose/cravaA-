@@ -1,0 +1,8 @@
+{
+  "name": "CravaAí",
+  "short_name": "CravaAí",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07160c",
+  "theme_color": "#0E8A3B"
+}
