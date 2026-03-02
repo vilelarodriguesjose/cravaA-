@@ -1977,62 +1977,78 @@ installBtn.addEventListener("click", async ()=>{
 if("serviceWorker" in navigator){
   window.addEventListener("load", ()=> navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
-// ===== Brasileirão Série A REAL (1X2 / h2h) =====
-async function loadSerieAReal(force = false){
+/* ===== CARREGAR BRASILEIRÃO REAL ===== */
+async function loadSerieAReal(){
+
   try{
-    if(getActiveCountryId()!=="BR" || getActiveLeagueId()!=="BRA-A") return;
 
-    // evita ficar puxando toda hora
-    const cacheKey = "cravai_real_braA_ts";
-    const last = Number(localStorage.getItem(cacheKey) || "0");
-    if(!force && Date.now() - last < 60_000) return; // 1 minuto
+    if(getActiveCountryId()!=="BR" || getActiveLeagueId()!=="BRA-A")
+      return;
 
-    const url = "/.netlify/functions/odds?sportKey=soccer_brazil_campeonato&markets=h2h&regions=eu&_=" + Date.now();
-    const res = await fetch(url);
-    if(!res.ok) throw new Error("HTTP " + res.status);
+    const cacheKey="real_bra_cache";
+    const last=Number(localStorage.getItem(cacheKey)||0);
+
+    // evita gastar créditos
+    if(Date.now()-last < 30*60*1000) return;
+
+    const res = await fetch(
+      "/.netlify/functions/odds?sportKey=soccer_brazil_campeonato&markets=h2h&regions=eu"
+    );
 
     const data = await res.json();
-    if(!Array.isArray(data)) throw new Error("Formato inválido");
+    if(!Array.isArray(data)) return;
 
-    const matches = data.map(g=>{
-      const home=g.home_team, away=g.away_team, startISO=g.commence_time;
+    const matches=data.map(g=>{
 
-      let oHome=null,oDraw=null,oAway=null;
-      const bk=(g.bookmakers||[])[0];
-      const mk=(bk?.markets||[]).find(m=>m.key==="h2h");
-      const outs=mk?.outcomes||[];
+      const home=g.home_team;
+      const away=g.away_team;
 
-      for(const o of outs){
-        if(o.name===home) oHome=o.price;
-        else if(o.name===away) oAway=o.price;
-        else if(o.name==="Draw") oDraw=o.price;
-      }
+      let h,d,a;
 
-      return {
-        id: g.id || uid("real"),
-        home, away, startISO,
-        markets: [{
-          key:"1x2", name:"Resultado (1X2)", type:"three",
-          options: [
-            { id:"1", label:home, odd:Number(oHome) },
-            { id:"X", label:"Empate", odd:Number(oDraw) },
-            { id:"2", label:away, odd:Number(oAway) }
-          ].filter(x=>Number.isFinite(x.odd) && x.odd > 1)
+      const mk=g.bookmakers?.[0]?.markets?.find(m=>m.key==="h2h");
+
+      mk?.outcomes?.forEach(o=>{
+        if(o.name===home) h=o.price;
+        if(o.name===away) a=o.price;
+        if(o.name==="Draw") d=o.price;
+      });
+
+      return{
+        id:uid("real"),
+        home,
+        away,
+        startISO:g.commence_time,
+        markets:[{
+          key:"1x2",
+          name:"Resultado (1X2)",
+          type:"three",
+          options:[
+            {id:"1",label:home,odd:h},
+            {id:"X",label:"Empate",odd:d},
+            {id:"2",label:away,odd:a}
+          ]
         }]
       };
-    }).filter(m=>m.home && m.away && m.startISO);
+    });
 
-    const base = getLeagueData("BR","BRA-A");
-    base.matches = matches;
-    base._real = true;
-    setLeagueData("BR","BRA-A", base);
+    const league=getLeagueData("BR","BRA-A");
+    league.matches=matches;
 
-    localStorage.setItem(cacheKey, String(Date.now()));
+    setLeagueData("BR","BRA-A",league);
+
+    localStorage.setItem(cacheKey,Date.now());
+
     renderAll();
-    toast("Série A real ✅");
+
+    console.log("✅ Série A real carregada");
+
   }catch(e){
-    console.log("Erro Série A real:", e);
-    toast("Não deu pra carregar Série A");
+    console.log(e);
+  }
+}
+
+/* chama automaticamente */
+loadSerieAReal();
   }
 }
 /* ===== Init ===== */
