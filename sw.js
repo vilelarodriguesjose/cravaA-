@@ -1,45 +1,48 @@
-const CACHE_NAME = "cravai-cache-v1";
-const CORE_ASSETS = [
-  "./",
-  "./index.html",
-  "./sw.js",
-  "./manifest.webmanifest"
-];
+// sw.js — CravaAí (safe update)
+// Não cacheia index.html para evitar tela antiga.
+// Cacheia só arquivos estáticos (css/js/imagens) quando fizer sentido.
+
+const VERSION = "cravai-v20260302";
+const STATIC_CACHE = `${VERSION}-static`;
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
-  );
   self.skipWaiting();
+  event.waitUntil(caches.open(STATIC_CACHE));
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)))
-    )
-  );
-  self.clients.claim();
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => (k.startsWith("cravai-") && k !== STATIC_CACHE) ? caches.delete(k) : null));
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
-  if (req.method !== "GET") return;
+  const url = new URL(req.url);
 
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
+  // Nunca cachear HTML
+  if (req.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname === "/" ) {
+    event.respondWith(fetch(req));
+    return;
+  }
 
-      return fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-          return res;
-        })
-        .catch(() => {
-          if (req.mode === "navigate") return caches.match("./index.html");
-          return cached;
-        });
-    })
-  );
+  // Nunca cachear funções (API)
+  if (url.pathname.startsWith("/.netlify/functions/")) {
+    event.respondWith(fetch(req));
+    return;
+  }
+
+  // Cache-first só para arquivos estáticos
+  event.respondWith((async () => {
+    const cache = await caches.open(STATIC_CACHE);
+    const cached = await cache.match(req);
+    if (cached) return cached;
+
+    const fresh = await fetch(req);
+    // Só cacheia GET e respostas ok
+    if (req.method === "GET" && fresh.ok) cache.put(req, fresh.clone());
+    return fresh;
+  })());
 });
