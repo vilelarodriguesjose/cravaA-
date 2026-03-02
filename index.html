@@ -3,2094 +3,1189 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>CravaAí — Palpites por Pontos</title>
-  <meta name="description" content="CravaAí: palpites por pontos, países, ligas, destaques e moeda fictícia." />
+  <title>CravaAí — Odds Reais (Série A)</title>
+  <meta name="description" content="CravaAí: palpites por Crava Points com odds reais." />
   <meta name="theme-color" content="#0E8A3B" />
+
+  <!-- Mantém manifest igual (não alterei o nome do arquivo) -->
   <link rel="manifest" href="manifest.webmanifest" />
 
   <style>
     :root{
-      --bg:#07160c;
-      --bg2:#06130b;
-      --panel:#0b2214;
-      --card:#0d2a18;
-      --muted:#a6bbaf;
-      --text:#ecfff2;
-
-      --green:#18c964;
-      --yellow:#ffd84d;
-      --danger:#ff5c5c;
-
-      --b: rgba(255,255,255,.10);
-      --shadow: 0 14px 34px rgba(0,0,0,.42);
-
-      --r: 18px;
-      --r2: 22px;
-
-      --safeB: env(safe-area-inset-bottom, 0px);
-      --safeT: env(safe-area-inset-top, 0px);
-      --safeL: env(safe-area-inset-left, 0px);
-      --safeR: env(safe-area-inset-right, 0px);
-
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --maxw: 980px;
+      --bg:#061a10;
+      --panel:#0b2a1a;
+      --panel2:#0e3320;
+      --card:#0f3a24;
+      --muted:#a6c7b3;
+      --text:#e9fff3;
+      --accent:#20d46b;
+      --accent2:#f7c948;
+      --danger:#ff5d5d;
+      --ok:#2ee59d;
+      --line:rgba(255,255,255,.08);
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:14px;
     }
-
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:var(--sans);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 800px at 20% -10%, rgba(32,212,107,.18), transparent 55%),
+                  radial-gradient(900px 700px at 105% 10%, rgba(247,201,72,.12), transparent 50%),
+                  var(--bg);
       color:var(--text);
-      background:
-        radial-gradient(900px 500px at 15% -10%, rgba(24,201,100,.20), transparent 60%),
-        radial-gradient(800px 420px at 90% 0%, rgba(255,216,77,.12), transparent 55%),
-        linear-gradient(180deg, #041008 0%, var(--bg2) 35%, #041008 100%);
     }
+    a{ color:inherit; text-decoration:none; }
+    button{ font-family:inherit; }
 
-    .wrap{
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding: calc(10px + var(--safeT)) 14px calc(104px + var(--safeB)) 14px;
-    }
-
-    /* Top header (bet365 vibe) */
-    .top{
-      position:sticky; top:0; z-index:20;
-      margin: calc(-10px - var(--safeT)) -14px 10px -14px;
-      padding: calc(10px + var(--safeT)) calc(14px + var(--safeR)) 10px calc(14px + var(--safeL));
+    /* Top bar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      background: rgba(6,26,16,.78);
       backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(6,19,11,.94), rgba(6,19,11,.64));
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid var(--line);
     }
-    .brand{display:flex; gap:10px; align-items:center}
+    .topbar-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 180px;
+    }
     .logo{
-      width:34px; height:34px; border-radius:12px;
-      background:
-        radial-gradient(16px 16px at 30% 30%, rgba(255,216,77,.95), rgba(255,216,77,.2)),
-        radial-gradient(18px 18px at 70% 70%, rgba(24,201,100,.9), rgba(24,201,100,.2)),
-        linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 20px rgba(0,0,0,.35);
+      width:38px;height:38px;border-radius:12px;
+      background: linear-gradient(135deg, rgba(32,212,107,.25), rgba(247,201,72,.20));
+      border:1px solid rgba(255,255,255,.12);
+      display:grid; place-items:center;
+      box-shadow: var(--shadow);
     }
-    .brand b{font-size:18px; letter-spacing:.2px}
-    .sub{font-size:12px;color:var(--muted);margin-top:2px}
-
-    .topRight{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.09);
-      font-size:12px; color:var(--muted);
-      white-space:nowrap;
-    }
-    .pill strong{color:var(--text)}
-
-    .btn{
-      border:none; cursor:pointer;
-      padding:10px 12px; border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:var(--text);
+    .logo span{
       font-weight:900;
+      letter-spacing:.5px;
+      color:var(--text);
     }
-    .btn:active{transform: translateY(1px)}
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(24,201,100,.95), rgba(24,201,100,.68));
-      border:1px solid rgba(24,201,100,.30);
-      color:#03140a;
+    .brand .title{
+      display:flex; flex-direction:column; line-height:1.1;
     }
-    .btn.yellow{
-      background: linear-gradient(135deg, rgba(255,216,77,.95), rgba(255,216,77,.72));
-      border:1px solid rgba(255,216,77,.30);
-      color:#1f1b03;
-    }
-    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.12)}
-    .btn.danger{background: rgba(255,92,92,.14);border:1px solid rgba(255,92,92,.22);color:#ffd8d8}
+    .brand .title b{ font-size:14px; }
+    .brand .title small{ font-size:11px; color:var(--muted); }
 
-    /* Search */
-    .searchBar{
-      margin-top:10px;
-      display:flex; gap:10px; align-items:center;
+    .search{
+      flex:1;
+      display:flex;
+      gap:8px;
+      align-items:center;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
       border-radius: 999px;
-      padding: 10px 12px;
+      padding: 8px 10px;
     }
-    .searchIcon{opacity:.9}
-    .searchBar input{
-      border:none;
-      outline:none;
-      background: transparent;
-      color: var(--text);
+    .search input{
       width:100%;
+      background:transparent;
+      border:0;
+      outline:none;
+      color:var(--text);
       font-size:14px;
     }
-    .searchBar input::placeholder{color: rgba(236,255,242,.45)}
-
-    /* Category tiles (Países) */
-    .tilesRow{
-      margin-top:12px;
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .tile{
-      min-width: 116px;
-      flex: 0 0 auto;
-      cursor:pointer;
-      border-radius: 16px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      padding:10px 10px;
-      display:flex;
-      flex-direction:column;
+    .pill{
+      display:inline-flex;
+      align-items:center;
       gap:8px;
-      align-items:flex-start;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:12px;
+      white-space:nowrap;
     }
-    .tile:active{transform: translateY(1px)}
-    .tile.on{
-      background: rgba(24,201,100,.16);
-      border:1px solid rgba(24,201,100,.25);
+    .pill .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(32,212,107,.14);
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color:var(--text);
+      padding:9px 12px;
+      border-radius: 999px;
+      font-size:13px;
+      cursor:pointer;
+    }
+    .btn:hover{ filter:brightness(1.08); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(32,212,107,.22), rgba(32,212,107,.10));
+      border-color: rgba(32,212,107,.35);
+    }
+
+    /* Layout */
+    .wrap{
+      max-width:1200px;
+      margin: 14px auto 92px;
+      padding: 0 14px;
+      display:grid;
+      grid-template-columns: 280px 1fr 340px;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 1060px){
+      .wrap{ grid-template-columns: 280px 1fr; }
+      .rightcol{ display:none; }
+    }
+    @media (max-width: 860px){
+      .wrap{ grid-template-columns: 1fr; margin-bottom: 120px; }
+      .leftcol{ order:1; }
+      .midcol{ order:2; }
+      .rightcol{ display:block; order:3; }
+    }
+
+    .panel{
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel .hd{
+      padding: 12px 12px 10px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(255,255,255,.03);
+    }
+    .panel .hd h3{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      color: rgba(233,255,243,.92);
+    }
+    .panel .bd{ padding: 12px; }
+    .subtle{ color: var(--muted); font-size:12px; }
+
+    /* Left menu (países/ligas) */
+    .list{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .item{
+      padding:10px 10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .item:hover{ filter:brightness(1.08); }
+    .item.active{
+      border-color: rgba(32,212,107,.40);
+      background: rgba(32,212,107,.10);
+    }
+    .item .left{
+      display:flex; align-items:center; gap:10px;
+      min-width:0;
     }
     .flag{
-      width:28px; height:28px;
-      display:flex; align-items:center; justify-content:center;
-      border-radius: 10px;
-      background: rgba(0,0,0,.16);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:18px;
-    }
-    .tileName{font-weight:1000; font-size:13px}
-    .tileMeta{font-size:12px; color: var(--muted)}
-
-    /* Banner (fake promo area) */
-    .banner{
-      margin-top:12px;
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(500px 260px at 10% 10%, rgba(24,201,100,.30), transparent 60%),
-        radial-gradient(420px 240px at 95% 30%, rgba(255,216,77,.22), transparent 60%),
-        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-    }
-    .banner h3{margin:0; font-size:14px; font-weight:1000}
-    .banner p{margin:6px 0 0; font-size:12px; color:var(--muted); line-height:1.25}
-
-    /* League tabs row */
-    .tabsRow{
-      margin-top:12px;
-      display:flex;
-      gap:14px;
-      overflow:auto;
-      padding: 6px 2px 10px;
-      -webkit-overflow-scrolling: touch;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .tab{
-      cursor:pointer;
-      color: var(--muted);
-      font-weight:1000;
-      white-space:nowrap;
-      padding: 8px 2px;
-      border-bottom: 3px solid transparent;
-    }
-    .tab.on{
-      color: var(--text);
-      border-bottom: 3px solid rgba(24,201,100,.85);
-    }
-
-    /* Sections */
-    .section{
-      margin-top:14px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .sectionHead{
-      padding: 14px 14px 10px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .sectionTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:1000;
-    }
-    .sectionTitle .icon{
-      width:30px; height:30px;
-      border-radius: 12px;
-      display:flex; align-items:center; justify-content:center;
+      width:26px; height:18px; border-radius:5px;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+    }
+    .item b{
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .badge{
+      font-size:11px;
+      padding: 3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(233,255,243,.92);
+      white-space:nowrap;
+    }
+
+    /* Mid content */
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px;
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .section-title .left{
+      display:flex;
+      align-items:flex-end;
+      gap:10px;
+    }
+    .section-title h2{
+      margin:0;
       font-size:16px;
     }
-    .sectionSub{font-size:12px; color:var(--muted); margin-top:4px}
-    .sectionBody{padding: 12px 14px 14px;}
-
-    /* Featured cards (horizontal) */
-    .featuredRow{
-      display:flex;
-      gap:12px;
-      overflow:auto;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
+    .section-title small{
+      color: var(--muted);
+      font-size:12px;
     }
-    .featCard{
-      min-width: 280px;
-      flex: 0 0 auto;
-      border-radius: 18px;
+
+    .filters{
+      display:flex; gap:8px; align-items:center;
+      flex-wrap:wrap;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius:999px;
+      padding: 7px 10px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .chip.active{
+      border-color: rgba(247,201,72,.40);
+      background: rgba(247,201,72,.12);
+    }
+
+    .matches{
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .match{
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius2);
       overflow:hidden;
     }
-    .featTop{
-      padding: 12px 12px 10px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    .match-top{
+      padding: 10px 10px 8px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.02);
     }
-    .featTag{
-      font-size:11px; font-weight:1000;
-      color:#1f1b03;
-      background: linear-gradient(135deg, rgba(255,216,77,.95), rgba(255,216,77,.72));
-      border:1px solid rgba(255,216,77,.32);
-      padding:6px 8px;
-      border-radius: 999px;
+    .teams{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:0;
+    }
+    .teams .t{
+      display:flex; align-items:center; gap:8px;
+      min-width:0;
+    }
+    .teams .t span{
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      font-weight:700;
+      font-size:14px;
+    }
+    .meta{
+      text-align:right;
+      color: var(--muted);
+      font-size:12px;
       white-space:nowrap;
     }
-    .teams{font-weight:1000; font-size:14px; line-height:1.15}
-    .meta{font-size:12px; color:var(--muted); margin-top:4px}
-
-    /* Odds buttons */
-    .oddsRow{
-      padding: 10px 12px 12px;
+    .oddsrow{
+      padding: 10px;
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap:8px;
     }
     .odd{
-      cursor:pointer;
-      background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      padding:10px 10px;
-      display:flex; flex-direction:column; gap:4px;
-      min-height:54px;
-      justify-content:center;
-    }
-    .odd:active{transform: translateY(1px)}
-    .odd .n{font-size:12px;color:var(--muted);font-weight:900}
-    .odd .v{font-family:var(--mono);font-weight:1000}
-    .odd.sel{background: rgba(24,201,100,.16); border:1px solid rgba(24,201,100,.28)}
-    .odd.disabled{opacity:.55; cursor:not-allowed}
-
-    .moreRow{
-      padding: 0 12px 12px;
-    }
-    .moreBtn{
-      width:100%;
-      padding:10px 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.10);
-      color: var(--muted);
-      font-weight:1000;
-      cursor:pointer;
-    }
-
-    /* Match list (vertical) */
-    .match{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      border-radius: 18px;
-      overflow:hidden;
-      margin-top:12px;
-    }
-    .matchTop{
-      padding:12px 12px 10px;
-      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-
-    /* Bottom nav */
-    .nav{
-      position:fixed; left:0; right:0; bottom:0; z-index:25;
-      padding: 10px calc(10px + var(--safeR)) calc(10px + var(--safeB)) calc(10px + var(--safeL));
-      background: linear-gradient(180deg, rgba(6,19,11,0), rgba(6,19,11,.85) 25%, rgba(6,19,11,.96));
-      border-top:1px solid rgba(255,255,255,.06);
-    }
-    .navIn{max-width:var(--maxw); margin:0 auto; display:flex; gap:8px}
-    .navBtn{
-      flex:1; border:none; cursor:pointer;
-      border-radius: 18px;
-      padding:12px 10px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:var(--muted);
-      font-weight:1000;
-    }
-    .navBtn.on{background: rgba(24,201,100,.16); border:1px solid rgba(24,201,100,.25); color:var(--text)}
-
-    /* Chip + Drawers */
-    .chip{
-      position:fixed;
-      left:14px; right:14px;
-      bottom: calc(74px + var(--safeB));
-      max-width:var(--maxw);
-      margin:0 auto;
-      z-index:26;
-      display:none;
-    }
-    .chipIn{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(24,201,100,.18), rgba(255,216,77,.10));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .chipTitle{font-weight:1000;font-size:13px}
-    .chipMeta{font-size:12px;color:var(--muted);margin-top:2px}
-
-    .overlay{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      display:none;
-      z-index:40;
-    }
-    .drawer{
-      position:fixed; left:0; right:0; bottom:0;
-      transform: translateY(110%);
-      transition: transform .22s ease;
-      z-index:41;
-      padding: 0 calc(10px + var(--safeR)) calc(10px + var(--safeB)) calc(10px + var(--safeL));
-    }
-    .drawer.open{transform: translateY(0)}
-    .drawerCard{
-      max-width:var(--maxw);
-      margin:0 auto;
-      border-radius: 24px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(13,42,24,.98), rgba(10,28,16,.98));
-      box-shadow: 0 -18px 44px rgba(0,0,0,.5);
-      overflow:hidden;
-    }
-    .drawerTop{
-      padding:12px 14px 10px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .grab{
-      width:46px; height:5px; border-radius:999px;
-      background: rgba(255,255,255,.18);
-      margin: 0 auto 8px;
-    }
-    .drawerTitle{font-weight:1000; font-size:14px}
-    .drawerSub{font-size:12px;color:var(--muted);margin-top:3px}
-    .drawerBody{padding:12px 14px 14px; max-height: 68vh; overflow:auto}
-
-    /* Markets (inside drawer) */
-    .mGroup{
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      border-radius: 18px;
-      padding:10px 10px;
-      margin-bottom:10px;
-    }
-    .mTitle{font-weight:1000;font-size:13px}
-    .mGrid{
-      margin-top:10px;
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:8px;
-    }
-    .mGrid.three{grid-template-columns: repeat(3, 1fr)}
-    @media (max-width: 360px){ .mGrid.three{grid-template-columns: repeat(2,1fr)} }
-
-    /* Slip items */
-    .slItem{
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      border-radius: 18px;
-      padding:10px 10px;
-      display:flex; justify-content:space-between; gap:10px;
-      margin-bottom:10px;
-    }
-    .slL{display:flex; flex-direction:column; gap:4px}
-    .sl1{font-weight:1000;font-size:13px}
-    .sl2{font-size:12px;color:var(--muted);line-height:1.2}
-    .slR{text-align:right; display:flex; flex-direction:column; gap:6px}
-    .oddMini{font-family:var(--mono);font-weight:1000}
-    .xBtn{
-      border:none; cursor:pointer;
-      padding:8px 10px; border-radius: 14px;
-      background: rgba(255,92,92,.14);
-      border:1px solid rgba(255,92,92,.22);
-      color:#ffd8d8; font-weight:1000; font-size:12px;
-    }
-
-    .calc{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding:10px 10px;
-      background: rgba(0,0,0,.14);
-      margin-top:10px;
-    }
-    .calcRow{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:8px}
-    .calcRow strong{font-family:var(--mono)}
-    .seg{
-      display:flex; background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.09);
-      border-radius: 14px;
-      padding:4px;
-      gap:4px;
-      margin-bottom:10px;
-    }
-    .seg button{
-      flex:1;
-      border:none;
-      background: transparent;
-      color: var(--muted);
-      padding:10px 10px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-weight:1000;
-      font-size:12px;
-    }
-    .seg button.on{
-      background: rgba(24,201,100,.18);
-      color: var(--text);
-      border:1px solid rgba(24,201,100,.18);
-    }
-
-    .field{display:flex; flex-direction:column; gap:6px; margin-top:10px}
-    .field label{font-size:12px; color:var(--muted); font-weight:900}
-    .field input, .field select{
-      width:100%;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      padding:12px 12px;
-      color: var(--text);
-      outline:none;
-    }
-    .hint{font-size:12px;color:var(--muted); margin-top:8px; line-height:1.25}
-
-    .planCard{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
-      border-radius: 18px;
-      padding:12px 12px;
-      margin-bottom:10px;
-    }
-    .planTop{display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
-    .planName{font-weight:1000}
-    .planPrice{font-family:var(--mono); font-weight:1000}
-    .planList{margin:8px 0 0; padding-left:16px; color:var(--muted); font-size:12px; line-height:1.35}
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:1000;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
-      color: var(--muted);
-      white-space:nowrap;
+      border-radius: 14px;
+      padding: 10px 10px;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      min-height:44px;
     }
-    .badge.green{
-      color:#03140a;
-      background: rgba(24,201,100,.85);
-      border:1px solid rgba(24,201,100,.35);
+    .odd:hover{ filter:brightness(1.08); }
+    .odd .lbl{ font-size:12px; color: rgba(233,255,243,.88); }
+    .odd .pr{
+      font-weight:900;
+      letter-spacing:.3px;
+      font-variant-numeric: tabular-nums;
     }
-    .badge.yellow{
-      color:#1f1b03;
-      background: rgba(255,216,77,.88);
-      border:1px solid rgba(255,216,77,.35);
+    .odd[disabled]{
+      opacity:.5; cursor:not-allowed;
     }
 
-    .empty{
-      padding:14px;
-      border:1px dashed rgba(255,255,255,.18);
-      border-radius: 18px;
-      color: var(--muted);
-      background: rgba(255,255,255,.02);
+    /* Right column betslip */
+    .betslip{
+      position:sticky;
+      top:70px;
     }
-    .toast{position:fixed;left:14px;right:14px;bottom: calc(140px + var(--safeB));max-width:var(--maxw);margin:0 auto;z-index:70;display:none}
-    .toast .box{padding:10px 12px;border-radius:18px;background: rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.10);backdrop-filter: blur(10px);box-shadow: var(--shadow);font-weight:1000;font-size:13px}
+    @media (max-width: 860px){
+      .betslip{
+        position:fixed;
+        left:0; right:0; bottom:0;
+        top:auto;
+        border-radius: 18px 18px 0 0;
+        z-index:60;
+      }
+      .betslip .bd{ max-height: 55vh; overflow:auto; }
+    }
+    .slip-items{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .slip-item{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      padding: 10px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .xbtn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      width:28px; height:28px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .stakebox{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .stakebox input{
+      width:100%;
+      padding:9px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .summary{
+      border-top:1px solid var(--line);
+      margin-top:10px;
+      padding-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .big{
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .muted{ color:var(--muted); font-size:12px; }
+    .cta{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(32,212,107,.35);
+      background: linear-gradient(135deg, rgba(32,212,107,.25), rgba(32,212,107,.10));
+      color:var(--text);
+      font-weight:900;
+      cursor:pointer;
+    }
+    .cta:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+    .toast{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      top:72px;
+      background: rgba(0,0,0,.65);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      color:var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      z-index: 80;
+      display:none;
+      max-width: 92vw;
+    }
+    .toast.show{ display:block; }
+
+    .statusline{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; padding: 10px 12px;
+      border-top:1px solid var(--line);
+      color: var(--muted);
+      font-size:12px;
+    }
+
+    .loading{
+      display:flex; align-items:center; gap:8px;
+    }
+    .spinner{
+      width:14px; height:14px; border-radius:999px;
+      border:2px solid rgba(255,255,255,.22);
+      border-top-color: rgba(32,212,107,.95);
+      animation: spin .9s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .empty{
+      padding: 16px 12px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius: 16px;
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+    }
   </style>
 </head>
 
 <body>
-  <div class="top">
-    <div class="brand">
-      <div class="logo"></div>
-      <div>
-        <b>CravaAí</b>
-        <div class="sub">Jogo de palpites com <strong>Crava Points</strong></div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"><span>CA</span></div>
+        <div class="title">
+          <b>CravaAí</b>
+          <small>Odds reais • Crava Points</small>
+        </div>
       </div>
-    </div>
 
-    <div class="topRight">
-      <div class="pill">CP: <strong id="cp">0</strong></div>
-      <button class="btn ghost" id="plansBtn">Planos</button>
-      <button class="btn yellow" id="signupBtn">Registre-se</button>
-      <button class="btn ghost" id="loginBtn">Login</button>
-      <button class="btn ghost" id="installBtn" style="display:none;">Instalar</button>
+      <div class="search" role="search">
+        <span style="opacity:.7">🔎</span>
+        <input id="q" placeholder="Buscar time ou jogo..." autocomplete="off" />
+      </div>
+
+      <div class="pill" id="userPill" title="Conta demo">
+        <span class="dot"></span>
+        <span><b id="userName">Visitante</b> • <span id="cp">1000</span> CP</span>
+      </div>
+
+      <button class="btn primary" id="reloadBtn" title="Recarregar jogos/odds">Atualizar</button>
     </div>
   </div>
 
   <div class="wrap">
-    <!-- Top search + countries + leagues -->
-    <div class="searchBar">
-      <span class="searchIcon">🔎</span>
-      <input id="searchInput" placeholder="Pesquisar time, liga, mercado..." />
-    </div>
-
-    <div class="tilesRow" id="countriesRow"></div>
-
-    <div class="banner">
-      <div>
-        <h3 id="bannerTitle">Partidas de hoje</h3>
-        <p id="bannerSub">Escolha um país e uma liga. Clique numa odd para abrir o bilhete.</p>
-      </div>
-      <button class="btn primary" id="openSlipQuick">Bilhete</button>
-    </div>
-
-    <div class="tabsRow" id="leaguesTabs"></div>
-
-    <!-- Views -->
-    <div id="view"></div>
-  </div>
-
-  <!-- Chip Bilhete -->
-  <div class="chip" id="chip">
-    <div class="chipIn">
-      <div>
-        <div class="chipTitle">Bilhete</div>
-        <div class="chipMeta" id="chipMeta">0 seleções</div>
-      </div>
-      <button class="btn primary" id="openSlip">Abrir</button>
-    </div>
-  </div>
-
-  <!-- Overlay -->
-  <div class="overlay" id="overlay"></div>
-
-  <!-- Drawer Mercados do jogo -->
-  <div class="drawer" id="marketsDrawer">
-    <div class="drawerCard">
-      <div class="drawerTop">
-        <div style="flex:1">
-          <div class="grab"></div>
-          <div class="drawerTitle" id="mTitle">Mercados</div>
-          <div class="drawerSub" id="mSub">Selecione odds</div>
+    <!-- LEFT -->
+    <div class="leftcol">
+      <div class="panel">
+        <div class="hd">
+          <h3>Países</h3>
+          <span class="subtle">Top</span>
         </div>
-        <button class="btn ghost" id="closeMarkets">Fechar</button>
-      </div>
-      <div class="drawerBody" id="marketsBody"></div>
-    </div>
-  </div>
-
-  <!-- Drawer Bilhete -->
-  <div class="drawer" id="slipDrawer">
-    <div class="drawerCard">
-      <div class="drawerTop">
-        <div style="flex:1">
-          <div class="grab"></div>
-          <div class="drawerTitle">Bilhete</div>
-          <div class="drawerSub" id="slipSub">0 seleções</div>
+        <div class="bd">
+          <div class="list" id="countries">
+            <!-- preenchido via JS -->
+          </div>
         </div>
-        <button class="btn ghost" id="closeSlip">Fechar</button>
       </div>
-      <div class="drawerBody" id="slipBody"></div>
-    </div>
-  </div>
 
-  <!-- Drawer Planos -->
-  <div class="drawer" id="plansDrawer">
-    <div class="drawerCard">
-      <div class="drawerTop">
-        <div style="flex:1">
-          <div class="grab"></div>
-          <div class="drawerTitle">Planos</div>
-          <div class="drawerSub">Escolha seu nível no CravaAí</div>
+      <div class="panel" style="margin-top:14px;">
+        <div class="hd">
+          <h3>Ligas</h3>
+          <span class="subtle" id="leagueHint">Selecione um país</span>
         </div>
-        <button class="btn ghost" id="closePlans">Fechar</button>
-      </div>
-      <div class="drawerBody" id="plansBody"></div>
-    </div>
-  </div>
-
-  <!-- Drawer Auth (Login/Cadastro) -->
-  <div class="drawer" id="authDrawer">
-    <div class="drawerCard">
-      <div class="drawerTop">
-        <div style="flex:1">
-          <div class="grab"></div>
-          <div class="drawerTitle" id="authTitle">Conta</div>
-          <div class="drawerSub" id="authSub">Entre ou crie sua conta</div>
+        <div class="bd">
+          <div class="list" id="leagues">
+            <!-- preenchido via JS -->
+          </div>
         </div>
-        <button class="btn ghost" id="closeAuth">Fechar</button>
       </div>
-      <div class="drawerBody" id="authBody"></div>
+    </div>
+
+    <!-- MIDDLE -->
+    <div class="midcol">
+      <div class="panel">
+        <div class="section-title">
+          <div class="left">
+            <h2 id="mainTitle">Destaques</h2>
+            <small id="subtitle">Escolha Brasil → Série A</small>
+          </div>
+          <div class="filters">
+            <button class="chip active" id="chipH2H" title="Mercado 1X2 (h2h)">1X2</button>
+          </div>
+        </div>
+
+        <div class="matches" id="matches">
+          <div class="empty">
+            Selecione <b>Brasil</b> → <b>Série A</b> para carregar jogos reais do endpoint:
+            <div style="margin-top:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:12px; opacity:.9;">
+              /.netlify/functions/odds
+            </div>
+          </div>
+        </div>
+
+        <div class="statusline">
+          <div class="loading" id="loading" style="display:none;">
+            <span class="spinner"></span>
+            <span>Carregando odds reais…</span>
+          </div>
+          <div id="statusText">Pronto.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="rightcol">
+      <div class="panel betslip" id="betslipPanel">
+        <div class="hd">
+          <h3>Bilhete</h3>
+          <span class="badge" id="slipCount">0</span>
+        </div>
+        <div class="bd">
+          <div class="slip-items" id="slipItems">
+            <div class="empty">Clique em uma odd para adicionar ao bilhete.</div>
+          </div>
+
+          <div class="summary">
+            <div class="row">
+              <span class="muted">Stake (CP)</span>
+              <b id="stakeLabel">—</b>
+            </div>
+            <div class="stakebox">
+              <input id="stake" type="number" min="1" step="1" placeholder="Quanto apostar (CP)?" />
+            </div>
+
+            <div class="row">
+              <span class="muted">Odd total</span>
+              <b id="totalOdd" class="big">—</b>
+            </div>
+            <div class="row">
+              <span class="muted">Retorno potencial</span>
+              <b id="potential" class="big">—</b>
+            </div>
+
+            <button class="cta" id="placeBet" disabled>Confirmar aposta (demo)</button>
+            <div class="muted">* Liquidação automática vem depois, quando você integrar resultados reais.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Bottom nav -->
-  <div class="nav">
-    <div class="navIn">
-      <button class="navBtn on" data-tab="inicio" id="tabInicio">Início</button>
-      <button class="navBtn" data-tab="esportes" id="tabEsportes">Todos os Esportes</button>
-      <button class="navBtn" data-tab="aoVivo" id="tabAoVivo">Ao-vivo</button>
-      <button class="navBtn" data-tab="perfil" id="tabPerfil">Conta</button>
-    </div>
-  </div>
+  <div class="toast" id="toast"></div>
 
-  <!-- Toast -->
-  <div class="toast" id="toast"><div class="box" id="toastText">Ok</div></div>
-
-<script>
-/* ===========================
-   CravaAí — Bet365-like Mobile
-   + Brasil Série A com jogos reais (1X2 real)
-   =========================== */
-
-const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
-
-const LS = {
-  POINTS:"cravai_points",
-  USERS:"cravai_users",
-  SESSION:"cravai_session",
-  COUNTRY:"cravai_country",
-  LEAGUE:"cravai_league",
-  SLIP:"cravai_slip",
-  STAKE:"cravai_stake",
-  MODE:"cravai_mode",
-  TAB:"cravai_tab",
-
-  // cache do Brasileirão real
-  REAL_BR_CACHE:"cravai_real_br_cache_v1"
-};
-
-const overlay = document.getElementById("overlay");
-const marketsDrawer = document.getElementById("marketsDrawer");
-const slipDrawer = document.getElementById("slipDrawer");
-const plansDrawer = document.getElementById("plansDrawer");
-const authDrawer = document.getElementById("authDrawer");
-
-const view = document.getElementById("view");
-
-function uid(p="id"){ return p+"_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
-function loadJSON(k,f){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch{return f;} }
-function saveJSON(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
-function toast(msg){
-  const t=document.getElementById("toast");
-  document.getElementById("toastText").textContent=msg;
-  t.style.display="block";
-  setTimeout(()=>t.style.display="none", 1600);
-}
-function esc(s){
-  return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-}
-function cssEsc(s){ return String(s).replaceAll('"','\\"').replaceAll("\\","\\\\"); }
-
-function nowISO(){ return new Date().toISOString(); }
-function futureHours(h){ const d=new Date(); d.setHours(d.getHours()+h); return d.toISOString(); }
-function fmtDate(iso){
-  try{
-    const d=new Date(iso);
-    const dd=d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
-    const hh=d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-    return dd+" "+hh;
-  }catch{ return iso; }
-}
-function sameDay(aISO, bISO){
-  const a=new Date(aISO), b=new Date(bISO);
-  return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
-}
-
-/* ===== Points ===== */
-function getPoints(){
-  const p=Number(localStorage.getItem(LS.POINTS) || "2000");
-  return Number.isFinite(p)?p:0;
-}
-function setPoints(p){
-  localStorage.setItem(LS.POINTS, String(Math.max(0, Math.floor(p))));
-  document.getElementById("cp").textContent = String(getPoints());
-}
-
-/* ===== Countries / Leagues ===== */
-const COUNTRIES = [
-  { id:"BR", name:"Brasil", flag:"🇧🇷", leagues:[
-    { id:"BRA-A", name:"Série A" },
-    { id:"BRA-B", name:"Série B" },
-    { id:"CDB", name:"Copa do Brasil" }
-  ]},
-  { id:"GB", name:"Inglaterra", flag:"🇬🇧", leagues:[
-    { id:"EPL", name:"Premier League" },
-    { id:"EFL", name:"Championship" }
-  ]},
-  { id:"ES", name:"Espanha", flag:"🇪🇸", leagues:[
-    { id:"LAL", name:"LaLiga" }
-  ]},
-  { id:"IT", name:"Itália", flag:"🇮🇹", leagues:[
-    { id:"SA", name:"Serie A" }
-  ]},
-  { id:"UEFA", name:"Europa", flag:"⭐", leagues:[
-    { id:"UCL", name:"Champions League" },
-    { id:"UEL", name:"Europa League" }
-  ]}
-];
-
-function getActiveCountryId(){
-  return localStorage.getItem(LS.COUNTRY) || "BR";
-}
-function setActiveCountryId(id){
-  localStorage.setItem(LS.COUNTRY, id);
-}
-function getActiveLeagueId(){
-  const c = getCountry(getActiveCountryId());
-  const fallback = c?.leagues?.[0]?.id || "BRA-A";
-  return localStorage.getItem(LS.LEAGUE) || fallback;
-}
-function setActiveLeagueId(id){
-  localStorage.setItem(LS.LEAGUE, id);
-}
-function getCountry(id){
-  return COUNTRIES.find(c=>c.id===id) || COUNTRIES[0];
-}
-function getLeague(countryId, leagueId){
-  const c=getCountry(countryId);
-  return (c.leagues||[]).find(l=>l.id===leagueId) || c.leagues?.[0] || null;
-}
-
-/* ===== Jogos reais: Brasil Série A (1X2 real) ===== */
-const REAL = {
-  SPORT_KEY_BRA_A: "soccer_brazil_campeonato",
-  regions=us,eu
-  ODDS_FORMAT: "decimal",
-  CACHE_TTL_MS: 1000 * 60 * 5 // 5 min
-};
-
-function isRealLeague(countryId, leagueId){
-  return countryId === "BR" && leagueId === "BRA-A";
-}
-
-function buildOddsUrl(){
-  // sua Netlify Function
-  const sportKey = REAL.SPORT_KEY_BRA_A;
-  const markets = "h2h";
-  return `/.netlify/functions/odds?sportKey=${encodeURIComponent(sportKey)}&markets=${encodeURIComponent(markets)}&regions=${encodeURIComponent(REAL.REGIONS)}&oddsFormat=${encodeURIComponent(REAL.ODDS_FORMAT)}`;
-}
-
-function getCachedRealBR(){
-  const c = loadJSON(LS.REAL_BR_CACHE, null);
-  if(!c || !c.ts || !Array.isArray(c.matches)) return null;
-  if(Date.now() - c.ts > REAL.CACHE_TTL_MS) return null;
-  return c.matches;
-}
-function setCachedRealBR(matches){
-  saveJSON(LS.REAL_BR_CACHE, { ts: Date.now(), matches });
-}
-
-function pickBestH2H(bookmakers, homeTeam, awayTeam){
-  // retorna {home, draw, away}
-  if(!Array.isArray(bookmakers)) return {home:null, draw:null, away:null};
-
-  for(const b of bookmakers){
-    const mk = (b.markets || []).find(m => m.key === "h2h");
-    if(!mk) continue;
-    const outs = mk.outcomes || [];
-    if(!outs.length) continue;
-
-    let home=null, away=null, draw=null;
-    for(const o of outs){
-      const name = String(o.name || "");
-      const n = name.toLowerCase();
-      if(n === String(homeTeam||"").toLowerCase()) home = o.price;
-      else if(n === String(awayTeam||"").toLowerCase()) away = o.price;
-      else if(n === "draw" || n.includes("empate")) draw = o.price;
-    }
-
-    // alguns books podem não ter empate (ou não mapear certinho); tenta fallback pelo nome "Draw"
-    if(draw === null){
-      const d = outs.find(x => String(x.name||"").toLowerCase() === "draw");
-      if(d) draw = d.price;
-    }
-
-    // se tiver pelo menos 2 preços, já serve
-    const count = [home,draw,away].filter(v => v !== null && v !== undefined && isFinite(Number(v))).length;
-    if(count >= 2){
-      return { home, draw, away };
-    }
-  }
-
-  return {home:null, draw:null, away:null};
-}
-
-// reaproveita seus mercados “mock” (btts, gols, etc.) como “Mais mercados”
-function templateExtraMarkets(home, away){
-  function rndOdd(min,max){
-    const v=min + Math.random()*(max-min);
-    return Math.round(v*100)/100;
-  }
-  return [
-    { key:"btts", name:"Ambas Marcam", type:"two", options:[
-      { id:"SIM", label:"Sim", odd:rndOdd(1.60,2.30) },
-      { id:"NAO", label:"Não", odd:rndOdd(1.70,2.60) }
-    ]},
-    { key:"gols", name:"Gols na Partida", type:"three", options:[
-      { id:"O15", label:"Mais 1.5", odd:rndOdd(1.20,1.80) },
-      { id:"O25", label:"Mais 2.5", odd:rndOdd(1.60,2.60) },
-      { id:"U25", label:"Menos 2.5", odd:rndOdd(1.60,2.80) }
-    ]},
-    { key:"esc", name:"Escanteios", type:"three", options:[
-      { id:"O85", label:"Mais 8.5", odd:rndOdd(1.55,2.45) },
-      { id:"O95", label:"Mais 9.5", odd:rndOdd(1.70,2.70) },
-      { id:"U95", label:"Menos 9.5", odd:rndOdd(1.60,2.60) }
-    ]},
-    { key:"car", name:"Cartões", type:"three", options:[
-      { id:"O35", label:"Mais 3.5", odd:rndOdd(1.55,2.45) },
-      { id:"O45", label:"Mais 4.5", odd:rndOdd(1.85,2.95) },
-      { id:"U45", label:"Menos 4.5", odd:rndOdd(1.60,2.70) }
-    ]},
-    { key:"hcap", name:"Handicap (Fictício)", type:"three", options:[
-      { id:"H-05", label:home+" -0.5", odd:rndOdd(1.65,2.65) },
-      { id:"A+05", label:away+" +0.5", odd:rndOdd(1.55,2.35) },
-      { id:"H+05", label:home+" +0.5", odd:rndOdd(1.40,2.10) }
-    ]}
-  ];
-}
-
-async function fetchRealBrazilA(){
-  const cached = getCachedRealBR();
-  if(cached) return cached;
-
-  const url = buildOddsUrl();
-  const res = await fetch(url, { cache:"no-store" });
-  if(!res.ok){
-    const txt = await res.text().catch(()=> "");
-    throw new Error(`Erro ao carregar odds (${res.status}): ${txt.slice(0,120)}`);
-  }
-  const data = await res.json();
-  if(!Array.isArray(data)) return [];
-
-  const matches = data.map(ev => {
-    const home = ev.home_team || "";
-    const away = ev.away_team || "";
-    const startISO = ev.commence_time || ev.commenceTime || nowISO();
-    const prices = pickBestH2H(ev.bookmakers, home, away);
-
-    // 1X2 real
-    const m1 = {
-      key:"1x2",
-      name:"Resultado (1X2)",
-      type:"three",
-      options:[
-        { id:"1", label:home, odd: isFinite(Number(prices.home)) ? Number(prices.home) : null },
-        { id:"X", label:"Empate", odd: isFinite(Number(prices.draw)) ? Number(prices.draw) : null },
-        { id:"2", label:away, odd: isFinite(Number(prices.away)) ? Number(prices.away) : null }
-      ]
+  <script>
+    /***********************
+     * CONFIG INTEGRAÇÃO
+     ***********************/
+    const CONFIG = {
+      sportKey: "soccer_brazil_campeonato",
+      market: "h2h", // 1X2
+      endpoint: "/.netlify/functions/odds"
     };
 
-    const extra = templateExtraMarkets(home, away);
-
-    return {
-      id: String(ev.id || uid("real")),
-      home,
-      away,
-      startISO,
-      markets: [m1, ...extra],
-      __real: true
+    /***********************
+     * ESTADO
+     ***********************/
+    const state = {
+      user: loadUser(),
+      selectedCountry: "BR",
+      selectedLeagueId: "BR-SA",
+      matches: [],
+      slip: [], // { id, home, away, commenceTime, pickLabel, odd, side, market }
+      market: "h2h"
     };
-  }).filter(m => m.home && m.away);
 
-  // ordena por horário
-  matches.sort((a,b)=> new Date(a.startISO) - new Date(b.startISO));
+    /***********************
+     * DADOS DE MENU (layout estilo casas)
+     ***********************/
+    const COUNTRIES = [
+      { id:"BR", name:"Brasil", flag:"🇧🇷" },
+      { id:"EN", name:"Inglaterra", flag:"🏴" },
+      { id:"ES", name:"Espanha", flag:"🇪🇸" },
+      { id:"IT", name:"Itália", flag:"🇮🇹" },
+      { id:"DE", name:"Alemanha", flag:"🇩🇪" },
+      { id:"FR", name:"França", flag:"🇫🇷" }
+    ];
 
-  setCachedRealBR(matches);
-  return matches;
-}
+    const LEAGUES_BY_COUNTRY = {
+      "BR": [
+        { id:"BR-SA", name:"Série A", badge:"AO VIVO/PRÓX", sportKey: CONFIG.sportKey, isReal:true }
+        // Você pode adicionar Série B fictícia depois, mas aqui o pedido é Série A real.
+      ],
+      "EN": [{ id:"EN-PL", name:"Premier League", badge:"em breve", isReal:false }],
+      "ES": [{ id:"ES-LL", name:"LaLiga", badge:"em breve", isReal:false }],
+      "IT": [{ id:"IT-SA", name:"Serie A", badge:"em breve", isReal:false }],
+      "DE": [{ id:"DE-BL", name:"Bundesliga", badge:"em breve", isReal:false }],
+      "FR": [{ id:"FR-L1", name:"Ligue 1", badge:"em breve", isReal:false }]
+    };
 
-/* ===== Matches storage (per league) DEMO (mantido) ===== */
-function rndOdd(min,max){
-  const v=min + Math.random()*(max-min);
-  return Math.round(v*100)/100;
-}
-function mkMatch(home,away,startISO){
-  return {
-    id: uid("mt"),
-    home,away,startISO,
-    markets: [
-      { key:"1x2", name:"Resultado (1X2)", type:"three", options:[
-        { id:"1", label:home, odd:rndOdd(1.80,2.80) },
-        { id:"X", label:"Empate", odd:rndOdd(2.80,3.60) },
-        { id:"2", label:away, odd:rndOdd(1.90,3.20) }
-      ]},
-      { key:"btts", name:"Ambas Marcam", type:"two", options:[
-        { id:"SIM", label:"Sim", odd:rndOdd(1.60,2.30) },
-        { id:"NAO", label:"Não", odd:rndOdd(1.70,2.60) }
-      ]},
-      { key:"gols", name:"Gols na Partida", type:"three", options:[
-        { id:"O15", label:"Mais 1.5", odd:rndOdd(1.20,1.80) },
-        { id:"O25", label:"Mais 2.5", odd:rndOdd(1.60,2.60) },
-        { id:"U25", label:"Menos 2.5", odd:rndOdd(1.60,2.80) }
-      ]},
-      { key:"esc", name:"Escanteios", type:"three", options:[
-        { id:"O85", label:"Mais 8.5", odd:rndOdd(1.55,2.45) },
-        { id:"O95", label:"Mais 9.5", odd:rndOdd(1.70,2.70) },
-        { id:"U95", label:"Menos 9.5", odd:rndOdd(1.60,2.60) }
-      ]},
-      { key:"car", name:"Cartões", type:"three", options:[
-        { id:"O35", label:"Mais 3.5", odd:rndOdd(1.55,2.45) },
-        { id:"O45", label:"Mais 4.5", odd:rndOdd(1.85,2.95) },
-        { id:"U45", label:"Menos 4.5", odd:rndOdd(1.60,2.70) }
-      ]},
-      { key:"hcap", name:"Handicap (Fictício)", type:"three", options:[
-        { id:"H-05", label:home+" -0.5", odd:rndOdd(1.65,2.65) },
-        { id:"A+05", label:away+" +0.5", odd:rndOdd(1.55,2.35) },
-        { id:"H+05", label:home+" +0.5", odd:rndOdd(1.40,2.10) }
-      ]}
-    ]
-  };
-}
+    /***********************
+     * INIT UI
+     ***********************/
+    const el = (id) => document.getElementById(id);
 
-function leagueKey(countryId, leagueId){
-  return `cravai_league_${countryId}_${leagueId}`;
-}
-function getLeagueData(countryId, leagueId){
-  return loadJSON(leagueKey(countryId, leagueId), { matches:[], ranking:[{name:"Você", points:0}] });
-}
-function setLeagueData(countryId, leagueId, data){
-  saveJSON(leagueKey(countryId, leagueId), data);
-}
+    function init(){
+      // user pill
+      el("userName").textContent = state.user.name;
+      el("cp").textContent = formatInt(state.user.cp);
 
-function seedIfNeeded(){
-  // seed only if no data for main league
-  const cId = getActiveCountryId();
-  const lId = getActiveLeagueId();
-  const d = getLeagueData(cId, lId);
-  if (d.matches && d.matches.length) return;
+      // render menus
+      renderCountries();
+      renderLeagues();
 
-  // seed some leagues across countries (demo)
-  function seedLeague(countryId, leagueId, matches){
-    const base = getLeagueData(countryId, leagueId);
-    if ((base.matches||[]).length) return;
-    setLeagueData(countryId, leagueId, {
-      matches,
-      ranking: base.ranking?.length ? base.ranking : [{name:"Você", points:0},{name:"Tico",points:0},{name:"Bia",points:0}]
-    });
-  }
+      // listeners
+      el("reloadBtn").addEventListener("click", () => refreshCurrent());
+      el("q").addEventListener("input", () => renderMatches()); // filtra localmente
+      el("stake").addEventListener("input", () => updateSlipSummary());
+      el("placeBet").addEventListener("click", placeBetDemo);
 
-  seedLeague("BR","BRA-A",[
-    mkMatch("Palmeiras","Corinthians", futureHours(4)),
-    mkMatch("Flamengo","São Paulo", futureHours(7)),
-    mkMatch("Grêmio","Internacional", futureHours(10))
-  ]);
-  seedLeague("BR","BRA-B",[
-    mkMatch("Sport","Ceará", futureHours(5)),
-    mkMatch("Goiás","Vitória", futureHours(9))
-  ]);
-  seedLeague("GB","EPL",[
-    mkMatch("Arsenal","Chelsea", futureHours(5)),
-    mkMatch("Liverpool","Man City", futureHours(9))
-  ]);
-  seedLeague("ES","LAL",[
-    mkMatch("Barcelona","Valencia", futureHours(6)),
-    mkMatch("Real Madrid","Sevilla", futureHours(11))
-  ]);
-  seedLeague("UEFA","UCL",[
-    mkMatch("PSG","Bayern", futureHours(8)),
-    mkMatch("Inter","Dortmund", futureHours(12))
-  ]);
-}
+      // default selection
+      selectCountry(state.selectedCountry);
+      selectLeague(state.selectedLeagueId);
 
-/* ===== Slip (bilhete) ===== */
-function getSlip(){ return loadJSON(LS.SLIP, []); }
-function setSlip(s){ saveJSON(LS.SLIP, s); syncSlipUI(); }
-function isSelected(matchId, marketKey, optionId){
-  const s=getSlip();
-  return s.some(x=>x.matchId===matchId && x.marketKey===marketKey && x.optionId===optionId);
-}
-function toggleSelection(sel){
-  let s=getSlip();
-  // 1 seleção por mercado por jogo
-  const idxSameMarket = s.findIndex(x=>x.matchId===sel.matchId && x.marketKey===sel.marketKey);
-  if(idxSameMarket >= 0){
-    if(s[idxSameMarket].optionId === sel.optionId){
-      s.splice(idxSameMarket,1);
-      setSlip(s);
-      return "removed";
-    }else{
-      s[idxSameMarket]=sel;
-      setSlip(s);
-      return "replaced";
-    }
-  }
-  s.push(sel);
-  setSlip(s);
-  return "added";
-}
-
-/* ===== Drawers ===== */
-function openOverlay(){ overlay.style.display="block"; }
-function closeOverlay(){ overlay.style.display="none"; }
-function openDrawer(el){ openOverlay(); el.classList.add("open"); }
-function closeDrawer(el){
-  el.classList.remove("open");
-  if(!marketsDrawer.classList.contains("open") &&
-     !slipDrawer.classList.contains("open") &&
-     !plansDrawer.classList.contains("open") &&
-     !authDrawer.classList.contains("open")){
-    closeOverlay();
-  }
-}
-overlay.addEventListener("click", ()=>{
-  closeDrawer(marketsDrawer);
-  closeDrawer(slipDrawer);
-  closeDrawer(plansDrawer);
-  closeDrawer(authDrawer);
-});
-
-document.getElementById("closeMarkets").addEventListener("click", ()=> closeDrawer(marketsDrawer));
-document.getElementById("closeSlip").addEventListener("click", ()=> closeDrawer(slipDrawer));
-document.getElementById("closePlans").addEventListener("click", ()=> closeDrawer(plansDrawer));
-document.getElementById("closeAuth").addEventListener("click", ()=> closeDrawer(authDrawer));
-
-document.getElementById("openSlip").addEventListener("click", ()=> openSlipDrawer());
-document.getElementById("openSlipQuick").addEventListener("click", ()=> openSlipDrawer());
-
-/* ===== Chip UI ===== */
-function syncSlipUI(){
-  const s=getSlip();
-  document.getElementById("slipSub").textContent = `${s.length} seleção(ões)`;
-  document.getElementById("chipMeta").textContent = `${s.length} seleção(ões)`;
-  document.getElementById("chip").style.display = s.length ? "block" : "none";
-  if(!s.length){
-    closeDrawer(slipDrawer);
-  }
-}
-
-/* ===== Plans ===== */
-function renderPlans(){
-  const body = document.getElementById("plansBody");
-  body.innerHTML = `
-    <div class="planCard">
-      <div class="planTop">
-        <div>
-          <div class="planName">Free</div>
-          <div class="hint">Para começar e testar o CravaAí.</div>
-        </div>
-        <span class="badge green">GRÁTIS</span>
-      </div>
-      <ul class="planList">
-        <li>Crava Points fictícios</li>
-        <li>Bilhete simples e múltiplo</li>
-        <li>Países e ligas básicas</li>
-      </ul>
-      <button class="btn primary" style="width:100%; margin-top:10px;" onclick="toast('Plano Free selecionado ✅')">Usar Free</button>
-    </div>
-
-    <div class="planCard">
-      <div class="planTop">
-        <div>
-          <div class="planName">Pro</div>
-          <div class="hint">Mais recursos e personalização.</div>
-        </div>
-        <span class="badge yellow">R$ 29,90</span>
-      </div>
-      <ul class="planList">
-        <li>Mais ligas e mercados</li>
-        <li>Rankings com mais detalhes</li>
-        <li>Filtros e destaques melhores</li>
-      </ul>
-      <button class="btn yellow" style="width:100%; margin-top:10px;" onclick="toast('Pro (visual) selecionado ✅')">Escolher Pro</button>
-      <div class="hint">Pagamento real ainda não está ativado (só visual).</div>
-    </div>
-
-    <div class="planCard">
-      <div class="planTop">
-        <div>
-          <div class="planName">Elite</div>
-          <div class="hint">Experiência completa no app.</div>
-        </div>
-        <span class="badge yellow">R$ 49,90</span>
-      </div>
-      <ul class="planList">
-        <li>Todos mercados liberados</li>
-        <li>Perfis e estatísticas avançadas</li>
-        <li>Alertas e favoritos</li>
-      </ul>
-      <button class="btn yellow" style="width:100%; margin-top:10px;" onclick="toast('Elite (visual) selecionado ✅')">Escolher Elite</button>
-      <div class="hint">Pagamento real ainda não está ativado (só visual).</div>
-    </div>
-  `;
-}
-
-/* ===== Auth (Login / Register) ===== */
-function getUsers(){ return loadJSON(LS.USERS, []); }
-function setUsers(users){ saveJSON(LS.USERS, users); }
-function getSession(){ return loadJSON(LS.SESSION, null); }
-function setSession(sess){ saveJSON(LS.SESSION, sess); }
-
-function renderAuth(mode){
-  const title = document.getElementById("authTitle");
-  const sub = document.getElementById("authSub");
-  const body = document.getElementById("authBody");
-
-  if(mode === "login"){
-    title.textContent = "Login";
-    sub.textContent = "Entre com email e senha";
-    body.innerHTML = `
-      <div class="field">
-        <label>Email</label>
-        <input id="loginEmail" placeholder="seuemail@exemplo.com" inputmode="email" />
-      </div>
-      <div class="field">
-        <label>Senha</label>
-        <input id="loginPass" placeholder="••••••••" type="password" />
-      </div>
-      <button class="btn primary" style="width:100%; margin-top:12px;" id="doLogin">Entrar</button>
-
-      <div class="hint">
-        Não tem conta? <a href="#" id="goSignup" style="color:var(--yellow); font-weight:1000; text-decoration:none;">Registre-se</a>
-      </div>
-    `;
-
-    document.getElementById("doLogin").addEventListener("click", ()=>{
-      const email = (document.getElementById("loginEmail").value || "").trim().toLowerCase();
-      const pass = (document.getElementById("loginPass").value || "").trim();
-      if(!email || !email.includes("@") || pass.length < 4){ toast("Login inválido"); return; }
-
-      const users = getUsers();
-      const u = users.find(x=>x.email===email && x.pass===pass);
-      if(!u){ toast("Email ou senha incorretos"); return; }
-
-      setSession({ email:u.email, name:u.name, plan: u.plan || "free", createdAt: u.createdAt });
-      toast("Logado ✅");
-      closeDrawer(authDrawer);
-      renderAll();
-    });
-
-    document.getElementById("goSignup").addEventListener("click", (e)=>{
-      e.preventDefault();
-      renderAuth("signup");
-    });
-
-  } else {
-    title.textContent = "Registre-se";
-    sub.textContent = "Crie sua conta (protótipo)";
-    body.innerHTML = `
-      <div class="field">
-        <label>Nome completo</label>
-        <input id="suName" placeholder="Seu nome" />
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input id="suEmail" placeholder="seuemail@exemplo.com" inputmode="email" />
-      </div>
-      <div class="field">
-        <label>Senha</label>
-        <input id="suPass" placeholder="Crie uma senha" type="password" />
-      </div>
-      <div class="field">
-        <label>Telefone (opcional)</label>
-        <input id="suPhone" placeholder="(11) 99999-9999" inputmode="tel" />
-      </div>
-
-      <div class="hint">Tudo aqui é só protótipo (sem dinheiro real).</div>
-
-      <button class="btn yellow" style="width:100%; margin-top:12px;" id="doSignup">Criar conta</button>
-
-      <div class="hint">
-        Já tem conta? <a href="#" id="goLogin" style="color:var(--yellow); font-weight:1000; text-decoration:none;">Login</a>
-      </div>
-    `;
-
-    document.getElementById("doSignup").addEventListener("click", ()=>{
-      const name = (document.getElementById("suName").value || "").trim();
-      const email = (document.getElementById("suEmail").value || "").trim().toLowerCase();
-      const pass = (document.getElementById("suPass").value || "").trim();
-
-      if(name.length < 2){ toast("Digite seu nome"); return; }
-      if(!email.includes("@")){ toast("Email inválido"); return; }
-      if(pass.length < 4){ toast("Senha muito curta"); return; }
-
-      const users = getUsers();
-      if(users.some(x=>x.email===email)){ toast("Esse email já existe"); return; }
-
-      users.push({ id:uid("u"), name, email, pass, plan:"free", createdAt: nowISO() });
-      setUsers(users);
-      setSession({ email, name, plan:"free", createdAt: nowISO() });
-
-      toast("Conta criada ✅");
-      closeDrawer(authDrawer);
-      renderAll();
-    });
-
-    document.getElementById("goLogin").addEventListener("click", (e)=>{
-      e.preventDefault();
-      renderAuth("login");
-    });
-  }
-}
-
-/* ===== UI: Countries + Leagues ===== */
-function renderCountriesRow(){
-  const row = document.getElementById("countriesRow");
-  const active = getActiveCountryId();
-  row.innerHTML = COUNTRIES.map(c=>{
-    const on = c.id===active ? "on" : "";
-    const count = (c.leagues||[]).length;
-    return `
-      <div class="tile ${on}" data-country="${esc(c.id)}">
-        <div class="flag">${esc(c.flag)}</div>
-        <div class="tileName">${esc(c.name)}</div>
-        <div class="tileMeta">${count} ligas</div>
-      </div>
-    `;
-  }).join("");
-
-  row.querySelectorAll("[data-country]").forEach(el=>{
-    el.addEventListener("click", ()=>{
-      setActiveCountryId(el.dataset.country);
-
-      // quando muda país, ajusta liga para primeira do país
-      const c = getCountry(el.dataset.country);
-      const firstLeague = c?.leagues?.[0]?.id;
-      if(firstLeague) setActiveLeagueId(firstLeague);
-
-      renderAll();
-    });
-  });
-}
-
-function renderLeaguesTabs(){
-  const c = getCountry(getActiveCountryId());
-  const activeLeague = getActiveLeagueId();
-  const tabs = document.getElementById("leaguesTabs");
-
-  tabs.innerHTML = (c.leagues||[]).map(l=>{
-    const on = l.id===activeLeague ? "on" : "";
-    return `<div class="tab ${on}" data-league="${esc(l.id)}">${esc(l.name)}</div>`;
-  }).join("");
-
-  tabs.querySelectorAll("[data-league]").forEach(t=>{
-    t.addEventListener("click", ()=>{
-      setActiveLeagueId(t.dataset.league);
-      renderAll();
-    });
-  });
-}
-
-/* ===== Featured + Match list ===== */
-function getAllMatchesForCountry(countryId){
-  const c = getCountry(countryId);
-  let all = [];
-  for(const l of (c.leagues||[])){
-    // Brasil Série A real só entra via fetch na home (pra não chamar API em loop)
-    if(isRealLeague(countryId, l.id)) continue;
-
-    const d = getLeagueData(countryId, l.id);
-    const matches = (d.matches||[]).map(m=>({ ...m, countryId, leagueId:l.id, leagueName:l.name, countryName:c.name, flag:c.flag }));
-    all = all.concat(matches);
-  }
-  // sort by start time
-  all.sort((a,b)=> new Date(a.startISO) - new Date(b.startISO));
-  return all;
-}
-
-function getMatchesForActiveLeagueDemo(){
-  const cId = getActiveCountryId();
-  const lId = getActiveLeagueId();
-  const c = getCountry(cId);
-  const league = getLeague(cId, lId);
-  const data = getLeagueData(cId, lId);
-  const matches = (data.matches||[]).map(m=>({ ...m, countryId:cId, leagueId:lId, leagueName:league?.name||lId, countryName:c.name, flag:c.flag }));
-  matches.sort((a,b)=> new Date(a.startISO) - new Date(b.startISO));
-  return matches;
-}
-
-function renderHomeLoading(){
-  const cId = getActiveCountryId();
-  const lId = getActiveLeagueId();
-  const c = getCountry(cId);
-  const l = getLeague(cId, lId);
-
-  document.getElementById("bannerTitle").textContent = `${c.flag} ${c.name} • ${l?.name || ""}`;
-  document.getElementById("bannerSub").textContent = `Carregando jogos reais…`;
-
-  view.innerHTML = `
-    <div class="section">
-      <div class="sectionHead">
-        <div class="sectionTitle">
-          <div class="icon">⚽</div>
-          <div>
-            <div>PARTIDAS EM DESTAQUE</div>
-            <div class="sectionSub">Carregando…</div>
-          </div>
-        </div>
-      </div>
-      <div class="sectionBody"><div class="empty">Buscando dados…</div></div>
-    </div>
-
-    <div class="section">
-      <div class="sectionHead">
-        <div class="sectionTitle">
-          <div class="icon">${esc(c.flag)}</div>
-          <div>
-            <div>${esc(l?.name || "Liga")}</div>
-            <div class="sectionSub">Odds 1X2 + mais mercados</div>
-          </div>
-        </div>
-        <span class="pill" style="padding:6px 10px;">Sem dinheiro real</span>
-      </div>
-      <div class="sectionBody"><div class="empty">Carregando partidas…</div></div>
-    </div>
-  `;
-}
-
-async function renderHome(){
-  const cId = getActiveCountryId();
-  const lId = getActiveLeagueId();
-  const c = getCountry(cId);
-  const l = getLeague(cId, lId);
-
-  const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-  const todayISO = new Date().toISOString();
-
-  // Se for Brasil Série A -> busca real
-  if(isRealLeague(cId, lId)){
-    renderHomeLoading();
-
-    let realMatches = [];
-    try{
-      realMatches = await fetchRealBrazilA();
-    }catch(err){
-      document.getElementById("bannerSub").textContent = `Falha ao carregar jogos reais. Mostrando demo.`;
-      toast("Erro jogos reais (usando demo)");
-      realMatches = getMatchesForActiveLeagueDemo();
+      // SW register (mantém seu sw.js igual)
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {});
+        });
+      }
     }
 
-    // monta featured com real + (se quiser) outros demo do país
-    let featured = realMatches.filter(m => sameDay(m.startISO, todayISO));
-    if(!featured.length) featured = realMatches.slice(0, 8);
-    featured = featured.slice(0, 8);
-
-    if(q){
-      featured = featured.filter(m => (m.home+" "+m.away+" "+l?.name+" "+c.name).toLowerCase().includes(q));
-    }
-
-    // lista principal = realMatches
-    let matches = realMatches.map(m=>({
-      ...m,
-      countryId:cId,
-      leagueId:lId,
-      leagueName:l?.name || lId,
-      countryName:c.name,
-      flag:c.flag
-    }));
-
-    if(q){
-      matches = matches.filter(m => (m.home+" "+m.away+" "+(l?.name||"")).toLowerCase().includes(q));
-    }
-
-    document.getElementById("bannerTitle").textContent = `${c.flag} ${c.name} • ${l?.name || ""}`;
-    document.getElementById("bannerSub").textContent = `Série A com jogos reais (1X2 real). “Mais mercados” ainda é protótipo.`;
-
-    const featuredHTML = featured.length ? `
-      <div class="section">
-        <div class="sectionHead">
-          <div>
-            <div class="sectionTitle">
-              <div class="icon">⚽</div>
-              <div>
-                <div>PARTIDAS EM DESTAQUE</div>
-                <div class="sectionSub">Seleções do dia (Série A real)</div>
-              </div>
-            </div>
-          </div>
-          <button class="btn ghost" id="featMoreBtn">Ver Mais</button>
-        </div>
-        <div class="sectionBody">
-          <div class="featuredRow">
-            ${featured.map(m=>featuredCard({
-              ...m,
-              countryId:cId, leagueId:lId, leagueName:l?.name||lId, countryName:c.name, flag:c.flag
-            })).join("")}
-          </div>
-        </div>
-      </div>
-    ` : `
-      <div class="section">
-        <div class="sectionHead">
-          <div class="sectionTitle">
-            <div class="icon">⚽</div>
-            <div>PARTIDAS EM DESTAQUE</div>
-          </div>
-        </div>
-        <div class="sectionBody"><div class="empty">Sem destaques no momento.</div></div>
-      </div>
-    `;
-
-    const listHTML = `
-      <div class="section">
-        <div class="sectionHead">
-          <div>
-            <div class="sectionTitle">
-              <div class="icon">${esc(c.flag)}</div>
-              <div>
-                <div>${esc(l?.name || "Liga")}</div>
-                <div class="sectionSub">Odds 1X2 real + mais mercados</div>
-              </div>
-            </div>
-          </div>
-          <span class="pill" style="padding:6px 10px;">Sem dinheiro real</span>
-        </div>
-        <div class="sectionBody">
-          ${matches.length ? matches.map(m=>matchCompact(m)).join("") : `<div class="empty">Sem partidas encontradas.</div>`}
-        </div>
-      </div>
-    `;
-
-    view.innerHTML = featuredHTML + listHTML;
-
-    const featMoreBtn = document.getElementById("featMoreBtn");
-    if(featMoreBtn){
-      featMoreBtn.addEventListener("click", ()=>{
-        document.querySelectorAll(".section")[1]?.scrollIntoView({behavior:"smooth", block:"start"});
-      });
-    }
-
-    bindOddsEvents();
-    bindMoreMarketsEvents();
-    return;
-  }
-
-  // resto continua DEMO
-  document.getElementById("bannerTitle").textContent = `${c.flag} ${c.name} • ${l?.name || ""}`;
-  document.getElementById("bannerSub").textContent = `Partidas e mercados (fictícios). Clique numa odd para abrir o bilhete.`;
-
-  let featured = getAllMatchesForCountry(cId).filter(m => sameDay(m.startISO, todayISO));
-  if(!featured.length) featured = getAllMatchesForCountry(cId).slice(0, 6);
-  featured = featured.slice(0, 8);
-
-  if(q){
-    featured = featured.filter(m => (m.home+" "+m.away+" "+m.leagueName+" "+m.countryName).toLowerCase().includes(q));
-  }
-
-  const featuredHTML = featured.length ? `
-    <div class="section">
-      <div class="sectionHead">
-        <div>
-          <div class="sectionTitle">
-            <div class="icon">⚽</div>
-            <div>
-              <div>PARTIDAS EM DESTAQUE</div>
-              <div class="sectionSub">Seleções do dia (fictício)</div>
-            </div>
-          </div>
-        </div>
-        <button class="btn ghost" id="featMoreBtn">Ver Mais</button>
-      </div>
-      <div class="sectionBody">
-        <div class="featuredRow">
-          ${featured.map(m=>featuredCard(m)).join("")}
-        </div>
-      </div>
-    </div>
-  ` : `
-    <div class="section">
-      <div class="sectionHead">
-        <div class="sectionTitle">
-          <div class="icon">⚽</div>
-          <div>PARTIDAS EM DESTAQUE</div>
-        </div>
-      </div>
-      <div class="sectionBody"><div class="empty">Sem destaques no momento.</div></div>
-    </div>
-  `;
-
-  let matches = getMatchesForActiveLeagueDemo();
-  if(q){
-    matches = matches.filter(m => (m.home+" "+m.away+" "+m.leagueName).toLowerCase().includes(q));
-  }
-
-  const listHTML = `
-    <div class="section">
-      <div class="sectionHead">
-        <div>
-          <div class="sectionTitle">
-            <div class="icon">${esc(c.flag)}</div>
-            <div>
-              <div>${esc(l?.name || "Liga")}</div>
-              <div class="sectionSub">Odds 1X2 + mais mercados</div>
-            </div>
-          </div>
-        </div>
-        <span class="pill" style="padding:6px 10px;">Sem dinheiro real</span>
-      </div>
-      <div class="sectionBody">
-        ${matches.length ? matches.map(m=>matchCompact(m)).join("") : `<div class="empty">Sem partidas encontradas.</div>`}
-      </div>
-    </div>
-  `;
-
-  view.innerHTML = featuredHTML + listHTML;
-
-  const featMoreBtn = document.getElementById("featMoreBtn");
-  if(featMoreBtn){
-    featMoreBtn.addEventListener("click", ()=>{
-      document.querySelectorAll(".section")[1]?.scrollIntoView({behavior:"smooth", block:"start"});
-    });
-  }
-
-  bindOddsEvents();
-  bindMoreMarketsEvents();
-}
-
-function featuredCard(m){
-  const m1 = (m.markets||[]).find(x=>x.key==="1x2");
-  const opt = m1?.options || [];
-  return `
-    <div class="featCard">
-      <div class="featTop">
-        <div>
-          <div class="teams">${esc(m.home)} <span style="color:var(--muted)">x</span> ${esc(m.away)}</div>
-          <div class="meta">${esc(m.leagueName)} • ${fmtDate(m.startISO)}${m.__real ? " • real" : ""}</div>
-        </div>
-        <span class="featTag">DESTAQUE</span>
-      </div>
-      <div class="oddsRow">
-        ${opt.map(o=>oddBtn(m, m1, o)).join("")}
-      </div>
-      <div class="moreRow">
-        <button class="moreBtn" data-more="${esc(m.countryId)}::${esc(m.leagueId)}::${esc(m.id)}">Mais mercados</button>
-      </div>
-    </div>
-  `;
-}
-
-function matchCompact(m){
-  const m1 = (m.markets||[]).find(x=>x.key==="1x2");
-  const opt = m1?.options || [];
-  return `
-    <div class="match">
-      <div class="matchTop">
-        <div>
-          <div class="teams">${esc(m.home)} <span style="color:var(--muted)">x</span> ${esc(m.away)}</div>
-          <div class="meta">Início: ${fmtDate(m.startISO)}${m.__real ? " • real" : ""}</div>
-        </div>
-        <span class="featTag" style="font-size:11px;">1X2</span>
-      </div>
-      <div class="oddsRow">
-        ${opt.map(o=>oddBtn(m, m1, o)).join("")}
-      </div>
-      <div class="moreRow">
-        <button class="moreBtn" data-more="${esc(m.countryId)}::${esc(m.leagueId)}::${esc(m.id)}">Mais mercados</button>
-      </div>
-    </div>
-  `;
-}
-
-function oddBtn(match, market, opt){
-  const isValid = (opt.odd !== null && opt.odd !== undefined && isFinite(Number(opt.odd)));
-  const sel = isValid && isSelected(match.id, market.key, opt.id) ? "sel" : "";
-  const dis = !isValid ? "disabled" : "";
-  const val = isValid ? Number(opt.odd).toFixed(2) : "—";
-
-  return `
-    <div class="odd ${sel} ${dis}"
-      data-odd="1"
-      data-disabled="${!isValid ? "1" : "0"}"
-      data-country="${esc(match.countryId)}"
-      data-league="${esc(match.leagueId)}"
-      data-match-id="${esc(match.id)}"
-      data-match="${esc(match.home+" x "+match.away)}"
-      data-start="${esc(match.startISO)}"
-      data-market-key="${esc(market.key)}"
-      data-market="${esc(market.name)}"
-      data-option-id="${esc(opt.id)}"
-      data-option="${esc(opt.label)}"
-      data-odd-val="${esc(String(isValid ? opt.odd : ""))}">
-      <div class="n">${esc(opt.label)}</div>
-      <div class="v">${val}</div>
-    </div>
-  `;
-}
-
-function bindOddsEvents(){
-  document.querySelectorAll("[data-odd='1']").forEach(el=>{
-    el.addEventListener("click", ()=>{
-      if(el.dataset.disabled === "1") return;
-
-      const sel = {
-        id: uid("sl"),
-        matchId: el.dataset.matchId,
-        match: el.dataset.match,
-        startISO: el.dataset.start,
-        marketKey: el.dataset.marketKey,
-        market: el.dataset.market,
-        optionId: el.dataset.optionId,
-        option: el.dataset.option,
-        odd: Number(el.dataset.oddVal)
-      };
-      const res = toggleSelection(sel);
-
-      document.querySelectorAll(`[data-odd='1'][data-match-id="${cssEsc(sel.matchId)}"][data-market-key="${cssEsc(sel.marketKey)}"]`)
-        .forEach(x=>x.classList.remove("sel"));
-      if(isSelected(sel.matchId, sel.marketKey, sel.optionId)) el.classList.add("sel");
-
-      renderSlipBody();
-      openSlipDrawer();
-      toast(res==="removed" ? "Removido" : "Adicionado");
-    });
-  });
-}
-
-function bindMoreMarketsEvents(){
-  document.querySelectorAll("[data-more]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const [countryId, leagueId, matchId] = btn.dataset.more.split("::");
-
-      // se for BR Série A real, pega do cache real
-      if(isRealLeague(countryId, leagueId)){
-        try{
-          const real = await fetchRealBrazilA();
-          const m = real.find(x => String(x.id) === String(matchId));
-          if(!m) return;
-          openMarketsForMatch(countryId, leagueId, {
-            ...m,
-            countryId, leagueId
-          });
-          return;
-        }catch(e){
-          toast("Não carregou mercados agora");
+    /***********************
+     * USER (demo local)
+     ***********************/
+    function loadUser(){
+      try{
+        const raw = localStorage.getItem("cravai_user");
+        if(raw){
+          const u = JSON.parse(raw);
+          if(u && typeof u.cp === "number" && u.name) return u;
         }
+      }catch(e){}
+      const u = { name:"Visitante", cp: 1000 };
+      localStorage.setItem("cravai_user", JSON.stringify(u));
+      return u;
+    }
+    function saveUser(){
+      localStorage.setItem("cravai_user", JSON.stringify(state.user));
+      el("cp").textContent = formatInt(state.user.cp);
+      el("userName").textContent = state.user.name;
+    }
+
+    /***********************
+     * MENU RENDER
+     ***********************/
+    function renderCountries(){
+      const box = el("countries");
+      box.innerHTML = "";
+      for(const c of COUNTRIES){
+        const div = document.createElement("div");
+        div.className = "item" + (state.selectedCountry === c.id ? " active" : "");
+        div.innerHTML = `
+          <div class="left">
+            <div class="flag">${c.flag}</div>
+            <b title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</b>
+          </div>
+          <span class="badge">+</span>
+        `;
+        div.addEventListener("click", () => selectCountry(c.id));
+        box.appendChild(div);
+      }
+    }
+
+    function renderLeagues(){
+      const box = el("leagues");
+      box.innerHTML = "";
+      const list = LEAGUES_BY_COUNTRY[state.selectedCountry] || [];
+      el("leagueHint").textContent = list.length ? "Selecione" : "Sem ligas";
+      for(const l of list){
+        const div = document.createElement("div");
+        const active = state.selectedLeagueId === l.id;
+        div.className = "item" + (active ? " active" : "");
+        div.innerHTML = `
+          <div class="left">
+            <div class="flag">🏟️</div>
+            <b title="${escapeHtml(l.name)}">${escapeHtml(l.name)}</b>
+          </div>
+          <span class="badge">${escapeHtml(l.badge || "")}</span>
+        `;
+        div.addEventListener("click", () => selectLeague(l.id));
+        box.appendChild(div);
+      }
+    }
+
+    function selectCountry(id){
+      state.selectedCountry = id;
+      // default league
+      const list = LEAGUES_BY_COUNTRY[id] || [];
+      state.selectedLeagueId = list[0]?.id || "";
+      renderCountries();
+      renderLeagues();
+
+      // update header
+      const countryName = (COUNTRIES.find(c => c.id===id)?.name) || "—";
+      el("mainTitle").textContent = countryName;
+      el("subtitle").textContent = "Selecione uma liga";
+      renderMatches();
+    }
+
+    function selectLeague(leagueId){
+      state.selectedLeagueId = leagueId;
+      renderLeagues();
+
+      const league = (LEAGUES_BY_COUNTRY[state.selectedCountry] || []).find(l => l.id === leagueId);
+      const countryName = (COUNTRIES.find(c => c.id===state.selectedCountry)?.name) || "—";
+      el("mainTitle").textContent = `${countryName} • ${league ? league.name : "—"}`;
+      el("subtitle").textContent = (league && league.isReal) ? "Jogos reais + odds 1X2 (h2h)" : "Conteúdo em breve";
+
+      // Só carrega real se for Brasil Série A
+      if(league && league.isReal){
+        loadRealOddsBrazilSerieA();
+      }else{
+        state.matches = [];
+        renderMatches();
+        setStatus("Selecione Brasil → Série A para jogos reais.");
+      }
+    }
+
+    async function refreshCurrent(){
+      const league = (LEAGUES_BY_COUNTRY[state.selectedCountry] || []).find(l => l.id === state.selectedLeagueId);
+      if(league && league.isReal){
+        await loadRealOddsBrazilSerieA(true);
+      }else{
+        toast("Nada para atualizar aqui ainda.");
+      }
+    }
+
+    /***********************
+     * FETCH REAL: Brasileirão Série A
+     * - sportKey: soccer_brazil_campeonato
+     * - market: h2h (1X2)
+     * - endpoint: /.netlify/functions/odds
+     ***********************/
+    async function loadRealOddsBrazilSerieA(force=false){
+      showLoading(true);
+      setStatus("Buscando odds reais…");
+
+      try{
+        // Fazendo o fetch do seu endpoint Netlify:
+        // - Mantive sportKey e market no querystring (se sua function não usa, ela pode ignorar)
+        // - Cache bust opcional
+        const url = new URL(CONFIG.endpoint, window.location.origin);
+        url.searchParams.set("sportKey", CONFIG.sportKey);
+        url.searchParams.set("market", CONFIG.market);
+        if(force) url.searchParams.set("_ts", String(Date.now()));
+
+        const res = await fetch(url.toString(), { headers: { "accept":"application/json" } });
+        if(!res.ok){
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const json = await res.json();
+
+        // Aceita formatos diferentes:
+        // - array direto
+        // - { data: [...] }
+        // - { games: [...] }
+        const arr = Array.isArray(json) ? json
+                  : (Array.isArray(json?.data) ? json.data
+                  : (Array.isArray(json?.games) ? json.games
+                  : []));
+
+        // Normaliza para o que a UI precisa
+        state.matches = normalizeOddsResponseToMatches(arr);
+
+        // Ordena por data
+        state.matches.sort((a,b) => (a.commenceTimeMs||0) - (b.commenceTimeMs||0));
+
+        renderMatches();
+        setStatus(`Carregado: ${state.matches.length} jogos.`);
+      }catch(err){
+        console.error(err);
+        state.matches = [];
+        renderMatches();
+        setStatus("Erro ao carregar odds. Verifique sua Netlify Function e a resposta JSON.");
+        toast("Não consegui carregar as odds agora.");
+      }finally{
+        showLoading(false);
+      }
+    }
+
+    function normalizeOddsResponseToMatches(items){
+      // Espera (mais comum na Odds API):
+      // [
+      //   {
+      //     id, sport_key, commence_time,
+      //     home_team, away_team,
+      //     bookmakers: [
+      //       { key, title, markets: [{ key:"h2h", outcomes:[{name,price}...] }] }
+      //     ]
+      //   }
+      // ]
+      //
+      // Mas o teu endpoint pode devolver já simplificado. Então eu tento achar:
+      // - home/away
+      // - commence_time
+      // - outcomes h2h
+      const out = [];
+
+      for(const g of items){
+        const home = g.home_team || g.homeTeam || g.home || g?.teams?.home || "";
+        const away = g.away_team || g.awayTeam || g.away || g?.teams?.away || "";
+        const commence = g.commence_time || g.commenceTime || g.start_time || g.startTime || g.date || g.kickoff || null;
+
+        // outcomes: tenta achar h2h dentro de bookmakers -> markets
+        let outcomes = null;
+
+        // Caso já venha tipo: { h2h: { home:1.9, draw:3.2, away:4.0 } }
+        if(g?.h2h && typeof g.h2h === "object"){
+          outcomes = [
+            { name: home || "Home", price: Number(g.h2h.home ?? g.h2h[home]) },
+            { name: "Draw", price: Number(g.h2h.draw ?? g.h2h["Draw"]) },
+            { name: away || "Away", price: Number(g.h2h.away ?? g.h2h[away]) }
+          ].filter(o => isFinite(o.price));
+        }
+
+        if(!outcomes){
+          const bks = Array.isArray(g.bookmakers) ? g.bookmakers : [];
+          // pega o primeiro bookmaker com h2h
+          for(const bk of bks){
+            const markets = Array.isArray(bk.markets) ? bk.markets : [];
+            const m = markets.find(m => (m.key || m.market || m.name) === "h2h") || null;
+            if(m && Array.isArray(m.outcomes)){
+              outcomes = m.outcomes;
+              break;
+            }
+          }
+        }
+
+        // Caso venha direto: { outcomes:[...] } ou { markets:{ h2h:{ outcomes:[] } } }
+        if(!outcomes && Array.isArray(g.outcomes)) outcomes = g.outcomes;
+        if(!outcomes && g?.markets?.h2h?.outcomes && Array.isArray(g.markets.h2h.outcomes)) outcomes = g.markets.h2h.outcomes;
+
+        // outcomes final: deve ter 3 opções (home/draw/away), mas pode vir com nomes diferentes.
+        const norm = normalizeH2HOutcomes(outcomes, home, away);
+
+        out.push({
+          id: g.id || `${home}__${away}__${commence || Math.random()}`,
+          home, away,
+          commenceTime: commence,
+          commenceTimeMs: toMs(commence),
+          odds: norm // { home, draw, away } numbers or nulls
+        });
       }
 
-      // demo
-      const data = getLeagueData(countryId, leagueId);
-      const m = (data.matches||[]).find(x=>x.id===matchId);
-      if(!m) return;
-      openMarketsForMatch(countryId, leagueId, m);
-    });
-  });
-}
-
-function openMarketsForMatch(countryId, leagueId, m){
-  const c = getCountry(countryId);
-  const l = getLeague(countryId, leagueId);
-
-  document.getElementById("mTitle").textContent = `Mercados — ${m.home} x ${m.away}`;
-  document.getElementById("mSub").textContent = `${c.flag} ${c.name} • ${l?.name || leagueId} • ${fmtDate(m.startISO)}${m.__real ? " • 1X2 real" : ""}`;
-
-  const body = document.getElementById("marketsBody");
-  body.innerHTML = `
-    ${(m.markets||[]).map(mk=>{
-      const cls = mk.type==="two" ? "mGrid" : "mGrid three";
-      return `
-        <div class="mGroup">
-          <div class="mTitle">${esc(mk.name)}</div>
-          <div class="${cls}">
-            ${(mk.options||[]).map(opt=>{
-              const isValid = (opt.odd !== null && opt.odd !== undefined && isFinite(Number(opt.odd)));
-              const sel = isValid && isSelected(m.id, mk.key, opt.id) ? "sel" : "";
-              const dis = !isValid ? "disabled" : "";
-              const val = isValid ? Number(opt.odd).toFixed(2) : "—";
-              return `
-                <div class="odd ${sel} ${dis}"
-                  data-odd="1"
-                  data-disabled="${!isValid ? "1" : "0"}"
-                  data-country="${esc(countryId)}"
-                  data-league="${esc(leagueId)}"
-                  data-match-id="${esc(m.id)}"
-                  data-match="${esc(m.home+" x "+m.away)}"
-                  data-start="${esc(m.startISO)}"
-                  data-market-key="${esc(mk.key)}"
-                  data-market="${esc(mk.name)}"
-                  data-option-id="${esc(opt.id)}"
-                  data-option="${esc(opt.label)}"
-                  data-odd-val="${esc(String(isValid ? opt.odd : ""))}">
-                  <div class="n">${esc(opt.label)}</div>
-                  <div class="v">${val}</div>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        </div>
-      `;
-    }).join("")}
-  `;
-
-  body.querySelectorAll("[data-odd='1']").forEach(el=>{
-    el.addEventListener("click", ()=>{
-      if(el.dataset.disabled === "1") return;
-
-      const sel = {
-        id: uid("sl"),
-        matchId: el.dataset.matchId,
-        match: el.dataset.match,
-        startISO: el.dataset.start,
-        marketKey: el.dataset.marketKey,
-        market: el.dataset.market,
-        optionId: el.dataset.optionId,
-        option: el.dataset.option,
-        odd: Number(el.dataset.oddVal)
-      };
-      const res = toggleSelection(sel);
-
-      body.querySelectorAll(`[data-odd='1'][data-match-id="${cssEsc(sel.matchId)}"][data-market-key="${cssEsc(sel.marketKey)}"]`)
-        .forEach(x=>x.classList.remove("sel"));
-      if(isSelected(sel.matchId, sel.marketKey, sel.optionId)) el.classList.add("sel");
-
-      renderSlipBody();
-      openSlipDrawer();
-      toast(res==="removed" ? "Removido" : "Adicionado");
-    });
-  });
-
-  openDrawer(marketsDrawer);
-}
-
-/* ===== Slip Drawer ===== */
-function openSlipDrawer(){
-  if(!getSlip().length) return;
-  renderSlipBody();
-  openDrawer(slipDrawer);
-}
-
-function renderSlipBody(){
-  const body = document.getElementById("slipBody");
-  const s = getSlip();
-  if(!s.length){
-    body.innerHTML = `<div class="empty">Sem seleções.</div>`;
-    return;
-  }
-
-  const mode = loadJSON(LS.MODE, "multiple");
-  const stake = Number(localStorage.getItem(LS.STAKE) || "50") || 50;
-  const totalOdd = s.reduce((acc,x)=>acc * x.odd, 1);
-  const retMultiple = stake * totalOdd;
-
-  body.innerHTML = `
-    <div class="seg">
-      <button id="mSingle" class="${mode==="single"?"on":""}">Simples</button>
-      <button id="mMulti" class="${mode==="multiple"?"on":""}">Múltipla</button>
-    </div>
-
-    ${s.map((x,i)=>`
-      <div class="slItem">
-        <div class="slL">
-          <div class="sl1">${esc(x.option)}</div>
-          <div class="sl2">${esc(x.match)} • ${esc(x.market)}</div>
-          <div class="sl2">Início: ${fmtDate(x.startISO)}</div>
-        </div>
-        <div class="slR">
-          <div class="oddMini">${x.odd.toFixed(2)}</div>
-          <button class="xBtn" data-rm="${i}">Remover</button>
-        </div>
-      </div>
-    `).join("")}
-
-    <div class="calc">
-      <div style="font-weight:1000;font-size:13px;">Stake (Crava Points)</div>
-      <div class="calcRow">
-        <input id="stake" type="number" min="1" step="1" value="${Math.max(1, Math.floor(stake))}" style="width:160px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); border-radius:14px; padding:12px; color:var(--text);" />
-        <button class="btn ghost" id="max">MAX</button>
-      </div>
-
-      ${mode==="multiple" ? `
-        <div class="calcRow"><span style="color:var(--muted)">Odds combinadas</span><strong>${totalOdd.toFixed(2)}</strong></div>
-        <div class="calcRow"><span style="color:var(--muted)">Retorno potencial</span><strong>${retMultiple.toFixed(0)} CP</strong></div>
-      ` : `
-        <div class="calcRow"><span style="color:var(--muted)">Custo total</span><strong>${(stake*s.length).toFixed(0)} CP</strong></div>
-        <div class="hint">No modo simples, o stake vale para cada seleção.</div>
-      `}
-
-      <div class="calcRow"><span style="color:var(--muted)">Saldo</span><strong>${getPoints()} CP</strong></div>
-
-      <div class="calcRow" style="margin-top:10px;">
-        <button class="btn danger" id="clear">Limpar</button>
-        <button class="btn primary" id="finish" style="flex:1;">Finalizar (simulado)</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("mSingle").addEventListener("click", ()=>{ saveJSON(LS.MODE,"single"); renderSlipBody(); });
-  document.getElementById("mMulti").addEventListener("click", ()=>{ saveJSON(LS.MODE,"multiple"); renderSlipBody(); });
-
-  body.querySelectorAll("[data-rm]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const idx = Number(b.dataset.rm);
-      const arr = getSlip();
-      arr.splice(idx,1);
-      setSlip(arr);
-      renderAll();
-    });
-  });
-
-  document.getElementById("stake").addEventListener("input",(e)=>{
-    const v = Math.max(1, Math.floor(Number(e.target.value||"1")));
-    localStorage.setItem(LS.STAKE, String(v));
-    renderSlipBody();
-  });
-
-  document.getElementById("max").addEventListener("click", ()=>{
-    localStorage.setItem(LS.STAKE, String(Math.max(1, Math.floor(getPoints()))));
-    renderSlipBody();
-  });
-
-  document.getElementById("clear").addEventListener("click", ()=>{
-    if(!confirm("Limpar bilhete?")) return;
-    setSlip([]);
-    renderAll();
-  });
-
-  document.getElementById("finish").addEventListener("click", ()=>{
-    const modeNow = loadJSON(LS.MODE,"multiple");
-    const stakeNow = Math.max(1, Math.floor(Number(localStorage.getItem(LS.STAKE)||"50")));
-    const slipNow = getSlip();
-    if(!slipNow.length) return;
-
-    const cost = modeNow==="multiple" ? stakeNow : stakeNow*slipNow.length;
-    if(cost > getPoints()){
-      toast("Saldo insuficiente");
-      return;
+      // remove sem times
+      return out.filter(m => (m.home && m.away));
     }
-    setPoints(getPoints()-cost);
-    setSlip([]);
-    toast("Finalizado (simulado) ✅");
-    renderAll();
-  });
-}
 
-/* ===== Bottom nav (simple) ===== */
-function getTab(){ return localStorage.getItem(LS.TAB) || "inicio"; }
-function setTab(t){ localStorage.setItem(LS.TAB, t); renderAll(); }
+    function normalizeH2HOutcomes(outcomes, home, away){
+      const res = { home:null, draw:null, away:null };
 
-function renderTabButtons(){
-  const tab = getTab();
-  document.querySelectorAll(".navBtn").forEach(b=>{
-    b.classList.toggle("on", b.dataset.tab===tab);
-  });
-}
+      if(!Array.isArray(outcomes)) return res;
 
-/* ===== Perfil screen (admin create matches/leagues later) ===== */
-function renderConta(){
-  const sess = getSession();
-  const isAdmin = sess?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+      for(const o of outcomes){
+        const name = String(o?.name ?? o?.label ?? "").toLowerCase();
+        const price = Number(o?.price ?? o?.odds ?? o?.value);
 
-  const cId = getActiveCountryId();
-  const lId = getActiveLeagueId();
+        if(!isFinite(price)) continue;
 
-  view.innerHTML = `
-    <div class="section">
-      <div class="sectionHead">
-        <div class="sectionTitle">
-          <div class="icon">👤</div>
-          <div>CONTA</div>
-        </div>
-        ${sess ? `<button class="btn danger" id="logoutBtn">Sair</button>` : ``}
-      </div>
-      <div class="sectionBody">
-        ${sess ? `
-          <div class="pill" style="display:inline-flex; margin-bottom:10px;">
-            Logado: <strong>${esc(sess.email)}</strong>
-          </div>
-          <div class="hint">Protótipo: tudo fictício (Crava Points). Sem dinheiro real.</div>
+        // home
+        if(home && name === String(home).toLowerCase()){
+          res.home = price; continue;
+        }
+        // away
+        if(away && name === String(away).toLowerCase()){
+          res.away = price; continue;
+        }
+        // draw
+        if(name === "draw" || name === "empate" || name === "tie" || name === "x"){
+          res.draw = price; continue;
+        }
 
-          <div style="margin-top:12px;">
-            <button class="btn primary" id="addCP" style="width:100%;">+1000 CP</button>
-          </div>
+        // fallback: se outcome não bate pelo nome do time, tenta reconhecer por palavras
+        if(name.includes("home")) res.home = price;
+        if(name.includes("away")) res.away = price;
+      }
 
-          ${isAdmin ? `
-            <div class="hint" style="margin-top:12px;">
-              ADMIN: você pode criar partidas rápidas para a liga ativa (${esc(getCountry(cId).name)} • ${esc(getLeague(cId,lId)?.name||lId)}).
-              (Obs: se for Brasil Série A real, isso é só demo local.)
-            </div>
+      // se veio exatamente 3 outcomes, tenta mapear por ordem (muito raro, mas ajuda)
+      const pricesOnly = outcomes.map(o => Number(o?.price ?? o?.odds ?? o?.value)).filter(v => isFinite(v));
+      if((res.home==null || res.draw==null || res.away==null) && pricesOnly.length === 3){
+        if(res.home==null) res.home = pricesOnly[0];
+        if(res.draw==null) res.draw = pricesOnly[1];
+        if(res.away==null) res.away = pricesOnly[2];
+      }
 
-            <div class="field">
-              <label>Time casa</label>
-              <input id="aHome" placeholder="Ex: Santos" />
-            </div>
-            <div class="field">
-              <label>Time fora</label>
-              <input id="aAway" placeholder="Ex: Vasco" />
-            </div>
-            <div class="field">
-              <label>Início (opcional)</label>
-              <input id="aWhen" placeholder="Ex: 2026-03-01 20:00" />
-            </div>
-            <button class="btn yellow" id="createMatch" style="width:100%; margin-top:12px;">Criar partida (admin)</button>
-          ` : `
-            <div class="empty" style="margin-top:12px;">Somente o admin cria ligas/partidas por enquanto.</div>
-          `}
-        ` : `
-          <div class="empty">Você não está logado.</div>
-          <div style="margin-top:12px; display:flex; gap:10px;">
-            <button class="btn yellow" id="openSignup2" style="flex:1;">Registre-se</button>
-            <button class="btn ghost" id="openLogin2" style="flex:1;">Login</button>
-          </div>
-        `}
-      </div>
-    </div>
-  `;
+      return res;
+    }
 
-  if(sess){
-    document.getElementById("logoutBtn")?.addEventListener("click", ()=>{
-      setSession(null);
-      toast("Saiu");
-      renderAll();
-    });
+    /***********************
+     * RENDER MATCHES
+     ***********************/
+    function renderMatches(){
+      const box = el("matches");
+      box.innerHTML = "";
 
-    document.getElementById("addCP")?.addEventListener("click", ()=>{
-      setPoints(getPoints()+1000);
-      toast("+1000 CP");
-      renderAll();
-    });
-
-    if(isAdmin){
-      document.getElementById("createMatch")?.addEventListener("click", ()=>{
-        const home = (document.getElementById("aHome").value||"").trim();
-        const away = (document.getElementById("aAway").value||"").trim();
-        const when = (document.getElementById("aWhen").value||"").trim();
-        if(!home || !away){ toast("Preencha os times"); return; }
-
-        let startISO;
-        if(when){
-          const d = new Date(when.replace(" ","T"));
-          startISO = isNaN(d.getTime()) ? futureHours(6) : d.toISOString();
-        } else startISO = futureHours(6);
-
-        const data = getLeagueData(cId, lId);
-        data.matches = data.matches || [];
-        data.matches.unshift(mkMatch(home, away, startISO));
-        setLeagueData(cId, lId, data);
-
-        toast("Partida criada ✅");
-        renderAll();
+      const q = (el("q").value || "").trim().toLowerCase();
+      const list = state.matches.filter(m => {
+        if(!q) return true;
+        return (m.home || "").toLowerCase().includes(q) || (m.away || "").toLowerCase().includes(q);
       });
-    }
-  } else {
-    document.getElementById("openSignup2")?.addEventListener("click", ()=>{
-      renderAuth("signup");
-      openDrawer(authDrawer);
-    });
-    document.getElementById("openLogin2")?.addEventListener("click", ()=>{
-      renderAuth("login");
-      openDrawer(authDrawer);
-    });
-  }
-}
 
-/* ===== Render All ===== */
-async function renderAll(){
-  seedIfNeeded();
-  setPoints(getPoints());
-  syncSlipUI();
-
-  renderCountriesRow();
-  renderLeaguesTabs();
-  renderTabButtons();
-
-  const tab = getTab();
-
-  if(tab === "inicio"){
-    await renderHome();
-  } else if(tab === "perfil"){
-    renderConta();
-  } else {
-    view.innerHTML = `
-      <div class="section">
-        <div class="sectionHead">
-          <div class="sectionTitle">
-            <div class="icon">📌</div>
-            <div>${tab === "aoVivo" ? "AO-VIVO" : "TODOS OS ESPORTES"}</div>
+      if(!list.length){
+        box.innerHTML = `
+          <div class="empty">
+            ${state.selectedCountry==="BR" && state.selectedLeagueId==="BR-SA"
+              ? "Nenhum jogo encontrado agora (ou filtro de busca muito específico)."
+              : "Selecione Brasil → Série A para carregar jogos reais."
+            }
           </div>
-        </div>
-        <div class="sectionBody">
-          <div class="empty">Por enquanto, essa aba é só visual. A home já tem Países → Ligas → Partidas.</div>
-        </div>
-      </div>
-    `;
-  }
-}
+        `;
+        return;
+      }
 
-/* ===== Top buttons ===== */
-document.getElementById("plansBtn").addEventListener("click", ()=>{
-  renderPlans();
-  openDrawer(plansDrawer);
-});
-document.getElementById("signupBtn").addEventListener("click", ()=>{
-  renderAuth("signup");
-  openDrawer(authDrawer);
-});
-document.getElementById("loginBtn").addEventListener("click", ()=>{
-  renderAuth("login");
-  openDrawer(authDrawer);
-});
+      for(const m of list){
+        const dt = formatDateTime(m.commenceTime);
+        const oddHome = m.odds.home;
+        const oddDraw = m.odds.draw;
+        const oddAway = m.odds.away;
 
-/* ===== Bottom nav events ===== */
-document.querySelectorAll(".navBtn").forEach(b=>{
-  b.addEventListener("click", ()=> setTab(b.dataset.tab));
-});
+        const card = document.createElement("div");
+        card.className = "match";
+        card.innerHTML = `
+          <div class="match-top">
+            <div class="teams">
+              <div class="t"><span>${escapeHtml(m.home)}</span></div>
+              <div class="t"><span>${escapeHtml(m.away)}</span></div>
+            </div>
+            <div class="meta">
+              <div>${escapeHtml(dt.date)}</div>
+              <div>${escapeHtml(dt.time)}</div>
+            </div>
+          </div>
+          <div class="oddsrow">
+            <button class="odd" data-pick="home" ${oddHome ? "" : "disabled"} title="Vitória do mandante">
+              <span class="lbl">1</span>
+              <span class="pr">${oddHome ? fmtOdd(oddHome) : "—"}</span>
+            </button>
+            <button class="odd" data-pick="draw" ${oddDraw ? "" : "disabled"} title="Empate">
+              <span class="lbl">X</span>
+              <span class="pr">${oddDraw ? fmtOdd(oddDraw) : "—"}</span>
+            </button>
+            <button class="odd" data-pick="away" ${oddAway ? "" : "disabled"} title="Vitória do visitante">
+              <span class="lbl">2</span>
+              <span class="pr">${oddAway ? fmtOdd(oddAway) : "—"}</span>
+            </button>
+          </div>
+        `;
 
-/* ===== Search rerender ===== */
-document.getElementById("searchInput").addEventListener("input", ()=>{
-  if(getTab()==="inicio") renderAll();
-});
+        // bind odds click
+        card.querySelectorAll(".odd").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const pick = btn.getAttribute("data-pick");
+            addToSlip(m, pick);
+          });
+        });
 
-/* ===== Install PWA ===== */
-let deferredPrompt=null;
-const installBtn=document.getElementById("installBtn");
-window.addEventListener("beforeinstallprompt",(e)=>{
-  e.preventDefault();
-  deferredPrompt=e;
-  installBtn.style.display="inline-flex";
-});
-installBtn.addEventListener("click", async ()=>{
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  installBtn.style.display="none";
-});
+        box.appendChild(card);
+      }
+    }
 
-/* ===== Service worker ===== */
-if("serviceWorker" in navigator){
-  window.addEventListener("load", ()=> navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-}
+    /***********************
+     * BETSLIP
+     ***********************/
+    function addToSlip(match, pick){
+      const label = pick === "home" ? "1"
+                  : pick === "draw" ? "X"
+                  : "2";
+      const odd = pick === "home" ? match.odds.home
+               : pick === "draw" ? match.odds.draw
+               : match.odds.away;
 
-/* ===== Init ===== */
-if(!localStorage.getItem(LS.COUNTRY)) setActiveCountryId("BR");
-const c = getCountry(getActiveCountryId());
-if(!localStorage.getItem(LS.LEAGUE)) setActiveLeagueId(c.leagues?.[0]?.id || "BRA-A");
-if(!localStorage.getItem(LS.POINTS)) setPoints(2000);
+      if(!odd){
+        toast("Odd indisponível.");
+        return;
+      }
 
-renderAll();
-</script>
+      // regra simples: só 1 seleção por jogo (se clicar outra, troca)
+      const id = match.id;
+      const existingIdx = state.slip.findIndex(s => s.id === id);
+      const item = {
+        id,
+        home: match.home,
+        away: match.away,
+        commenceTime: match.commenceTime,
+        pickLabel: label,
+        side: pick,
+        odd: Number(odd),
+        market: "h2h"
+      };
+
+      if(existingIdx >= 0){
+        state.slip[existingIdx] = item;
+        toast("Seleção atualizada no bilhete.");
+      }else{
+        state.slip.push(item);
+        toast("Adicionado ao bilhete.");
+      }
+
+      renderSlip();
+      updateSlipSummary();
+    }
+
+    function removeFromSlip(id){
+      state.slip = state.slip.filter(s => s.id !== id);
+      renderSlip();
+      updateSlipSummary();
+    }
+
+    function renderSlip(){
+      el("slipCount").textContent = String(state.slip.length);
+
+      const box = el("slipItems");
+      if(!state.slip.length){
+        box.innerHTML = `<div class="empty">Clique em uma odd para adicionar ao bilhete.</div>`;
+        return;
+      }
+
+      box.innerHTML = "";
+      for(const s of state.slip){
+        const dt = formatDateTime(s.commenceTime);
+        const div = document.createElement("div");
+        div.className = "slip-item";
+        div.innerHTML = `
+          <div class="row">
+            <div style="min-width:0;">
+              <b style="font-size:13px;">${escapeHtml(s.home)} x ${escapeHtml(s.away)}</b>
+              <div class="muted">${escapeHtml(dt.date)} • ${escapeHtml(dt.time)}</div>
+            </div>
+            <button class="xbtn" title="Remover">✕</button>
+          </div>
+          <div class="row">
+            <span class="badge">Pick: <b>${escapeHtml(s.pickLabel)}</b></span>
+            <span class="badge">Odd: <b>${fmtOdd(s.odd)}</b></span>
+          </div>
+        `;
+        div.querySelector(".xbtn").addEventListener("click", () => removeFromSlip(s.id));
+        box.appendChild(div);
+      }
+    }
+
+    function updateSlipSummary(){
+      const stake = Math.max(0, Math.floor(Number(el("stake").value || 0)));
+      el("stakeLabel").textContent = stake ? `${formatInt(stake)} CP` : "—";
+
+      if(!state.slip.length || !stake){
+        el("totalOdd").textContent = "—";
+        el("potential").textContent = "—";
+        el("placeBet").disabled = true;
+        return;
+      }
+
+      let totalOdd = 1;
+      for(const s of state.slip){
+        totalOdd *= Number(s.odd || 1);
+      }
+
+      const potential = Math.floor(stake * totalOdd);
+
+      el("totalOdd").textContent = fmtOdd(totalOdd);
+      el("potential").textContent = `${formatInt(potential)} CP`;
+      el("placeBet").disabled = !(stake > 0 && stake <= state.user.cp);
+      if(stake > state.user.cp){
+        toast("Você não tem CP suficiente para essa stake.");
+      }
+    }
+
+    function placeBetDemo(){
+      const stake = Math.max(0, Math.floor(Number(el("stake").value || 0)));
+      if(!state.slip.length){ toast("Bilhete vazio."); return; }
+      if(!stake || stake <= 0){ toast("Informe a stake em CP."); return; }
+      if(stake > state.user.cp){ toast("CP insuficiente."); return; }
+
+      // demo: só debita e limpa
+      state.user.cp -= stake;
+      saveUser();
+      state.slip = [];
+      el("stake").value = "";
+      renderSlip();
+      updateSlipSummary();
+
+      toast("Aposta confirmada (demo). CP debitados.");
+    }
+
+    /***********************
+     * UX helpers
+     ***********************/
+    function showLoading(on){
+      el("loading").style.display = on ? "flex" : "none";
+    }
+    function setStatus(txt){
+      el("statusText").textContent = txt;
+    }
+    function toast(msg){
+      const t = el("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+    }
+
+    /***********************
+     * Format helpers
+     ***********************/
+    function fmtOdd(x){
+      const n = Number(x);
+      if(!isFinite(n)) return "—";
+      return n.toFixed(2);
+    }
+    function formatInt(n){
+      return Number(n).toLocaleString("pt-BR");
+    }
+    function toMs(dt){
+      if(!dt) return 0;
+      const d = new Date(dt);
+      const ms = d.getTime();
+      return isFinite(ms) ? ms : 0;
+    }
+    function formatDateTime(dt){
+      if(!dt){
+        return { date:"—", time:"—" };
+      }
+      const d = new Date(dt);
+      if(!isFinite(d.getTime())){
+        return { date:String(dt).slice(0,10) || "—", time:"—" };
+      }
+      const date = d.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      const time = d.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour:"2-digit", minute:"2-digit" });
+      return { date, time };
+    }
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // go
+    init();
+  </script>
 </body>
 </html>
