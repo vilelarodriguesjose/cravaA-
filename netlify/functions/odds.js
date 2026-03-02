@@ -24,7 +24,7 @@ export async function handler(event) {
     const sportKey = (qs.sportKey || qs.sport || "soccer_brazil_campeonato").trim();
 
     // Defaults bons pro futebol
-    const regions = (qs.regions || "sa").trim();              // sa, eu, uk, us, au (ou combinado: "sa,eu")
+    const regions = (qs.regions || "eu").trim();              // sa, eu, uk, us, au (ou combinado: "sa,eu")
     const markets = (qs.markets || qs.market || "h2h").trim(); // h2h, totals, spreads, etc.
     const oddsFormat = (qs.oddsFormat || "decimal").trim();    // decimal ou american
     const dateFormat = (qs.dateFormat || "iso").trim();        // iso ou unix
