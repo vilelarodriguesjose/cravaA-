@@ -686,7 +686,7 @@ const REAL = {
   sportKey: "soccer_brazil_campeonato",
   endpoint: "/.netlify/functions/odds",
   markets: "h2h",
-  regions: "sa",
+  regions: "eu",
   cacheKey: "cravai_real_braA_cache_v1",
   cacheMinutes: 10
 };
@@ -1035,10 +1035,7 @@ function seedIfNeeded(){
     });
   }
 
-  seedLeague("BR","BRA-B",[
-    mkMatch("Santos","Vasco", futureHours(4)),
-    mkMatch("Sport","Ceará", futureHours(7)),
-    mkMatch("Goiás","Coritiba", futureHours(10))
+  
   ]);
   seedLeague("BR","CDB",[
     mkMatch("Atlético-MG","Bahia", futureHours(6)),
@@ -1314,6 +1311,7 @@ function renderCountriesRow(){
       if(firstLeague) setActiveLeagueId(firstLeague);
 
       await renderAll();
+      loadSerieAReal(true);
     });
   });
 }
@@ -1332,6 +1330,7 @@ function renderLeaguesTabs(){
     t.addEventListener("click", async ()=>{
       setActiveLeagueId(t.dataset.league);
       await renderAll();
+      loadSerieAReal(true);
     });
   });
 }
@@ -1978,7 +1977,64 @@ installBtn.addEventListener("click", async ()=>{
 if("serviceWorker" in navigator){
   window.addEventListener("load", ()=> navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
+// ===== Brasileirão Série A REAL (1X2 / h2h) =====
+async function loadSerieAReal(force = false){
+  try{
+    if(getActiveCountryId()!=="BR" || getActiveLeagueId()!=="BRA-A") return;
 
+    // evita ficar puxando toda hora
+    const cacheKey = "cravai_real_braA_ts";
+    const last = Number(localStorage.getItem(cacheKey) || "0");
+    if(!force && Date.now() - last < 60_000) return; // 1 minuto
+
+    const url = "/.netlify/functions/odds?sportKey=soccer_brazil_campeonato&markets=h2h&regions=eu&_=" + Date.now();
+    const res = await fetch(url);
+    if(!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    if(!Array.isArray(data)) throw new Error("Formato inválido");
+
+    const matches = data.map(g=>{
+      const home=g.home_team, away=g.away_team, startISO=g.commence_time;
+
+      let oHome=null,oDraw=null,oAway=null;
+      const bk=(g.bookmakers||[])[0];
+      const mk=(bk?.markets||[]).find(m=>m.key==="h2h");
+      const outs=mk?.outcomes||[];
+
+      for(const o of outs){
+        if(o.name===home) oHome=o.price;
+        else if(o.name===away) oAway=o.price;
+        else if(o.name==="Draw") oDraw=o.price;
+      }
+
+      return {
+        id: g.id || uid("real"),
+        home, away, startISO,
+        markets: [{
+          key:"1x2", name:"Resultado (1X2)", type:"three",
+          options: [
+            { id:"1", label:home, odd:Number(oHome) },
+            { id:"X", label:"Empate", odd:Number(oDraw) },
+            { id:"2", label:away, odd:Number(oAway) }
+          ].filter(x=>Number.isFinite(x.odd) && x.odd > 1)
+        }]
+      };
+    }).filter(m=>m.home && m.away && m.startISO);
+
+    const base = getLeagueData("BR","BRA-A");
+    base.matches = matches;
+    base._real = true;
+    setLeagueData("BR","BRA-A", base);
+
+    localStorage.setItem(cacheKey, String(Date.now()));
+    renderAll();
+    toast("Série A real ✅");
+  }catch(e){
+    console.log("Erro Série A real:", e);
+    toast("Não deu pra carregar Série A");
+  }
+}
 /* ===== Init ===== */
 if(!localStorage.getItem(LS.COUNTRY)) setActiveCountryId("BR");
 const c = getCountry(getActiveCountryId());
@@ -1986,6 +2042,7 @@ if(!localStorage.getItem(LS.LEAGUE)) setActiveLeagueId(c.leagues?.[0]?.id || "BR
 if(!localStorage.getItem(LS.POINTS)) setPoints(2000);
 
 renderAll();
+loadSerieAReal(true);
 </script>
 </body>
 </html>
