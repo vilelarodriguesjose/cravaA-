@@ -793,137 +793,7 @@
     const esc = (str)=>String(str ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     const uid = ()=> (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2)));
     const nowIso = ()=> new Date().toISOString();
-/* ===========================
-   REAL ODDS (Brasileirão Série A) — integra com seu DB
-   =========================== */
 
-const REAL = {
-  sportKey: "soccer_brazil_campeonato",
-  markets: "h2h",
-  regions: "us,eu",
-  oddsFormat: "decimal"
-};
-
-function fmtWhenFromISO(iso){
-  try{
-    const d = new Date(iso);
-    const dia = d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
-    const hora = d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-    return `${dia} ${hora}`;
-  }catch{
-    return "Em breve";
-  }
-}
-
-async function fetchOddsBR(){
-  const url =
-    `/.netlify/functions/odds` +
-    `?sportKey=${encodeURIComponent(REAL.sportKey)}` +
-    `&markets=${encodeURIComponent(REAL.markets)}` +
-    `&regions=${encodeURIComponent(REAL.regions)}` +
-    `&oddsFormat=${encodeURIComponent(REAL.oddsFormat)}`;
-
-  const res = await fetch(url, { cache: "no-store" });
-  if(!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if(!Array.isArray(data)) return [];
-  return data;
-}
-
-function pickH2HOdds(ev){
-  // tenta pegar o primeiro bookmaker com h2h
-  const home = ev.home_team;
-  const away = ev.away_team;
-
-  if(!Array.isArray(ev.bookmakers)) return null;
-
-  for(const b of ev.bookmakers){
-    const mk = (b.markets||[]).find(m => m.key === "h2h");
-    if(!mk || !Array.isArray(mk.outcomes)) continue;
-
-    let o1=null, ox=null, o2=null;
-
-    for(const o of mk.outcomes){
-      const name = String(o.name||"").toLowerCase();
-      const price = Number(o.price);
-      if(!Number.isFinite(price)) continue;
-
-      if(name === String(home).toLowerCase()) o1 = price;
-      else if(name === String(away).toLowerCase()) o2 = price;
-      else if(name === "draw") ox = price;
-    }
-
-    if(o1 && o2){
-      return {
-        "1": o1,
-        "X": ox || Number(rndOdd(2.90, 3.70)), // se não vier empate, usa demo
-        "2": o2
-      };
-    }
-  }
-  return null;
-}
-
-function realEventToMatch(ev){
-  const home = ev.home_team;
-  const away = ev.away_team;
-
-  const odds = pickH2HOdds(ev);
-  const whenTxt = fmtWhenFromISO(ev.commence_time);
-
-  // cria match no seu formato (mantém mercados demo por enquanto)
-  const m = mkMatch("br-seriea", home, away, whenTxt, "—");
-
-  // deixa id estável (pra seleção não ficar trocando toda hora)
-  m.id = ev.id || m.id;
-
-  // aplica odds reais no 1x2
-  if(odds){
-    m.odds1x2 = {
-      "1": Number(odds["1"]).toFixed(2),
-      "X": Number(odds["X"]).toFixed(2),
-      "2": Number(odds["2"]).toFixed(2)
-    };
-  }
-
-  // marca como “real”
-  m._real = true;
-  m.featured = true;
-
-  return m;
-}
-
-// Atualiza somente a liga br-seriea dentro do state.db.matches
-async function updateBRSerieAReal(){
-  try{
-    const events = await fetchOddsBR();
-    if(!events.length){
-      toast("API retornou vazio (mantive demo).");
-      return;
-    }
-
-    const newMatches = events
-      .map(realEventToMatch)
-      .slice(0, 30);
-
-    // remove antigos da br-seriea e coloca os reais
-    state.db.matches = state.db.matches.filter(x => x.leagueId !== "br-seriea");
-    state.db.matches.unshift(...newMatches);
-
-    saveDB(state.db);
-
-    toast("Série A atualizada (odds reais 1X2) ✅");
-
-    // re-render só do necessário
-    renderLeagues();
-    renderMatches();
-    renderFeatured();
-    if(state.game.open) renderGameScreen();
-  }catch(e){
-    console.log("Erro odds reais:", e);
-    toast("Falha ao puxar odds reais (mantive demo).");
-  }
-}
     function toast(msg){
       const t = $("#toast");
       t.textContent = msg;
@@ -1044,6 +914,137 @@ async function updateBRSerieAReal(){
         markets,
         odds1x2: { "1": rndOdd(1.60, 2.80), "X": rndOdd(2.90, 3.70), "2": rndOdd(2.10, 3.40) }
       };
+    }
+
+    /* ===========================
+       REAL ODDS (Brasileirão Série A) — integra com seu DB
+       =========================== */
+    const REAL = {
+      sportKey: "soccer_brazil_campeonato",
+      markets: "h2h",
+      regions: "us,eu",
+      oddsFormat: "decimal"
+    };
+
+    function fmtWhenFromISO(iso){
+      try{
+        const d = new Date(iso);
+        const dia = d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+        const hora = d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+        return `${dia} ${hora}`;
+      }catch{
+        return "Em breve";
+      }
+    }
+
+    async function fetchOddsBR(){
+      const url =
+        `/.netlify/functions/odds` +
+        `?sportKey=${encodeURIComponent(REAL.sportKey)}` +
+        `&markets=${encodeURIComponent(REAL.markets)}` +
+        `&regions=${encodeURIComponent(REAL.regions)}` +
+        `&oddsFormat=${encodeURIComponent(REAL.oddsFormat)}`;
+
+      const res = await fetch(url, { cache: "no-store" });
+
+      // Se der erro, a gente joga o motivo no toast
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      if(!Array.isArray(data)) return [];
+      return data;
+    }
+
+    function pickH2HOdds(ev){
+      const home = ev.home_team;
+      const away = ev.away_team;
+
+      if(!Array.isArray(ev.bookmakers)) return null;
+
+      // tenta achar um bookmaker que tenha 1, X, 2
+      for(const b of ev.bookmakers){
+        const mk = (b.markets||[]).find(m => m.key === "h2h");
+        if(!mk || !Array.isArray(mk.outcomes)) continue;
+
+        let o1=null, ox=null, o2=null;
+
+        for(const o of mk.outcomes){
+          const name = String(o.name||"").toLowerCase();
+          const price = Number(o.price);
+          if(!Number.isFinite(price)) continue;
+
+          if(name === String(home).toLowerCase()) o1 = price;
+          else if(name === String(away).toLowerCase()) o2 = price;
+          else if(name === "draw") ox = price;
+        }
+
+        if(o1 && o2){
+          return {
+            "1": o1,
+            "X": ox || null,
+            "2": o2
+          };
+        }
+      }
+      return null;
+    }
+
+    function realEventToMatch(ev){
+      const home = ev.home_team;
+      const away = ev.away_team;
+
+      const odds = pickH2HOdds(ev);
+      const whenTxt = fmtWhenFromISO(ev.commence_time);
+
+      // cria match no seu formato (mantém mercados demo por enquanto)
+      const m = mkMatch("br-seriea", home, away, whenTxt, "—");
+
+      // id estável
+      m.id = ev.id || m.id;
+
+      // odds reais 1x2 (se vier X beleza; se não vier, usa demo pro X)
+      if(odds && odds["1"] && odds["2"]){
+        const demoX = Number(rndOdd(2.90, 3.70));
+        m.odds1x2 = {
+          "1": Number(odds["1"]).toFixed(2),
+          "X": Number(odds["X"] ?? demoX).toFixed(2),
+          "2": Number(odds["2"]).toFixed(2)
+        };
+      }
+
+      m._real = true;
+      m.featured = true;
+
+      return m;
+    }
+
+    async function updateBRSerieAReal(){
+      try{
+        const events = await fetchOddsBR();
+        if(!events.length){
+          toast("API retornou vazio (mantive demo).");
+          return;
+        }
+
+        const newMatches = events
+          .map(realEventToMatch)
+          .slice(0, 30);
+
+        // remove antigos da br-seriea e coloca os reais
+        state.db.matches = state.db.matches.filter(x => x.leagueId !== "br-seriea");
+        state.db.matches.unshift(...newMatches);
+
+        saveDB(state.db);
+        toast("Série A atualizada (odds reais 1X2) ✅");
+
+        renderLeagues();
+        renderMatches();
+        renderFeatured();
+        if(state.game.open) renderGameScreen();
+      }catch(e){
+        console.log("Erro odds reais:", e);
+        toast("Falha: " + (e?.message || e));
+      }
     }
 
     function getAuth(){
@@ -1894,14 +1895,16 @@ async function updateBRSerieAReal(){
     function hookUI(){
       $$(".navBtn").forEach(b=> b.onclick = ()=> setNav(b.dataset.nav));
 
+      // ✅ Atualizar: se estiver na Série A, puxa real; senão demo
       $("#btnRefresh").onclick = async ()=> {
-  if(state.ui.leagueId === "br-seriea"){
-    await updateBRSerieAReal();
-  }else{
-    toast("Atualizado (demo).");
-    renderFeatured();
-  }
-};
+        if(state.ui.leagueId === "br-seriea"){
+          await updateBRSerieAReal();
+        }else{
+          toast("Atualizado (demo).");
+          renderFeatured();
+        }
+      };
+
       $("#btnSeed").onclick = ()=>{
         if(confirm("Resetar demo? (apaga dados locais)")){
           localStorage.removeItem(LS.DB);
@@ -1983,12 +1986,18 @@ async function updateBRSerieAReal(){
       $("#btnClosePlans").onclick = closePlans;
     }
 
-    function init(){
+    // ✅ init agora é async, e se estiver na Série A já tenta puxar real
+    async function init(){
       hookUI();
       ensureDefaults();
       renderAll();
-      registerSW();
+      await registerSW();
+
+      if(state.ui.leagueId === "br-seriea"){
+        await updateBRSerieAReal();
+      }
     }
+
     init();
   </script>
 </body>
