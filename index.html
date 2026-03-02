@@ -300,6 +300,7 @@
     .odd .n{font-size:12px;color:var(--muted);font-weight:900}
     .odd .v{font-family:var(--mono);font-weight:1000}
     .odd.sel{background: rgba(24,201,100,.16); border:1px solid rgba(24,201,100,.28)}
+    .odd.disabled{opacity:.55; cursor:not-allowed}
 
     .moreRow{
       padding: 0 12px 12px;
@@ -672,24 +673,10 @@
 <script>
 /* ===========================
    CravaAí — Bet365-like Mobile
-   (layout mantido)
-   + Integração real: Brasil → Série A (1X2 / h2h) via /.netlify/functions/odds
+   + Brasil Série A com jogos reais (1X2 real)
    =========================== */
 
 const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
-
-// ✅ Config real do Brasileirão
-const REAL = {
-  enabled: true,
-  countryId: "BR",
-  leagueId: "BRA-A",
-  sportKey: "soccer_brazil_campeonato",
-  endpoint: "/.netlify/functions/odds",
-  markets: "h2h",
-  regions: "eu",
-  cacheKey: "cravai_real_braA_cache_v1",
-  cacheMinutes: 10
-};
 
 const LS = {
   POINTS:"cravai_points",
@@ -700,7 +687,10 @@ const LS = {
   SLIP:"cravai_slip",
   STAKE:"cravai_stake",
   MODE:"cravai_mode",
-  TAB:"cravai_tab"
+  TAB:"cravai_tab",
+
+  // cache do Brasileirão real
+  REAL_BR_CACHE:"cravai_real_br_cache_v1"
 };
 
 const overlay = document.getElementById("overlay");
@@ -739,9 +729,6 @@ function fmtDate(iso){
 function sameDay(aISO, bISO){
   const a=new Date(aISO), b=new Date(bISO);
   return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
-}
-function isRealActive(){
-  return REAL.enabled && getActiveCountryId()===REAL.countryId && getActiveLeagueId()===REAL.leagueId;
 }
 
 /* ===== Points ===== */
@@ -799,7 +786,155 @@ function getLeague(countryId, leagueId){
   return (c.leagues||[]).find(l=>l.id===leagueId) || c.leagues?.[0] || null;
 }
 
-/* ===== Matches storage (per league) ===== */
+/* ===== Jogos reais: Brasil Série A (1X2 real) ===== */
+const REAL = {
+  SPORT_KEY_BRA_A: "soccer_brazil_campeonato",
+  REGIONS: "eu",
+  ODDS_FORMAT: "decimal",
+  CACHE_TTL_MS: 1000 * 60 * 5 // 5 min
+};
+
+function isRealLeague(countryId, leagueId){
+  return countryId === "BR" && leagueId === "BRA-A";
+}
+
+function buildOddsUrl(){
+  // sua Netlify Function
+  const sportKey = REAL.SPORT_KEY_BRA_A;
+  const markets = "h2h";
+  return `/.netlify/functions/odds?sportKey=${encodeURIComponent(sportKey)}&markets=${encodeURIComponent(markets)}&regions=${encodeURIComponent(REAL.REGIONS)}&oddsFormat=${encodeURIComponent(REAL.ODDS_FORMAT)}`;
+}
+
+function getCachedRealBR(){
+  const c = loadJSON(LS.REAL_BR_CACHE, null);
+  if(!c || !c.ts || !Array.isArray(c.matches)) return null;
+  if(Date.now() - c.ts > REAL.CACHE_TTL_MS) return null;
+  return c.matches;
+}
+function setCachedRealBR(matches){
+  saveJSON(LS.REAL_BR_CACHE, { ts: Date.now(), matches });
+}
+
+function pickBestH2H(bookmakers, homeTeam, awayTeam){
+  // retorna {home, draw, away}
+  if(!Array.isArray(bookmakers)) return {home:null, draw:null, away:null};
+
+  for(const b of bookmakers){
+    const mk = (b.markets || []).find(m => m.key === "h2h");
+    if(!mk) continue;
+    const outs = mk.outcomes || [];
+    if(!outs.length) continue;
+
+    let home=null, away=null, draw=null;
+    for(const o of outs){
+      const name = String(o.name || "");
+      const n = name.toLowerCase();
+      if(n === String(homeTeam||"").toLowerCase()) home = o.price;
+      else if(n === String(awayTeam||"").toLowerCase()) away = o.price;
+      else if(n === "draw" || n.includes("empate")) draw = o.price;
+    }
+
+    // alguns books podem não ter empate (ou não mapear certinho); tenta fallback pelo nome "Draw"
+    if(draw === null){
+      const d = outs.find(x => String(x.name||"").toLowerCase() === "draw");
+      if(d) draw = d.price;
+    }
+
+    // se tiver pelo menos 2 preços, já serve
+    const count = [home,draw,away].filter(v => v !== null && v !== undefined && isFinite(Number(v))).length;
+    if(count >= 2){
+      return { home, draw, away };
+    }
+  }
+
+  return {home:null, draw:null, away:null};
+}
+
+// reaproveita seus mercados “mock” (btts, gols, etc.) como “Mais mercados”
+function templateExtraMarkets(home, away){
+  function rndOdd(min,max){
+    const v=min + Math.random()*(max-min);
+    return Math.round(v*100)/100;
+  }
+  return [
+    { key:"btts", name:"Ambas Marcam", type:"two", options:[
+      { id:"SIM", label:"Sim", odd:rndOdd(1.60,2.30) },
+      { id:"NAO", label:"Não", odd:rndOdd(1.70,2.60) }
+    ]},
+    { key:"gols", name:"Gols na Partida", type:"three", options:[
+      { id:"O15", label:"Mais 1.5", odd:rndOdd(1.20,1.80) },
+      { id:"O25", label:"Mais 2.5", odd:rndOdd(1.60,2.60) },
+      { id:"U25", label:"Menos 2.5", odd:rndOdd(1.60,2.80) }
+    ]},
+    { key:"esc", name:"Escanteios", type:"three", options:[
+      { id:"O85", label:"Mais 8.5", odd:rndOdd(1.55,2.45) },
+      { id:"O95", label:"Mais 9.5", odd:rndOdd(1.70,2.70) },
+      { id:"U95", label:"Menos 9.5", odd:rndOdd(1.60,2.60) }
+    ]},
+    { key:"car", name:"Cartões", type:"three", options:[
+      { id:"O35", label:"Mais 3.5", odd:rndOdd(1.55,2.45) },
+      { id:"O45", label:"Mais 4.5", odd:rndOdd(1.85,2.95) },
+      { id:"U45", label:"Menos 4.5", odd:rndOdd(1.60,2.70) }
+    ]},
+    { key:"hcap", name:"Handicap (Fictício)", type:"three", options:[
+      { id:"H-05", label:home+" -0.5", odd:rndOdd(1.65,2.65) },
+      { id:"A+05", label:away+" +0.5", odd:rndOdd(1.55,2.35) },
+      { id:"H+05", label:home+" +0.5", odd:rndOdd(1.40,2.10) }
+    ]}
+  ];
+}
+
+async function fetchRealBrazilA(){
+  const cached = getCachedRealBR();
+  if(cached) return cached;
+
+  const url = buildOddsUrl();
+  const res = await fetch(url, { cache:"no-store" });
+  if(!res.ok){
+    const txt = await res.text().catch(()=> "");
+    throw new Error(`Erro ao carregar odds (${res.status}): ${txt.slice(0,120)}`);
+  }
+  const data = await res.json();
+  if(!Array.isArray(data)) return [];
+
+  const matches = data.map(ev => {
+    const home = ev.home_team || "";
+    const away = ev.away_team || "";
+    const startISO = ev.commence_time || ev.commenceTime || nowISO();
+    const prices = pickBestH2H(ev.bookmakers, home, away);
+
+    // 1X2 real
+    const m1 = {
+      key:"1x2",
+      name:"Resultado (1X2)",
+      type:"three",
+      options:[
+        { id:"1", label:home, odd: isFinite(Number(prices.home)) ? Number(prices.home) : null },
+        { id:"X", label:"Empate", odd: isFinite(Number(prices.draw)) ? Number(prices.draw) : null },
+        { id:"2", label:away, odd: isFinite(Number(prices.away)) ? Number(prices.away) : null }
+      ]
+    };
+
+    const extra = templateExtraMarkets(home, away);
+
+    return {
+      id: String(ev.id || uid("real")),
+      home,
+      away,
+      startISO,
+      markets: [m1, ...extra],
+      __real: true
+    };
+  }).filter(m => m.home && m.away);
+
+  // ordena por horário
+  matches.sort((a,b)=> new Date(a.startISO) - new Date(b.startISO));
+
+  setCachedRealBR(matches);
+  return matches;
+}
+
+/* ===== Matches storage (per league) DEMO (mantido) ===== */
 function rndOdd(min,max){
   const v=min + Math.random()*(max-min);
   return Math.round(v*100)/100;
@@ -842,27 +977,6 @@ function mkMatch(home,away,startISO){
   };
 }
 
-// ✅ mercado REAL 1X2 (apenas) no formato do seu app
-function mkRealMatch1x2(home, away, startISO, oddsHome, oddsDraw, oddsAway, id){
-  const safeId = id || uid("mt");
-  const oH = Number(oddsHome), oD = Number(oddsDraw), oA = Number(oddsAway);
-
-  const opts = [
-    { id:"1", label:home, odd: Number.isFinite(oH) ? oH : null },
-    { id:"X", label:"Empate", odd: Number.isFinite(oD) ? oD : null },
-    { id:"2", label:away, odd: Number.isFinite(oA) ? oA : null }
-  ].filter(x => x.odd && x.odd > 1);
-
-  return {
-    id: safeId,
-    home, away,
-    startISO,
-    markets: [
-      { key:"1x2", name:"Resultado (1X2)", type:"three", options: opts }
-    ]
-  };
-}
-
 function leagueKey(countryId, leagueId){
   return `cravai_league_${countryId}_${leagueId}`;
 }
@@ -873,160 +987,15 @@ function setLeagueData(countryId, leagueId, data){
   saveJSON(leagueKey(countryId, leagueId), data);
 }
 
-/* ===== REAL fetch + cache (Série A) ===== */
-function getRealCache(){
-  return loadJSON(REAL.cacheKey, null);
-}
-function setRealCache(payload){
-  saveJSON(REAL.cacheKey, payload);
-}
-function cacheIsFresh(cache){
-  if(!cache?.ts) return false;
-  const ageMs = Date.now() - cache.ts;
-  return ageMs < REAL.cacheMinutes * 60 * 1000;
-}
-
-async function fetchBrazilSerieAOdds(){
-  const url = new URL(REAL.endpoint, window.location.origin);
-  url.searchParams.set("sportKey", REAL.sportKey);
-  url.searchParams.set("markets", REAL.markets);
-  url.searchParams.set("regions", REAL.regions);
-  url.searchParams.set("oddsFormat", "decimal");
-  url.searchParams.set("dateFormat", "iso");
-  url.searchParams.set("_ts", String(Date.now())); // evita cache
-
-  const res = await fetch(url.toString(), { headers:{ "accept":"application/json" } });
-  if(!res.ok){
-    const t = await res.text().catch(()=> "");
-    throw new Error(`Erro /odds HTTP ${res.status} ${t}`.slice(0,160));
-  }
-  return await res.json();
-}
-
-function normalizeOddsApiToMatches(items){
-  const arr = Array.isArray(items) ? items
-    : Array.isArray(items?.data) ? items.data
-    : Array.isArray(items?.games) ? items.games
-    : [];
-
-  const out = [];
-  for(const g of arr){
-    const home = g.home_team || g.homeTeam || g.home;
-    const away = g.away_team || g.awayTeam || g.away;
-    const startISO = g.commence_time || g.commenceTime || g.start_time || g.startTime || g.date;
-
-    if(!home || !away || !startISO) continue;
-
-    let oddsHome=null, oddsDraw=null, oddsAway=null;
-
-    // Odds API clássico: bookmakers -> markets(h2h) -> outcomes
-    if(Array.isArray(g.bookmakers)){
-      for(const bk of g.bookmakers){
-        const markets = Array.isArray(bk.markets) ? bk.markets : [];
-        const m = markets.find(x => (x.key || x.market) === "h2h");
-        if(!m || !Array.isArray(m.outcomes)) continue;
-
-        for(const o of m.outcomes){
-          const name = String(o?.name ?? "").toLowerCase();
-          const price = Number(o?.price);
-          if(!Number.isFinite(price)) continue;
-
-          if(name === String(home).toLowerCase()) oddsHome = price;
-          else if(name === String(away).toLowerCase()) oddsAway = price;
-          else if(name === "draw" || name === "empate" || name === "tie" || name === "x") oddsDraw = price;
-        }
-        break;
-      }
-    }
-
-    // formato alternativo simplificado (se sua function um dia devolver assim)
-    if((oddsHome==null || oddsAway==null) && g?.h2h){
-      const h = g.h2h;
-      if(h){
-        oddsHome = Number.isFinite(Number(h.home)) ? Number(h.home) : oddsHome;
-        oddsAway = Number.isFinite(Number(h.away)) ? Number(h.away) : oddsAway;
-        oddsDraw = Number.isFinite(Number(h.draw)) ? Number(h.draw) : oddsDraw;
-      }
-    }
-
-    const m = mkRealMatch1x2(home, away, startISO, oddsHome, oddsDraw, oddsAway, g.id);
-    out.push(m);
-  }
-
-  out.sort((a,b)=> new Date(a.startISO) - new Date(b.startISO));
-  return out;
-}
-
-async function ensureRealSerieA(){
-  if(!REAL.enabled) return;
-
-  const cId = getActiveCountryId();
-  const lId = getActiveLeagueId();
-  if(cId !== REAL.countryId || lId !== REAL.leagueId) return;
-
-  // Se já tem dados reais “recentes” no storage da liga, não precisa bater de novo
-  const cache = getRealCache();
-  if(cacheIsFresh(cache)){
-    const matches = cache.matches || [];
-    const base = getLeagueData(REAL.countryId, REAL.leagueId);
-    base.matches = matches;
-    base._real = true;
-    setLeagueData(REAL.countryId, REAL.leagueId, base);
-    return;
-  }
-
-  // Busca real
-  try{
-    const json = await fetchBrazilSerieAOdds();
-    const matches = normalizeOddsApiToMatches(json);
-
-    // salva cache
-    setRealCache({ ts: Date.now(), matches });
-
-    // salva na liga BRA-A
-    const base = getLeagueData(REAL.countryId, REAL.leagueId);
-    base.matches = matches;
-    base._real = true;
-    setLeagueData(REAL.countryId, REAL.leagueId, base);
-  }catch(e){
-    console.error(e);
-    toast("Erro ao puxar Série A real");
-    // mantém o que tiver salvo anteriormente (se tiver)
-    const base = getLeagueData(REAL.countryId, REAL.leagueId);
-    if(!Array.isArray(base.matches) || base.matches.length===0){
-      // se nunca teve nada, deixa vazio (em vez de demo)
-      base.matches = [];
-      base._real = true;
-      setLeagueData(REAL.countryId, REAL.leagueId, base);
-    }
-  }
-}
-
-/* ===== Seed fictício (não mexe na Série A quando real estiver ativo) ===== */
 function seedIfNeeded(){
   // seed only if no data for main league
   const cId = getActiveCountryId();
   const lId = getActiveLeagueId();
-
-  // Se for Série A real, não cria demo
-  if(REAL.enabled && cId===REAL.countryId && lId===REAL.leagueId){
-    const d = getLeagueData(cId, lId);
-    if(!d._real){
-      d.matches = d.matches || [];
-      d._real = true;
-      setLeagueData(cId, lId, d);
-    }
-    return;
-  }
-
   const d = getLeagueData(cId, lId);
   if (d.matches && d.matches.length) return;
 
-  // seed some leagues across countries
+  // seed some leagues across countries (demo)
   function seedLeague(countryId, leagueId, matches){
-    // não seed na BRA-A real
-    if(REAL.enabled && countryId===REAL.countryId && leagueId===REAL.leagueId) return;
-
     const base = getLeagueData(countryId, leagueId);
     if ((base.matches||[]).length) return;
     setLeagueData(countryId, leagueId, {
@@ -1035,11 +1004,14 @@ function seedIfNeeded(){
     });
   }
 
-  
+  seedLeague("BR","BRA-A",[
+    mkMatch("Palmeiras","Corinthians", futureHours(4)),
+    mkMatch("Flamengo","São Paulo", futureHours(7)),
+    mkMatch("Grêmio","Internacional", futureHours(10))
   ]);
-  seedLeague("BR","CDB",[
-    mkMatch("Atlético-MG","Bahia", futureHours(6)),
-    mkMatch("Fortaleza","Fluminense", futureHours(12))
+  seedLeague("BR","BRA-B",[
+    mkMatch("Sport","Ceará", futureHours(5)),
+    mkMatch("Goiás","Vitória", futureHours(9))
   ]);
   seedLeague("GB","EPL",[
     mkMatch("Arsenal","Chelsea", futureHours(5)),
@@ -1302,7 +1274,7 @@ function renderCountriesRow(){
   }).join("");
 
   row.querySelectorAll("[data-country]").forEach(el=>{
-    el.addEventListener("click", async ()=>{
+    el.addEventListener("click", ()=>{
       setActiveCountryId(el.dataset.country);
 
       // quando muda país, ajusta liga para primeira do país
@@ -1310,8 +1282,7 @@ function renderCountriesRow(){
       const firstLeague = c?.leagues?.[0]?.id;
       if(firstLeague) setActiveLeagueId(firstLeague);
 
-      await renderAll();
-      loadSerieAReal(true);
+      renderAll();
     });
   });
 }
@@ -1327,10 +1298,9 @@ function renderLeaguesTabs(){
   }).join("");
 
   tabs.querySelectorAll("[data-league]").forEach(t=>{
-    t.addEventListener("click", async ()=>{
+    t.addEventListener("click", ()=>{
       setActiveLeagueId(t.dataset.league);
-      await renderAll();
-      loadSerieAReal(true);
+      renderAll();
     });
   });
 }
@@ -1340,6 +1310,9 @@ function getAllMatchesForCountry(countryId){
   const c = getCountry(countryId);
   let all = [];
   for(const l of (c.leagues||[])){
+    // Brasil Série A real só entra via fetch na home (pra não chamar API em loop)
+    if(isRealLeague(countryId, l.id)) continue;
+
     const d = getLeagueData(countryId, l.id);
     const matches = (d.matches||[]).map(m=>({ ...m, countryId, leagueId:l.id, leagueName:l.name, countryName:c.name, flag:c.flag }));
     all = all.concat(matches);
@@ -1349,7 +1322,7 @@ function getAllMatchesForCountry(countryId){
   return all;
 }
 
-function getMatchesForActiveLeague(){
+function getMatchesForActiveLeagueDemo(){
   const cId = getActiveCountryId();
   const lId = getActiveLeagueId();
   const c = getCountry(cId);
@@ -1360,25 +1333,166 @@ function getMatchesForActiveLeague(){
   return matches;
 }
 
-function renderHome(){
+function renderHomeLoading(){
   const cId = getActiveCountryId();
   const lId = getActiveLeagueId();
   const c = getCountry(cId);
   const l = getLeague(cId, lId);
 
-  const realNow = isRealActive();
-
-  // Banner text
   document.getElementById("bannerTitle").textContent = `${c.flag} ${c.name} • ${l?.name || ""}`;
-  document.getElementById("bannerSub").textContent =
-    realNow
-      ? `Jogos reais + odds 1X2 (h2h). Clique numa odd para abrir o bilhete.`
-      : `Partidas e mercados (fictícios). Clique numa odd para abrir o bilhete.`;
+  document.getElementById("bannerSub").textContent = `Carregando jogos reais…`;
+
+  view.innerHTML = `
+    <div class="section">
+      <div class="sectionHead">
+        <div class="sectionTitle">
+          <div class="icon">⚽</div>
+          <div>
+            <div>PARTIDAS EM DESTAQUE</div>
+            <div class="sectionSub">Carregando…</div>
+          </div>
+        </div>
+      </div>
+      <div class="sectionBody"><div class="empty">Buscando dados…</div></div>
+    </div>
+
+    <div class="section">
+      <div class="sectionHead">
+        <div class="sectionTitle">
+          <div class="icon">${esc(c.flag)}</div>
+          <div>
+            <div>${esc(l?.name || "Liga")}</div>
+            <div class="sectionSub">Odds 1X2 + mais mercados</div>
+          </div>
+        </div>
+        <span class="pill" style="padding:6px 10px;">Sem dinheiro real</span>
+      </div>
+      <div class="sectionBody"><div class="empty">Carregando partidas…</div></div>
+    </div>
+  `;
+}
+
+async function renderHome(){
+  const cId = getActiveCountryId();
+  const lId = getActiveLeagueId();
+  const c = getCountry(cId);
+  const l = getLeague(cId, lId);
 
   const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-
-  // Featured: "Partidas em destaque" (hoje, do país inteiro)
   const todayISO = new Date().toISOString();
+
+  // Se for Brasil Série A -> busca real
+  if(isRealLeague(cId, lId)){
+    renderHomeLoading();
+
+    let realMatches = [];
+    try{
+      realMatches = await fetchRealBrazilA();
+    }catch(err){
+      document.getElementById("bannerSub").textContent = `Falha ao carregar jogos reais. Mostrando demo.`;
+      toast("Erro jogos reais (usando demo)");
+      realMatches = getMatchesForActiveLeagueDemo();
+    }
+
+    // monta featured com real + (se quiser) outros demo do país
+    let featured = realMatches.filter(m => sameDay(m.startISO, todayISO));
+    if(!featured.length) featured = realMatches.slice(0, 8);
+    featured = featured.slice(0, 8);
+
+    if(q){
+      featured = featured.filter(m => (m.home+" "+m.away+" "+l?.name+" "+c.name).toLowerCase().includes(q));
+    }
+
+    // lista principal = realMatches
+    let matches = realMatches.map(m=>({
+      ...m,
+      countryId:cId,
+      leagueId:lId,
+      leagueName:l?.name || lId,
+      countryName:c.name,
+      flag:c.flag
+    }));
+
+    if(q){
+      matches = matches.filter(m => (m.home+" "+m.away+" "+(l?.name||"")).toLowerCase().includes(q));
+    }
+
+    document.getElementById("bannerTitle").textContent = `${c.flag} ${c.name} • ${l?.name || ""}`;
+    document.getElementById("bannerSub").textContent = `Série A com jogos reais (1X2 real). “Mais mercados” ainda é protótipo.`;
+
+    const featuredHTML = featured.length ? `
+      <div class="section">
+        <div class="sectionHead">
+          <div>
+            <div class="sectionTitle">
+              <div class="icon">⚽</div>
+              <div>
+                <div>PARTIDAS EM DESTAQUE</div>
+                <div class="sectionSub">Seleções do dia (Série A real)</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn ghost" id="featMoreBtn">Ver Mais</button>
+        </div>
+        <div class="sectionBody">
+          <div class="featuredRow">
+            ${featured.map(m=>featuredCard({
+              ...m,
+              countryId:cId, leagueId:lId, leagueName:l?.name||lId, countryName:c.name, flag:c.flag
+            })).join("")}
+          </div>
+        </div>
+      </div>
+    ` : `
+      <div class="section">
+        <div class="sectionHead">
+          <div class="sectionTitle">
+            <div class="icon">⚽</div>
+            <div>PARTIDAS EM DESTAQUE</div>
+          </div>
+        </div>
+        <div class="sectionBody"><div class="empty">Sem destaques no momento.</div></div>
+      </div>
+    `;
+
+    const listHTML = `
+      <div class="section">
+        <div class="sectionHead">
+          <div>
+            <div class="sectionTitle">
+              <div class="icon">${esc(c.flag)}</div>
+              <div>
+                <div>${esc(l?.name || "Liga")}</div>
+                <div class="sectionSub">Odds 1X2 real + mais mercados</div>
+              </div>
+            </div>
+          </div>
+          <span class="pill" style="padding:6px 10px;">Sem dinheiro real</span>
+        </div>
+        <div class="sectionBody">
+          ${matches.length ? matches.map(m=>matchCompact(m)).join("") : `<div class="empty">Sem partidas encontradas.</div>`}
+        </div>
+      </div>
+    `;
+
+    view.innerHTML = featuredHTML + listHTML;
+
+    const featMoreBtn = document.getElementById("featMoreBtn");
+    if(featMoreBtn){
+      featMoreBtn.addEventListener("click", ()=>{
+        document.querySelectorAll(".section")[1]?.scrollIntoView({behavior:"smooth", block:"start"});
+      });
+    }
+
+    bindOddsEvents();
+    bindMoreMarketsEvents();
+    return;
+  }
+
+  // resto continua DEMO
+  document.getElementById("bannerTitle").textContent = `${c.flag} ${c.name} • ${l?.name || ""}`;
+  document.getElementById("bannerSub").textContent = `Partidas e mercados (fictícios). Clique numa odd para abrir o bilhete.`;
+
   let featured = getAllMatchesForCountry(cId).filter(m => sameDay(m.startISO, todayISO));
   if(!featured.length) featured = getAllMatchesForCountry(cId).slice(0, 6);
   featured = featured.slice(0, 8);
@@ -1395,7 +1509,7 @@ function renderHome(){
             <div class="icon">⚽</div>
             <div>
               <div>PARTIDAS EM DESTAQUE</div>
-              <div class="sectionSub">${realNow ? "Seleções do dia (reais)" : "Seleções do dia (fictício)"}</div>
+              <div class="sectionSub">Seleções do dia (fictício)</div>
             </div>
           </div>
         </div>
@@ -1415,12 +1529,11 @@ function renderHome(){
           <div>PARTIDAS EM DESTAQUE</div>
         </div>
       </div>
-      <div class="sectionBody"><div class="empty">${realNow ? "Sem jogos reais no momento." : "Sem destaques no momento."}</div></div>
+      <div class="sectionBody"><div class="empty">Sem destaques no momento.</div></div>
     </div>
   `;
 
-  // Matches list (active league)
-  let matches = getMatchesForActiveLeague();
+  let matches = getMatchesForActiveLeagueDemo();
   if(q){
     matches = matches.filter(m => (m.home+" "+m.away+" "+m.leagueName).toLowerCase().includes(q));
   }
@@ -1433,21 +1546,20 @@ function renderHome(){
             <div class="icon">${esc(c.flag)}</div>
             <div>
               <div>${esc(l?.name || "Liga")}</div>
-              <div class="sectionSub">${realNow ? "Odds reais 1X2 (h2h)" : "Odds 1X2 + mais mercados"}</div>
+              <div class="sectionSub">Odds 1X2 + mais mercados</div>
             </div>
           </div>
         </div>
         <span class="pill" style="padding:6px 10px;">Sem dinheiro real</span>
       </div>
       <div class="sectionBody">
-        ${matches.length ? matches.map(m=>matchCompact(m)).join("") : `<div class="empty">${realNow ? "Não encontrei jogos reais agora." : "Sem partidas encontradas."}</div>`}
+        ${matches.length ? matches.map(m=>matchCompact(m)).join("") : `<div class="empty">Sem partidas encontradas.</div>`}
       </div>
     </div>
   `;
 
   view.innerHTML = featuredHTML + listHTML;
 
-  // Ver mais -> só rola pra lista
   const featMoreBtn = document.getElementById("featMoreBtn");
   if(featMoreBtn){
     featMoreBtn.addEventListener("click", ()=>{
@@ -1467,14 +1579,12 @@ function featuredCard(m){
       <div class="featTop">
         <div>
           <div class="teams">${esc(m.home)} <span style="color:var(--muted)">x</span> ${esc(m.away)}</div>
-          <div class="meta">${esc(m.leagueName)} • ${fmtDate(m.startISO)}</div>
+          <div class="meta">${esc(m.leagueName)} • ${fmtDate(m.startISO)}${m.__real ? " • real" : ""}</div>
         </div>
         <span class="featTag">DESTAQUE</span>
       </div>
       <div class="oddsRow">
-        ${opt.length ? opt.map(o=>oddBtn(m, m1, o)).join("") : `
-          <div class="empty" style="grid-column:1 / span 3; margin:12px;">Odds indisponíveis.</div>
-        `}
+        ${opt.map(o=>oddBtn(m, m1, o)).join("")}
       </div>
       <div class="moreRow">
         <button class="moreBtn" data-more="${esc(m.countryId)}::${esc(m.leagueId)}::${esc(m.id)}">Mais mercados</button>
@@ -1491,14 +1601,12 @@ function matchCompact(m){
       <div class="matchTop">
         <div>
           <div class="teams">${esc(m.home)} <span style="color:var(--muted)">x</span> ${esc(m.away)}</div>
-          <div class="meta">Início: ${fmtDate(m.startISO)}</div>
+          <div class="meta">Início: ${fmtDate(m.startISO)}${m.__real ? " • real" : ""}</div>
         </div>
         <span class="featTag" style="font-size:11px;">1X2</span>
       </div>
       <div class="oddsRow">
-        ${opt.length ? opt.map(o=>oddBtn(m, m1, o)).join("") : `
-          <div class="empty" style="grid-column:1 / span 3; margin:12px;">Odds indisponíveis.</div>
-        `}
+        ${opt.map(o=>oddBtn(m, m1, o)).join("")}
       </div>
       <div class="moreRow">
         <button class="moreBtn" data-more="${esc(m.countryId)}::${esc(m.leagueId)}::${esc(m.id)}">Mais mercados</button>
@@ -1508,13 +1616,15 @@ function matchCompact(m){
 }
 
 function oddBtn(match, market, opt){
-  const sel = isSelected(match.id, market.key, opt.id) ? "sel" : "";
-  const oddVal = Number(opt.odd);
-  const hasOdd = Number.isFinite(oddVal) && oddVal > 1;
+  const isValid = (opt.odd !== null && opt.odd !== undefined && isFinite(Number(opt.odd)));
+  const sel = isValid && isSelected(match.id, market.key, opt.id) ? "sel" : "";
+  const dis = !isValid ? "disabled" : "";
+  const val = isValid ? Number(opt.odd).toFixed(2) : "—";
 
   return `
-    <div class="odd ${sel}"
-      ${hasOdd ? `data-odd="1"` : ``}
+    <div class="odd ${sel} ${dis}"
+      data-odd="1"
+      data-disabled="${!isValid ? "1" : "0"}"
       data-country="${esc(match.countryId)}"
       data-league="${esc(match.leagueId)}"
       data-match-id="${esc(match.id)}"
@@ -1524,10 +1634,9 @@ function oddBtn(match, market, opt){
       data-market="${esc(market.name)}"
       data-option-id="${esc(opt.id)}"
       data-option="${esc(opt.label)}"
-      data-odd-val="${esc(String(hasOdd ? oddVal : ""))}"
-      style="${hasOdd ? "" : "opacity:.45; cursor:not-allowed;"}">
+      data-odd-val="${esc(String(isValid ? opt.odd : ""))}">
       <div class="n">${esc(opt.label)}</div>
-      <div class="v">${hasOdd ? oddVal.toFixed(2) : "—"}</div>
+      <div class="v">${val}</div>
     </div>
   `;
 }
@@ -1535,8 +1644,7 @@ function oddBtn(match, market, opt){
 function bindOddsEvents(){
   document.querySelectorAll("[data-odd='1']").forEach(el=>{
     el.addEventListener("click", ()=>{
-      const oddVal = Number(el.dataset.oddVal);
-      if(!Number.isFinite(oddVal) || oddVal <= 1) return;
+      if(el.dataset.disabled === "1") return;
 
       const sel = {
         id: uid("sl"),
@@ -1547,19 +1655,16 @@ function bindOddsEvents(){
         market: el.dataset.market,
         optionId: el.dataset.optionId,
         option: el.dataset.option,
-        odd: oddVal
+        odd: Number(el.dataset.oddVal)
       };
       const res = toggleSelection(sel);
 
-      // Atualiza seleção no mesmo mercado/jogo (na tela atual)
       document.querySelectorAll(`[data-odd='1'][data-match-id="${cssEsc(sel.matchId)}"][data-market-key="${cssEsc(sel.marketKey)}"]`)
         .forEach(x=>x.classList.remove("sel"));
       if(isSelected(sel.matchId, sel.marketKey, sel.optionId)) el.classList.add("sel");
 
       renderSlipBody();
-      // requisito: clicar em odd -> abre bilhete gaveta automaticamente
       openSlipDrawer();
-
       toast(res==="removed" ? "Removido" : "Adicionado");
     });
   });
@@ -1567,17 +1672,29 @@ function bindOddsEvents(){
 
 function bindMoreMarketsEvents(){
   document.querySelectorAll("[data-more]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
+    btn.addEventListener("click", async ()=>{
       const [countryId, leagueId, matchId] = btn.dataset.more.split("::");
+
+      // se for BR Série A real, pega do cache real
+      if(isRealLeague(countryId, leagueId)){
+        try{
+          const real = await fetchRealBrazilA();
+          const m = real.find(x => String(x.id) === String(matchId));
+          if(!m) return;
+          openMarketsForMatch(countryId, leagueId, {
+            ...m,
+            countryId, leagueId
+          });
+          return;
+        }catch(e){
+          toast("Não carregou mercados agora");
+        }
+      }
+
+      // demo
       const data = getLeagueData(countryId, leagueId);
       const m = (data.matches||[]).find(x=>x.id===matchId);
       if(!m) return;
-
-      // Série A real: só tem 1X2 por enquanto (porque o endpoint pediu só h2h)
-      if(REAL.enabled && countryId===REAL.countryId && leagueId===REAL.leagueId){
-        toast("Série A real: por enquanto só 1X2 (h2h)");
-      }
-
       openMarketsForMatch(countryId, leagueId, m);
     });
   });
@@ -1588,7 +1705,7 @@ function openMarketsForMatch(countryId, leagueId, m){
   const l = getLeague(countryId, leagueId);
 
   document.getElementById("mTitle").textContent = `Mercados — ${m.home} x ${m.away}`;
-  document.getElementById("mSub").textContent = `${c.flag} ${c.name} • ${l?.name || leagueId} • ${fmtDate(m.startISO)}`;
+  document.getElementById("mSub").textContent = `${c.flag} ${c.name} • ${l?.name || leagueId} • ${fmtDate(m.startISO)}${m.__real ? " • 1X2 real" : ""}`;
 
   const body = document.getElementById("marketsBody");
   body.innerHTML = `
@@ -1599,12 +1716,14 @@ function openMarketsForMatch(countryId, leagueId, m){
           <div class="mTitle">${esc(mk.name)}</div>
           <div class="${cls}">
             ${(mk.options||[]).map(opt=>{
-              const sel = isSelected(m.id, mk.key, opt.id) ? "sel" : "";
-              const oddVal = Number(opt.odd);
-              const hasOdd = Number.isFinite(oddVal) && oddVal > 1;
+              const isValid = (opt.odd !== null && opt.odd !== undefined && isFinite(Number(opt.odd)));
+              const sel = isValid && isSelected(m.id, mk.key, opt.id) ? "sel" : "";
+              const dis = !isValid ? "disabled" : "";
+              const val = isValid ? Number(opt.odd).toFixed(2) : "—";
               return `
-                <div class="odd ${sel}"
-                  ${hasOdd ? `data-odd="1"` : ``}
+                <div class="odd ${sel} ${dis}"
+                  data-odd="1"
+                  data-disabled="${!isValid ? "1" : "0"}"
                   data-country="${esc(countryId)}"
                   data-league="${esc(leagueId)}"
                   data-match-id="${esc(m.id)}"
@@ -1614,10 +1733,9 @@ function openMarketsForMatch(countryId, leagueId, m){
                   data-market="${esc(mk.name)}"
                   data-option-id="${esc(opt.id)}"
                   data-option="${esc(opt.label)}"
-                  data-odd-val="${esc(String(hasOdd ? oddVal : ""))}"
-                  style="${hasOdd ? "" : "opacity:.45; cursor:not-allowed;"}">
+                  data-odd-val="${esc(String(isValid ? opt.odd : ""))}">
                   <div class="n">${esc(opt.label)}</div>
-                  <div class="v">${hasOdd ? oddVal.toFixed(2) : "—"}</div>
+                  <div class="v">${val}</div>
                 </div>
               `;
             }).join("")}
@@ -1627,11 +1745,9 @@ function openMarketsForMatch(countryId, leagueId, m){
     }).join("")}
   `;
 
-  // bind odds inside drawer
   body.querySelectorAll("[data-odd='1']").forEach(el=>{
     el.addEventListener("click", ()=>{
-      const oddVal = Number(el.dataset.oddVal);
-      if(!Number.isFinite(oddVal) || oddVal <= 1) return;
+      if(el.dataset.disabled === "1") return;
 
       const sel = {
         id: uid("sl"),
@@ -1642,11 +1758,10 @@ function openMarketsForMatch(countryId, leagueId, m){
         market: el.dataset.market,
         optionId: el.dataset.optionId,
         option: el.dataset.option,
-        odd: oddVal
+        odd: Number(el.dataset.oddVal)
       };
       const res = toggleSelection(sel);
 
-      // Atualiza seleção no drawer (mesmo mercado/jogo)
       body.querySelectorAll(`[data-odd='1'][data-match-id="${cssEsc(sel.matchId)}"][data-market-key="${cssEsc(sel.marketKey)}"]`)
         .forEach(x=>x.classList.remove("sel"));
       if(isSelected(sel.matchId, sel.marketKey, sel.optionId)) el.classList.add("sel");
@@ -1733,7 +1848,7 @@ function renderSlipBody(){
       const arr = getSlip();
       arr.splice(idx,1);
       setSlip(arr);
-      renderAll(); // atualiza seleções visuais
+      renderAll();
     });
   });
 
@@ -1814,26 +1929,22 @@ function renderConta(){
           ${isAdmin ? `
             <div class="hint" style="margin-top:12px;">
               ADMIN: você pode criar partidas rápidas para a liga ativa (${esc(getCountry(cId).name)} • ${esc(getLeague(cId,lId)?.name||lId)}).
-              ${isRealActive() ? "<br><br><b>Obs:</b> Série A está em modo REAL (não cria demo aqui)." : ""}
+              (Obs: se for Brasil Série A real, isso é só demo local.)
             </div>
 
-            ${isRealActive() ? `
-              <div class="empty" style="margin-top:12px;">Série A real: criação manual desativada.</div>
-            ` : `
-              <div class="field">
-                <label>Time casa</label>
-                <input id="aHome" placeholder="Ex: Santos" />
-              </div>
-              <div class="field">
-                <label>Time fora</label>
-                <input id="aAway" placeholder="Ex: Vasco" />
-              </div>
-              <div class="field">
-                <label>Início (opcional)</label>
-                <input id="aWhen" placeholder="Ex: 2026-03-01 20:00" />
-              </div>
-              <button class="btn yellow" id="createMatch" style="width:100%; margin-top:12px;">Criar partida (admin)</button>
-            `}
+            <div class="field">
+              <label>Time casa</label>
+              <input id="aHome" placeholder="Ex: Santos" />
+            </div>
+            <div class="field">
+              <label>Time fora</label>
+              <input id="aAway" placeholder="Ex: Vasco" />
+            </div>
+            <div class="field">
+              <label>Início (opcional)</label>
+              <input id="aWhen" placeholder="Ex: 2026-03-01 20:00" />
+            </div>
+            <button class="btn yellow" id="createMatch" style="width:100%; margin-top:12px;">Criar partida (admin)</button>
           ` : `
             <div class="empty" style="margin-top:12px;">Somente o admin cria ligas/partidas por enquanto.</div>
           `}
@@ -1861,7 +1972,7 @@ function renderConta(){
       renderAll();
     });
 
-    if(isAdmin && !isRealActive()){
+    if(isAdmin){
       document.getElementById("createMatch")?.addEventListener("click", ()=>{
         const home = (document.getElementById("aHome").value||"").trim();
         const away = (document.getElementById("aAway").value||"").trim();
@@ -1901,11 +2012,6 @@ async function renderAll(){
   setPoints(getPoints());
   syncSlipUI();
 
-  // ✅ se estiver em Brasil → Série A, carrega real antes de renderizar home
-  if(getTab()==="inicio" && isRealActive()){
-    await ensureRealSerieA();
-  }
-
   renderCountriesRow();
   renderLeaguesTabs();
   renderTabButtons();
@@ -1913,7 +2019,7 @@ async function renderAll(){
   const tab = getTab();
 
   if(tab === "inicio"){
-    renderHome();
+    await renderHome();
   } else if(tab === "perfil"){
     renderConta();
   } else {
@@ -1977,80 +2083,7 @@ installBtn.addEventListener("click", async ()=>{
 if("serviceWorker" in navigator){
   window.addEventListener("load", ()=> navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
-/* ===== CARREGAR BRASILEIRÃO REAL ===== */
-async function loadSerieAReal(){
 
-  try{
-
-    if(getActiveCountryId()!=="BR" || getActiveLeagueId()!=="BRA-A")
-      return;
-
-    const cacheKey="real_bra_cache";
-    const last=Number(localStorage.getItem(cacheKey)||0);
-
-    // evita gastar créditos
-    if(Date.now()-last < 30*60*1000) return;
-
-    const res = await fetch(
-      "/.netlify/functions/odds?sportKey=soccer_brazil_campeonato&markets=h2h&regions=eu"
-    );
-
-    const data = await res.json();
-    if(!Array.isArray(data)) return;
-
-    const matches=data.map(g=>{
-
-      const home=g.home_team;
-      const away=g.away_team;
-
-      let h,d,a;
-
-      const mk=g.bookmakers?.[0]?.markets?.find(m=>m.key==="h2h");
-
-      mk?.outcomes?.forEach(o=>{
-        if(o.name===home) h=o.price;
-        if(o.name===away) a=o.price;
-        if(o.name==="Draw") d=o.price;
-      });
-
-      return{
-        id:uid("real"),
-        home,
-        away,
-        startISO:g.commence_time,
-        markets:[{
-          key:"1x2",
-          name:"Resultado (1X2)",
-          type:"three",
-          options:[
-            {id:"1",label:home,odd:h},
-            {id:"X",label:"Empate",odd:d},
-            {id:"2",label:away,odd:a}
-          ]
-        }]
-      };
-    });
-
-    const league=getLeagueData("BR","BRA-A");
-    league.matches=matches;
-
-    setLeagueData("BR","BRA-A",league);
-
-    localStorage.setItem(cacheKey,Date.now());
-
-    renderAll();
-
-    console.log("✅ Série A real carregada");
-
-  }catch(e){
-    console.log(e);
-  }
-}
-
-/* chama automaticamente */
-loadSerieAReal();
-  }
-}
 /* ===== Init ===== */
 if(!localStorage.getItem(LS.COUNTRY)) setActiveCountryId("BR");
 const c = getCountry(getActiveCountryId());
@@ -2058,7 +2091,6 @@ if(!localStorage.getItem(LS.LEAGUE)) setActiveLeagueId(c.leagues?.[0]?.id || "BR
 if(!localStorage.getItem(LS.POINTS)) setPoints(2000);
 
 renderAll();
-loadSerieAReal(true);
 </script>
 </body>
 </html>
