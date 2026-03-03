@@ -326,9 +326,6 @@
 
     /* Betslip */
     .betslip{
-      max-height: calc(100vh - 120px);
-      display: flex;
-      flex-direction: column;
       position:fixed;
       right:14px;
       bottom:98px;
@@ -1425,20 +1422,11 @@ async function refreshSerieAReal(){
     }
 
     function openGame(matchId){
-
-  state.game.open = true;
-  state.game.matchId = matchId;
-
-  // ✅ diminui o bilhete automaticamente
-  state.ui.betslipMini = true;
-  saveUI(state.ui);
-
-  renderGameScreen();
-  $("#gameScreen").classList.add("show");
-
-  // ✅ redesenha o bilhete já diminuído
-  renderBetslip();
-}
+      state.game.open = true;
+      state.game.matchId = matchId;
+      saveUI(state.ui);
+      renderGameScreen();
+      $("#gameScreen").classList.add("show");
     }
     function closeGame(){
       state.game.open = false;
@@ -1622,7 +1610,7 @@ async function refreshSerieAReal(){
 
       slipEl.classList.toggle("hide", state.slip.selections.length===0);
       slipEl.classList.toggle("mini", !!state.ui.betslipMini);
-      $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Diminuir";
+      $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Mini";
       $("#slipCount").textContent = String(state.slip.selections.length);
 
       $("#modeLabel").textContent = state.slip.selections.length > 1 ? "Múltipla" : "Simples";
@@ -2104,21 +2092,6 @@ async function refreshSerieAReal(){
 
       $("#btnClosePlans").onclick = closePlans;
     }
-// ✅ clique em qualquer lugar (fora do bilhete) diminui o bilhete
-document.addEventListener("click", (e)=>{
-  const slip = $("#betslip");
-  if(!slip || slip.classList.contains("hide")) return;
-
-  // se clicou dentro do bilhete, não faz nada
-  if(slip.contains(e.target)) return;
-
-  // se clicou no botão Diminuir/Expandir, não faz nada (evita conflito)
-  if(e.target?.id === "btnMini") return;
-
-  state.ui.betslipMini = true;
-  saveUI(state.ui);
-  renderBetslip();
-}, true);
 
     // ✅ init agora é async, e se estiver na Série A já tenta puxar real
     async function init(){
