@@ -786,7 +786,114 @@
   <script>
     const LS = { DB:"cravai_db_v1", AUTH:"cravai_auth_v1", UI:"cravai_ui_v1" };
     const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
+// ====== REAL ODDS (Netlify Function) ======
+const ODDS_ENDPOINT = "/.netlify/functions/odds";
 
+function toWhenTxt(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString("pt-BR", { weekday:"short", day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" });
+  }catch(e){
+    return "—";
+  }
+}
+
+// escolhe um bookmaker "melhor" (mais atualizado) ou o primeiro
+function pickBestBookmaker(bookmakers){
+  if(!Array.isArray(bookmakers) || bookmakers.length===0) return null;
+  // tenta pegar o mais recente
+  const sorted = [...bookmakers].sort((a,b)=>{
+    const ta = Date.parse(a.last_update||"")||0;
+    const tb = Date.parse(b.last_update||"")||0;
+    return tb - ta;
+  });
+  return sorted[0];
+}
+
+function parseH2H(event){
+  const bm = pickBestBookmaker(event.bookmakers);
+  if(!bm) return null;
+
+  const mkt = (bm.markets||[]).find(x=>x.key==="h2h");
+  if(!mkt) return null;
+
+  const out = mkt.outcomes || [];
+  const home = out.find(o=>o.name === event.home_team);
+  const away = out.find(o=>o.name === event.away_team);
+  const draw = out.find(o=>String(o.name).toLowerCase()==="draw");
+
+  if(!home || !away) return null;
+
+  return {
+    "1": Number(home.price).toFixed(2),
+    "2": Number(away.price).toFixed(2),
+    "X": draw ? Number(draw.price).toFixed(2) : "—"
+  };
+}
+
+function buildMarketsFromReal1X2(matchId, home, away, odds1x2){
+  // Por enquanto: só 1X2 REAL.
+  // Os outros mercados ficam demo até você adicionar endpoints de markets (outra etapa).
+  const mk = (tab, title, picks)=>({ id: uid(), matchId, tab, title, picks: picks.map(p=>({ id: uid(), ...p })) });
+
+  return [
+    mk("Principais","Resultado (1X2)", [
+      { label: `${home} vence`, odd: odds1x2["1"] },
+      { label: `Empate`, odd: odds1x2["X"] },
+      { label: `${away} vence`, odd: odds1x2["2"] },
+    ]),
+  ];
+}
+
+async function refreshSerieAReal(){
+  try{
+    toast("Buscando jogos reais Série A...");
+    const url = `${ODDS_ENDPOINT}?sportKey=soccer_brazil_campeonato&markets=h2h&regions=eu&oddsFormat=decimal`;
+    const res = await fetch(url, { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+
+    if(!Array.isArray(data) || data.length===0){
+      toast("Sem jogos reais agora (API).");
+      return;
+    }
+
+    const realMatches = [];
+    for(const ev of data){
+      const odds1x2 = parseH2H(ev);
+      if(!odds1x2) continue;
+
+      const id = ev.id || uid();
+      const home = ev.home_team;
+      const away = ev.away_team;
+
+      realMatches.push({
+        id,
+        leagueId: "br-seriea",              // joga dentro do Brasileirão Série A do seu layout
+        home,
+        away,
+        whenTxt: toWhenTxt(ev.commence_time),
+        stadium: "—",
+        featured: true,                    // pode mudar depois
+        odds1x2,
+        markets: buildMarketsFromReal1X2(id, home, away, odds1x2),
+      });
+    }
+
+    // troca só a Série A, mantém demo das outras ligas
+    state.db.matches = [
+      ...state.db.matches.filter(m=>m.leagueId !== "br-seriea"),
+      ...realMatches
+    ];
+
+    saveDB(state.db);
+    toast(`Série A atualizada: ${realMatches.length} jogos reais`);
+    renderLeagues(); renderMatches(); renderFeatured();
+  }catch(e){
+    console.error(e);
+    toast("Falha ao puxar odds reais (ver console).");
+  }
+}
     const $ = (s)=>document.querySelector(s);
     const $$ = (s)=>Array.from(document.querySelectorAll(s));
     const fmtCP = (n)=>{ const x=Number(n||0); try{return x.toLocaleString("pt-BR")}catch{return String(x)} };
@@ -1898,7 +2005,7 @@
       // ✅ Atualizar: se estiver na Série A, puxa real; senão demo
       $("#btnRefresh").onclick = async ()=> {
         if(state.ui.leagueId === "br-seriea"){
-          await updateBRSerieAReal();
+          await refreshSerieAReal();
         }else{
           toast("Atualizado (demo).");
           renderFeatured();
@@ -1992,7 +2099,7 @@
       ensureDefaults();
       renderAll();
       await registerSW();
-
+      refreshSerieAReal();
       if(state.ui.leagueId === "br-seriea"){
         await updateBRSerieAReal();
       }
