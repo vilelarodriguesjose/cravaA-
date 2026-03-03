@@ -786,114 +786,7 @@
   <script>
     const LS = { DB:"cravai_db_v1", AUTH:"cravai_auth_v1", UI:"cravai_ui_v1" };
     const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
-// ====== REAL ODDS (Netlify Function) ======
-const ODDS_ENDPOINT = "/.netlify/functions/odds";
 
-function toWhenTxt(iso){
-  try{
-    const d = new Date(iso);
-    return d.toLocaleString("pt-BR", { weekday:"short", day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" });
-  }catch(e){
-    return "—";
-  }
-}
-
-// escolhe um bookmaker "melhor" (mais atualizado) ou o primeiro
-function pickBestBookmaker(bookmakers){
-  if(!Array.isArray(bookmakers) || bookmakers.length===0) return null;
-  // tenta pegar o mais recente
-  const sorted = [...bookmakers].sort((a,b)=>{
-    const ta = Date.parse(a.last_update||"")||0;
-    const tb = Date.parse(b.last_update||"")||0;
-    return tb - ta;
-  });
-  return sorted[0];
-}
-
-function parseH2H(event){
-  const bm = pickBestBookmaker(event.bookmakers);
-  if(!bm) return null;
-
-  const mkt = (bm.markets||[]).find(x=>x.key==="h2h");
-  if(!mkt) return null;
-
-  const out = mkt.outcomes || [];
-  const home = out.find(o=>o.name === event.home_team);
-  const away = out.find(o=>o.name === event.away_team);
-  const draw = out.find(o=>String(o.name).toLowerCase()==="draw");
-
-  if(!home || !away) return null;
-
-  return {
-    "1": Number(home.price).toFixed(2),
-    "2": Number(away.price).toFixed(2),
-    "X": draw ? Number(draw.price).toFixed(2) : "—"
-  };
-}
-
-function buildMarketsFromReal1X2(matchId, home, away, odds1x2){
-  // Por enquanto: só 1X2 REAL.
-  // Os outros mercados ficam demo até você adicionar endpoints de markets (outra etapa).
-  const mk = (tab, title, picks)=>({ id: uid(), matchId, tab, title, picks: picks.map(p=>({ id: uid(), ...p })) });
-
-  return [
-    mk("Principais","Resultado (1X2)", [
-      { label: `${home} vence`, odd: odds1x2["1"] },
-      { label: `Empate`, odd: odds1x2["X"] },
-      { label: `${away} vence`, odd: odds1x2["2"] },
-    ]),
-  ];
-}
-
-async function refreshSerieAReal(){
-  try{
-    toast("Buscando jogos reais Série A...");
-    const url = `${ODDS_ENDPOINT}?sportKey=soccer_brazil_campeonato&markets=h2h&regions=eu&oddsFormat=decimal`;
-    const res = await fetch(url, { cache:"no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-
-    if(!Array.isArray(data) || data.length===0){
-      toast("Sem jogos reais agora (API).");
-      return;
-    }
-
-    const realMatches = [];
-    for(const ev of data){
-      const odds1x2 = parseH2H(ev);
-      if(!odds1x2) continue;
-
-      const id = ev.id || uid();
-      const home = ev.home_team;
-      const away = ev.away_team;
-
-      realMatches.push({
-        id,
-        leagueId: "br-seriea",              // joga dentro do Brasileirão Série A do seu layout
-        home,
-        away,
-        whenTxt: toWhenTxt(ev.commence_time),
-        stadium: "—",
-        featured: true,                    // pode mudar depois
-        odds1x2,
-        markets: buildMarketsFromReal1X2(id, home, away, odds1x2),
-      });
-    }
-
-    // troca só a Série A, mantém demo das outras ligas
-    state.db.matches = [
-      ...state.db.matches.filter(m=>m.leagueId !== "br-seriea"),
-      ...realMatches
-    ];
-
-    saveDB(state.db);
-    toast(`Série A atualizada: ${realMatches.length} jogos reais`);
-    renderLeagues(); renderMatches(); renderFeatured();
-  }catch(e){
-    console.error(e);
-    toast("Falha ao puxar odds reais (ver console).");
-  }
-}
     const $ = (s)=>document.querySelector(s);
     const $$ = (s)=>Array.from(document.querySelectorAll(s));
     const fmtCP = (n)=>{ const x=Number(n||0); try{return x.toLocaleString("pt-BR")}catch{return String(x)} };
@@ -1024,14 +917,34 @@ async function refreshSerieAReal(){
     }
 
     /* ===========================
-       REAL ODDS (Brasileirão Série A) — integra com seu DB
+       REAL ODDS (todas as ligas do pedido)
        =========================== */
-    const REAL = {
-      sportKey: "soccer_brazil_campeonato",
+
+    // Netlify Function
+    const ODDS_ENDPOINT = "/.netlify/functions/odds";
+
+    // Liga do seu layout -> sportKey da API
+    const REAL_LEAGUE_MAP = {
+      "br-seriea": "soccer_brazil_campeonato",
+      "eng-pl":    "soccer_epl",
+      "esp-ll":    "soccer_spain_la_liga",
+      "ita-sa":    "soccer_italy_serie_a",
+      "ger-bl":    "soccer_germany_bundesliga",
+      "fra-l1":    "soccer_france_ligue_one",
+      // série B fica demo por enquanto:
+      // "br-serieb": "soccer_brazil_serie_b"
+    };
+
+    // parâmetros (iguais para todas)
+    const REAL_CFG = {
       markets: "h2h",
-      regions: "us,eu",
+      regions: "eu",       // pode trocar pra "us,eu" se quiser mais casas
       oddsFormat: "decimal"
     };
+
+    // cache simples (memória) pra não fazer request toda hora ao clicar
+    const realCache = {}; // { [leagueId]: { ts:number, count:number } }
+    const REAL_COOLDOWN_MS = 60 * 1000; // 1 min
 
     function fmtWhenFromISO(iso){
       try{
@@ -1044,37 +957,31 @@ async function refreshSerieAReal(){
       }
     }
 
-    async function fetchOddsBR(){
+    async function fetchOddsBySportKey(sportKey){
       const url =
-        `/.netlify/functions/odds` +
-        `?sportKey=${encodeURIComponent(REAL.sportKey)}` +
-        `&markets=${encodeURIComponent(REAL.markets)}` +
-        `&regions=${encodeURIComponent(REAL.regions)}` +
-        `&oddsFormat=${encodeURIComponent(REAL.oddsFormat)}`;
+        `${ODDS_ENDPOINT}` +
+        `?sportKey=${encodeURIComponent(sportKey)}` +
+        `&markets=${encodeURIComponent(REAL_CFG.markets)}` +
+        `&regions=${encodeURIComponent(REAL_CFG.regions)}` +
+        `&oddsFormat=${encodeURIComponent(REAL_CFG.oddsFormat)}`;
 
-      const res = await fetch(url, { cache: "no-store" });
-
-      // Se der erro, a gente joga o motivo no toast
+      const res = await fetch(url, { cache:"no-store" });
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
-
       const data = await res.json();
-      if(!Array.isArray(data)) return [];
-      return data;
+      return Array.isArray(data) ? data : [];
     }
 
     function pickH2HOdds(ev){
       const home = ev.home_team;
       const away = ev.away_team;
-
       if(!Array.isArray(ev.bookmakers)) return null;
 
-      // tenta achar um bookmaker que tenha 1, X, 2
+      // tenta achar algum bookmaker que tenha h2h
       for(const b of ev.bookmakers){
         const mk = (b.markets||[]).find(m => m.key === "h2h");
         if(!mk || !Array.isArray(mk.outcomes)) continue;
 
         let o1=null, ox=null, o2=null;
-
         for(const o of mk.outcomes){
           const name = String(o.name||"").toLowerCase();
           const price = Number(o.price);
@@ -1086,30 +993,22 @@ async function refreshSerieAReal(){
         }
 
         if(o1 && o2){
-          return {
-            "1": o1,
-            "X": ox || null,
-            "2": o2
-          };
+          return {"1": o1, "X": ox || null, "2": o2};
         }
       }
       return null;
     }
 
-    function realEventToMatch(ev){
+    function realEventToMatch(ev, leagueId){
       const home = ev.home_team;
       const away = ev.away_team;
-
-      const odds = pickH2HOdds(ev);
       const whenTxt = fmtWhenFromISO(ev.commence_time);
 
-      // cria match no seu formato (mantém mercados demo por enquanto)
-      const m = mkMatch("br-seriea", home, away, whenTxt, "—");
-
-      // id estável
+      // cria no seu formato (mantém mercados demo por enquanto)
+      const m = mkMatch(leagueId, home, away, whenTxt, "—");
       m.id = ev.id || m.id;
 
-      // odds reais 1x2 (se vier X beleza; se não vier, usa demo pro X)
+      const odds = pickH2HOdds(ev);
       if(odds && odds["1"] && odds["2"]){
         const demoX = Number(rndOdd(2.90, 3.70));
         m.odds1x2 = {
@@ -1121,28 +1020,47 @@ async function refreshSerieAReal(){
 
       m._real = true;
       m.featured = true;
-
       return m;
     }
 
-    async function updateBRSerieAReal(){
+    async function updateLeagueReal(leagueId, {force=false} = {}){
+      const sportKey = REAL_LEAGUE_MAP[leagueId];
+      if(!sportKey){
+        toast("Essa liga está em demo (sem odds reais).");
+        return;
+      }
+
+      const now = Date.now();
+      const prev = realCache[leagueId];
+      if(!force && prev && (now - prev.ts) < REAL_COOLDOWN_MS){
+        // evita gastar request; só re-render
+        renderLeagues(); renderMatches(); renderFeatured();
+        if(state.game.open) renderGameScreen();
+        return;
+      }
+
       try{
-        const events = await fetchOddsBR();
+        toast("Buscando jogos reais da liga...");
+        const events = await fetchOddsBySportKey(sportKey);
+
         if(!events.length){
           toast("API retornou vazio (mantive demo).");
+          realCache[leagueId] = { ts: now, count: 0 };
           return;
         }
 
-        const newMatches = events
-          .map(realEventToMatch)
-          .slice(0, 30);
+        const realMatches = events
+          .map(ev => realEventToMatch(ev, leagueId))
+          .slice(0, 40);
 
-        // remove antigos da br-seriea e coloca os reais
-        state.db.matches = state.db.matches.filter(x => x.leagueId !== "br-seriea");
-        state.db.matches.unshift(...newMatches);
+        // troca só a liga selecionada
+        state.db.matches = state.db.matches.filter(x => x.leagueId !== leagueId);
+        state.db.matches.unshift(...realMatches);
 
         saveDB(state.db);
-        toast("Série A atualizada (odds reais 1X2) ✅");
+        realCache[leagueId] = { ts: now, count: realMatches.length };
+
+        toast(`Liga atualizada: ${realMatches.length} jogos reais ✅`);
 
         renderLeagues();
         renderMatches();
@@ -1150,7 +1068,7 @@ async function refreshSerieAReal(){
         if(state.game.open) renderGameScreen();
       }catch(e){
         console.log("Erro odds reais:", e);
-        toast("Falha: " + (e?.message || e));
+        toast("Falha ao puxar odds reais (ver console).");
       }
     }
 
@@ -1261,6 +1179,11 @@ async function refreshSerieAReal(){
           state.ui.leagueId = (c.leagues[0]?.id)||null;
           saveUI(state.ui);
           renderCountries(); renderLeagues(); renderMatches(); renderFeatured();
+
+          // ao trocar país, se a liga default desse país for real, tenta buscar
+          if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
+            updateLeagueReal(state.ui.leagueId);
+          }
         };
         wrap.appendChild(el);
       });
@@ -1278,11 +1201,12 @@ async function refreshSerieAReal(){
 
       c.leagues.forEach(l=>{
         const gamesCount = state.db.matches.filter(m=>m.leagueId===l.id).length;
+        const isReal = !!REAL_LEAGUE_MAP[l.id];
         const el = document.createElement("div");
         el.className = "leagueItem";
         el.innerHTML = `
           <div>
-            <div class="leagueName">${esc(l.name)}</div>
+            <div class="leagueName">${esc(l.name)} ${isReal ? '<span class="badge" style="margin-left:6px">REAL</span>' : ''}</div>
             <div class="smallText">${c.flag} ${esc(c.name)} • ${gamesCount} jogos</div>
           </div>
           <span class="badge">${gamesCount}</span>
@@ -1292,6 +1216,11 @@ async function refreshSerieAReal(){
           saveUI(state.ui);
           renderLeagues();
           renderMatches();
+
+          // ✅ se for liga real, atualiza automaticamente (com cooldown)
+          if(REAL_LEAGUE_MAP[l.id]){
+            updateLeagueReal(l.id);
+          }
         };
         list.appendChild(el);
       });
@@ -1449,14 +1378,12 @@ async function refreshSerieAReal(){
       $("#gameTitle").textContent = `${m.home} x ${m.away}`;
       $("#gameSub").textContent = `${country?.flag||""} ${league?.name||""} • ${m.whenTxt} • ${m.stadium}`;
 
-      // Toggle visual
       const sw = $("#builderSwitchGame");
       sw.classList.toggle("on", !!state.ui.builderOn);
       $("#builderBadge").textContent = state.ui.builderOn ? "ON" : "OFF";
       $("#builderBadge").style.borderColor = state.ui.builderOn ? "rgba(23,201,100,.32)" : "rgba(255,255,255,.12)";
       $("#builderBadge").style.background = state.ui.builderOn ? "rgba(23,201,100,.12)" : "rgba(255,255,255,.05)";
 
-      // Tabs
       const tabsWrap = $("#gameTabs");
       tabsWrap.innerHTML = "";
       TABS.forEach(t=>{
@@ -1471,7 +1398,6 @@ async function refreshSerieAReal(){
         tabsWrap.appendChild(el);
       });
 
-      // Markets for active tab
       const area = $("#marketsArea");
       area.innerHTML = "";
 
@@ -1529,11 +1455,7 @@ async function refreshSerieAReal(){
       addSelection(m, { title: marketTitle, tab }, { label: pickLabel, odd }, pickKey);
     }
 
-    // >>> REGRA PRINCIPAL (igual casas):
-    // OFF: múltipla liberada, mas NO MESMO JOGO só 1 seleção (substitui)
-    // ON: Bet Builder NO MESMO JOGO (várias seleções), mas 1 por mercado dentro do jogo (anti-conflito)
     function addSelection(match, market, pick, key){
-      // toggle remove
       if(isSelectedKey(key)){
         state.slip.selections = state.slip.selections.filter(s=>s.key!==key);
         renderBetslip(); renderAll();
@@ -1543,10 +1465,8 @@ async function refreshSerieAReal(){
       const isSameMatch = (s)=> s.matchId === match.id;
 
       if(!state.ui.builderOn){
-        // remove só as seleções do MESMO jogo (mantém as de outros jogos)
         state.slip.selections = state.slip.selections.filter(s => !isSameMatch(s));
       }else{
-        // ON: permite múltiplas seleções no mesmo jogo, mas só 1 por mercado no mesmo jogo
         state.slip.selections = state.slip.selections.filter(s => {
           const sameMatch = s.matchId === match.id;
           const sameMarket = s.marketTitle === market.title && s.tab === market.tab;
@@ -2002,10 +1922,10 @@ async function refreshSerieAReal(){
     function hookUI(){
       $$(".navBtn").forEach(b=> b.onclick = ()=> setNav(b.dataset.nav));
 
-      // ✅ Atualizar: se estiver na Série A, puxa real; senão demo
+      // ✅ Atualizar: puxa odds reais da liga selecionada (se suportada)
       $("#btnRefresh").onclick = async ()=> {
-        if(state.ui.leagueId === "br-seriea"){
-          await refreshSerieAReal();
+        if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
+          await updateLeagueReal(state.ui.leagueId, { force:true });
         }else{
           toast("Atualizado (demo).");
           renderFeatured();
@@ -2046,7 +1966,6 @@ async function refreshSerieAReal(){
 
       $("#btnCloseGame").onclick = closeGame;
 
-      // TOGGLE DENTRO DO JOGO
       $("#toggleBuilderGame").onclick = ()=>{
         state.ui.builderOn = !state.ui.builderOn;
         saveUI(state.ui);
@@ -2093,15 +2012,15 @@ async function refreshSerieAReal(){
       $("#btnClosePlans").onclick = closePlans;
     }
 
-    // ✅ init agora é async, e se estiver na Série A já tenta puxar real
     async function init(){
       hookUI();
       ensureDefaults();
       renderAll();
       await registerSW();
-      refreshSerieAReal();
-      if(state.ui.leagueId === "br-seriea"){
-        await updateBRSerieAReal();
+
+      // ✅ ao abrir o site, tenta puxar odds reais da liga atual (se suportada)
+      if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
+        await updateLeagueReal(state.ui.leagueId, { force:true });
       }
     }
 
