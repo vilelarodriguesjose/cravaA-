@@ -1890,6 +1890,15 @@
       state.db.users.push(user);
       saveDB(state.db);
       setAuth(user.id);
+      fetch("/.netlify/functions/profile-upsert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      email,
+      username,
+      fullname
+  })
+}).catch(()=>{});
       toast("Conta criada!");
       closeAuth();
       renderTopbar(); renderHistory(); renderLeaguesView();
