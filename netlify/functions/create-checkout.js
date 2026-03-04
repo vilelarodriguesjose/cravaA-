@@ -68,11 +68,13 @@ exports.handler = async (event) => {
     }
 
     const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-      customer_email: email,
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${siteUrl}/?pay=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/?pay=cancel`,
+  mode: "subscription",
+  customer_email: email,
+  line_items: [{ price: priceId, quantity: 1 }],
+  metadata: { plan }, // ✅ pro ou elite
+  success_url: `${siteUrl}/?pay=success&session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${siteUrl}/?pay=cancel`,
+});
     });
 
     return {
