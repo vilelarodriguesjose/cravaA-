@@ -759,6 +759,7 @@
             <div>
               <strong>Free</strong>
               <div class="smallText">Acesso básico • CP inicial • histórico</div>
+              <div class="smallText">Stack: Stripe + Supabase + Netlify Functions</div>
             </div>
             <span class="badge">R$ 0</span>
           </div>
@@ -766,6 +767,7 @@
             <div>
               <strong>Pro</strong>
               <div class="smallText">Recursos extras • ligas premium • mais filtros</div>
+              <div class="smallText">Checkout: create-checkout + webhook (já funcionando)</div>
             </div>
             <span class="badge">R$ 29,90</span>
             <button class="btn small primary" id="btnBuyPro">Assinar</button>
@@ -774,13 +776,14 @@
             <div>
               <strong>Elite</strong>
               <div class="smallText">Tudo do Pro • destaque • rankings avançados</div>
+              <div class="smallText">Checkout: create-checkout + webhook (já funcionando)</div>
             </div>
             <span class="badge">R$ 49,90</span>
             <button class="btn small yellow" id="btnBuyElite">Assinar</button>
           </div>
         </div>
         <div class="sep"></div>
-        <div class="smallText">Pagamento real não está ativo (protótipo). Isso é só a UI.</div>
+        <div class="smallText">Pagamento real: Stripe. Persistência/planos: Supabase. Backend: Netlify Functions.</div>
       </div>
     </div>
   </div>
@@ -919,13 +922,10 @@
     }
 
     /* ===========================
-       REAL ODDS (todas as ligas do pedido)
+       REAL ODDS
        =========================== */
-
-    // Netlify Function
     const ODDS_ENDPOINT = "/.netlify/functions/odds";
 
-    // Liga do seu layout -> sportKey da API
     const REAL_LEAGUE_MAP = {
       "br-seriea": "soccer_brazil_campeonato",
       "eng-pl":    "soccer_epl",
@@ -933,20 +933,17 @@
       "ita-sa":    "soccer_italy_serie_a",
       "ger-bl":    "soccer_germany_bundesliga",
       "fra-l1":    "soccer_france_ligue_one",
-      // série B fica demo por enquanto:
       // "br-serieb": "soccer_brazil_serie_b"
     };
 
-    // parâmetros (iguais para todas)
     const REAL_CFG = {
       markets: "h2h",
-      regions: "eu",       // pode trocar pra "us,eu" se quiser mais casas
+      regions: "eu",
       oddsFormat: "decimal"
     };
 
-    // cache simples (memória) pra não fazer request toda hora ao clicar
-    const realCache = {}; // { [leagueId]: { ts:number, count:number } }
-    const REAL_COOLDOWN_MS = 60 * 1000; // 1 min
+    const realCache = {};
+    const REAL_COOLDOWN_MS = 60 * 1000;
 
     function fmtWhenFromISO(iso){
       try{
@@ -978,7 +975,6 @@
       const away = ev.away_team;
       if(!Array.isArray(ev.bookmakers)) return null;
 
-      // tenta achar algum bookmaker que tenha h2h
       for(const b of ev.bookmakers){
         const mk = (b.markets||[]).find(m => m.key === "h2h");
         if(!mk || !Array.isArray(mk.outcomes)) continue;
@@ -1006,7 +1002,6 @@
       const away = ev.away_team;
       const whenTxt = fmtWhenFromISO(ev.commence_time);
 
-      // cria no seu formato (mantém mercados demo por enquanto)
       const m = mkMatch(leagueId, home, away, whenTxt, "—");
       m.id = ev.id || m.id;
 
@@ -1035,7 +1030,6 @@
       const now = Date.now();
       const prev = realCache[leagueId];
       if(!force && prev && (now - prev.ts) < REAL_COOLDOWN_MS){
-        // evita gastar request; só re-render
         renderLeagues(); renderMatches(); renderFeatured();
         if(state.game.open) renderGameScreen();
         return;
@@ -1055,7 +1049,6 @@
           .map(ev => realEventToMatch(ev, leagueId))
           .slice(0, 40);
 
-        // troca só a liga selecionada
         state.db.matches = state.db.matches.filter(x => x.leagueId !== leagueId);
         state.db.matches.unshift(...realMatches);
 
@@ -1078,7 +1071,16 @@
       try{ const raw = localStorage.getItem(LS.AUTH); return raw ? JSON.parse(raw) : { userId:null }; }
       catch(e){ return { userId:null }; }
     }
-    function setAuth(userId){ localStorage.setItem(LS.AUTH, JSON.stringify({ userId })); }
+
+    // ✅ corrigido: se userId for null, remove do LS (logout limpo)
+    function setAuth(userId){
+      if(!userId){
+        localStorage.removeItem(LS.AUTH);
+        return;
+      }
+      localStorage.setItem(LS.AUTH, JSON.stringify({ userId }));
+    }
+
     function getCurrentUser(db){
       const a = getAuth();
       if(!a.userId) return null;
@@ -1135,7 +1137,7 @@
       }else{
         const name = (u.username && u.username.trim()) ? u.username.trim() : "Usuário";
         const planTxt = (u.plan || "free").toUpperCase();
-pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</span> <span>${fmtCP(u.cp)} CP</span> <span style="opacity:.65">•</span> <span>${esc(planTxt)}</span>`;
+        pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</span> <span>${fmtCP(u.cp)} CP</span> <span style="opacity:.65">•</span> <span>${esc(planTxt)}</span>`;
         pill.classList.remove("hide");
         btnLogout.classList.remove("hide");
         btnEnter.classList.add("hide");
@@ -1183,7 +1185,6 @@ pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</s
           saveUI(state.ui);
           renderCountries(); renderLeagues(); renderMatches(); renderFeatured();
 
-          // ao trocar país, se a liga default desse país for real, tenta buscar
           if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
             updateLeagueReal(state.ui.leagueId);
           }
@@ -1220,7 +1221,6 @@ pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</s
           renderLeagues();
           renderMatches();
 
-          // ✅ se for liga real, atualiza automaticamente (com cooldown)
           if(REAL_LEAGUE_MAP[l.id]){
             updateLeagueReal(l.id);
           }
@@ -1856,37 +1856,42 @@ pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</s
     }
     function closeAuth(){ $("#authModal").classList.remove("show"); }
 
+    // ✅ CORRIGIDO: fluxo de login/registro + sem erro de parse
     function submitAuth(){
       const email = ($("#authEmail").value || "").trim().toLowerCase();
       const pass = ($("#authPass").value || "").trim();
 
-      if(!email.includes("@") || pass.length < 4){ toast("Email/senha inválidos."); return; }
-
-      if(authMode === "login"){
-  const u = state.db.users.find(x=>x.email===email && x.pass===pass);
-  if(!u){ toast("Dados incorretos."); return; }
-
-  setAuth(u.id);
-
-  // buscar plano no Supabase
-  fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(email)}`)
-    .then(r=>r.json())
-    .then(j=>{
-      u.plan = j.plan || "free";
-      saveDB(state.db);
-      renderTopbar();
-    })
-    .catch(()=>{});
-
-  toast("Entrou!");
-  closeAuth();
-  renderTopbar(); 
-  renderHistory(); 
-  renderLeaguesView();
-  return;
-}
+      if(!email.includes("@") || pass.length < 4){
+        toast("Email/senha inválidos.");
+        return;
       }
 
+      // LOGIN
+      if(authMode === "login"){
+        const u = state.db.users.find(x=>x.email===email && x.pass===pass);
+        if(!u){ toast("Dados incorretos."); return; }
+
+        setAuth(u.id);
+
+        // buscar plano no Supabase
+        fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(email)}`)
+          .then(r=>r.json())
+          .then(j=>{
+            u.plan = j?.plan || "free";
+            saveDB(state.db);
+            renderTopbar();
+          })
+          .catch(()=>{});
+
+        toast("Entrou!");
+        closeAuth();
+        renderTopbar();
+        renderHistory();
+        renderLeaguesView();
+        return;
+      }
+
+      // REGISTRO
       const username = ($("#regUsername").value || "").trim();
       const fullname = ($("#regFullname").value || "").trim();
       const cpf = ($("#regCPF").value || "").trim();
@@ -1903,24 +1908,25 @@ pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</s
         username, fullname, cpf, phone, birth, city,
         email, pass,
         cp: 1000,
-        isAdmin: email === ADMIN_EMAIL
+        isAdmin: email === ADMIN_EMAIL,
         plan: "free"
       };
+
       state.db.users.push(user);
       saveDB(state.db);
       setAuth(user.id);
+
       fetch("/.netlify/functions/profile-upsert", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-      email,
-      username,
-      fullname
-  })
-}).catch(()=>{});
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, username, fullname })
+      }).catch(()=>{});
+
       toast("Conta criada!");
       closeAuth();
-      renderTopbar(); renderHistory(); renderLeaguesView();
+      renderTopbar();
+      renderHistory();
+      renderLeaguesView();
     }
 
     // Plans
@@ -1950,7 +1956,6 @@ pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</s
     function hookUI(){
       $$(".navBtn").forEach(b=> b.onclick = ()=> setNav(b.dataset.nav));
 
-      // ✅ Atualizar: puxa odds reais da liga selecionada (se suportada)
       $("#btnRefresh").onclick = async ()=> {
         if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
           await updateLeagueReal(state.ui.leagueId, { force:true });
@@ -2038,36 +2043,42 @@ pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</s
       $("#btnRefreshAdmin").onclick = ()=> renderLeaguesView();
 
       $("#btnClosePlans").onclick = closePlans;
-      // ====== Planos: abrir checkout no clique ======
-async function startCheckout(plan){
-  const u = getCurrentUser(state.db);
-  if(!u){
-    toast("Entre para assinar um plano.");
-    openAuth("login");
-    return;
-  }
 
-  const res = await fetch("/.netlify/functions/create-checkout", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ email: u.email, plan })
-  });
+      // ====== Planos: abre checkout Stripe ======
+      async function startCheckout(plan){
+        const u = getCurrentUser(state.db);
+        if(!u){
+          toast("Entre para assinar um plano.");
+          openAuth("login");
+          return;
+        }
 
-  const data = await res.json();
-  if(!res.ok){
-    toast(data?.error || "Erro no checkout");
-    return;
-  }
+        try{
+          const res = await fetch("/.netlify/functions/create-checkout", {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({ email: u.email, plan })
+          });
 
-  if(data?.url){
-    window.location.href = data.url; // ✅ abre checkout Stripe
-  }else{
-    toast("Checkout sem URL");
-  }
-}
+          const data = await res.json().catch(()=> ({}));
+          if(!res.ok){
+            toast(data?.error || "Erro no checkout");
+            return;
+          }
 
-$("#btnBuyPro").onclick = ()=> startCheckout("pro");
-$("#btnBuyElite").onclick = ()=> startCheckout("elite");
+          if(data?.url){
+            window.location.href = data.url;
+          }else{
+            toast("Checkout sem URL");
+          }
+        }catch(e){
+          console.log(e);
+          toast("Falha ao iniciar checkout.");
+        }
+      }
+
+      $("#btnBuyPro").onclick = ()=> startCheckout("pro");
+      $("#btnBuyElite").onclick = ()=> startCheckout("elite");
     }
 
     async function init(){
@@ -2076,21 +2087,21 @@ $("#btnBuyElite").onclick = ()=> startCheckout("elite");
       renderAll();
       await registerSW();
 
-      // ✅ ao abrir o site, tenta puxar odds reais da liga atual (se suportada)
       if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
         await updateLeagueReal(state.ui.leagueId, { force:true });
       }
+
       const u = getCurrentUser(state.db);
-if(u?.email){
-  fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(u.email)}`)
-    .then(r=>r.json())
-    .then(j=>{
-      u.plan = (j?.plan || "free");
-      saveDB(state.db);
-      renderTopbar();
-    })
-    .catch(()=>{});
-}
+      if(u?.email){
+        fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(u.email)}`)
+          .then(r=>r.json())
+          .then(j=>{
+            u.plan = (j?.plan || "free");
+            saveDB(state.db);
+            renderTopbar();
+          })
+          .catch(()=>{});
+      }
     }
 
     init();
