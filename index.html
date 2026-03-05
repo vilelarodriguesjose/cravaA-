@@ -768,6 +768,7 @@
               <div class="smallText">Recursos extras • ligas premium • mais filtros</div>
             </div>
             <span class="badge">R$ 29,90</span>
+            <button class="btn small primary" id="btnBuyPro">Assinar</button>
           </div>
           <div class="itemRow">
             <div>
@@ -775,6 +776,7 @@
               <div class="smallText">Tudo do Pro • destaque • rankings avançados</div>
             </div>
             <span class="badge">R$ 49,90</span>
+            <button class="btn small yellow" id="btnBuyElite">Assinar</button>
           </div>
         </div>
         <div class="sep"></div>
@@ -1132,7 +1134,8 @@
         btnRegister.classList.remove("hide");
       }else{
         const name = (u.username && u.username.trim()) ? u.username.trim() : "Usuário";
-        pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</span> <span>${fmtCP(u.cp)} CP</span>`;
+        const planTxt = (u.plan || "free").toUpperCase();
+pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</span> <span>${fmtCP(u.cp)} CP</span> <span style="opacity:.65">•</span> <span>${esc(planTxt)}</span>`;
         pill.classList.remove("hide");
         btnLogout.classList.remove("hide");
         btnEnter.classList.add("hide");
@@ -1860,13 +1863,28 @@
       if(!email.includes("@") || pass.length < 4){ toast("Email/senha inválidos."); return; }
 
       if(authMode === "login"){
-        const u = state.db.users.find(x=>x.email===email && x.pass===pass);
-        if(!u){ toast("Dados incorretos."); return; }
-        setAuth(u.id);
-        toast("Entrou!");
-        closeAuth();
-        renderTopbar(); renderHistory(); renderLeaguesView();
-        return;
+  const u = state.db.users.find(x=>x.email===email && x.pass===pass);
+  if(!u){ toast("Dados incorretos."); return; }
+
+  setAuth(u.id);
+
+  // buscar plano no Supabase
+  fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(email)}`)
+    .then(r=>r.json())
+    .then(j=>{
+      u.plan = j.plan || "free";
+      saveDB(state.db);
+      renderTopbar();
+    })
+    .catch(()=>{});
+
+  toast("Entrou!");
+  closeAuth();
+  renderTopbar(); 
+  renderHistory(); 
+  renderLeaguesView();
+  return;
+}
       }
 
       const username = ($("#regUsername").value || "").trim();
@@ -1886,6 +1904,7 @@
         email, pass,
         cp: 1000,
         isAdmin: email === ADMIN_EMAIL
+        plan: "free"
       };
       state.db.users.push(user);
       saveDB(state.db);
@@ -2019,6 +2038,36 @@
       $("#btnRefreshAdmin").onclick = ()=> renderLeaguesView();
 
       $("#btnClosePlans").onclick = closePlans;
+      // ====== Planos: abrir checkout no clique ======
+async function startCheckout(plan){
+  const u = getCurrentUser(state.db);
+  if(!u){
+    toast("Entre para assinar um plano.");
+    openAuth("login");
+    return;
+  }
+
+  const res = await fetch("/.netlify/functions/create-checkout", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ email: u.email, plan })
+  });
+
+  const data = await res.json();
+  if(!res.ok){
+    toast(data?.error || "Erro no checkout");
+    return;
+  }
+
+  if(data?.url){
+    window.location.href = data.url; // ✅ abre checkout Stripe
+  }else{
+    toast("Checkout sem URL");
+  }
+}
+
+$("#btnBuyPro").onclick = ()=> startCheckout("pro");
+$("#btnBuyElite").onclick = ()=> startCheckout("elite");
     }
 
     async function init(){
@@ -2031,6 +2080,17 @@
       if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
         await updateLeagueReal(state.ui.leagueId, { force:true });
       }
+      const u = getCurrentUser(state.db);
+if(u?.email){
+  fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(u.email)}`)
+    .then(r=>r.json())
+    .then(j=>{
+      u.plan = (j?.plan || "free");
+      saveDB(state.db);
+      renderTopbar();
+    })
+    .catch(()=>{});
+}
     }
 
     init();
