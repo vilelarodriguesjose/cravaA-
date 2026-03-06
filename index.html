@@ -24,25 +24,34 @@
       --radius2:14px;
       --fieldBg:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(900px 600px at 20% 0%, rgba(23,201,100,.10), transparent 55%),
-                  radial-gradient(900px 600px at 80% 0%, rgba(245,197,66,.08), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(900px 600px at 20% 0%, rgba(23,201,100,.10), transparent 55%),
+        radial-gradient(900px 600px at 80% 0%, rgba(245,197,66,.08), transparent 55%),
+        var(--bg);
       color:var(--text);
       min-height:100vh;
       padding-bottom:92px;
     }
+
     .wrap{max-width:1100px;margin:0 auto;padding:14px}
+
     .topbar{
       position:sticky;top:0;z-index:50;
       backdrop-filter: blur(12px);
       background: rgba(7,19,11,.72);
       border-bottom:1px solid var(--line);
     }
-    .topbarInner{max-width:1100px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
+    .topbarInner{
+      max-width:1100px;margin:0 auto;padding:10px 14px;
+      display:flex;align-items:center;gap:10px;
+    }
+
     .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.2px}
     .logo{
       width:38px;height:38px;border-radius:12px;
@@ -61,7 +70,9 @@
     }
     .logo span{position:relative;font-weight:900}
     @keyframes spin{to{transform:rotate(360deg)}}
+
     .spacer{flex:1}
+
     .pill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
@@ -71,6 +82,7 @@
       font-size:13px;
       white-space:nowrap;
     }
+
     .btn{
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
       padding:10px 12px;border-radius:12px;
@@ -130,6 +142,7 @@
       flex:1;border:0;outline:0;background:transparent;color:var(--text);
       font-weight:700;
     }
+
     .chips{display:flex;gap:8px;flex-wrap:wrap}
     .chip{
       padding:8px 10px;border-radius:999px;
@@ -154,6 +167,7 @@
       transition:.15s transform ease, .15s background ease;
     }
     .leagueItem:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
+    .leagueItem.active{border-color: rgba(23,201,100,.30); background: rgba(23,201,100,.10)}
     .leagueName{font-weight:900}
     .badge{
       padding:6px 8px;border-radius:999px;
@@ -190,6 +204,7 @@
     .oddBtn .lab{font-size:12px;color:var(--muted);font-weight:900}
     .oddBtn .val{font-size:14px;font-weight:1000}
     .oddBtn.selected{border-color: rgba(23,201,100,.35); background: rgba(23,201,100,.12)}
+
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .sep{height:1px;background:var(--line);margin:10px 0}
 
@@ -231,6 +246,7 @@
     }
     .tab.active{border-color: rgba(245,197,66,.32); background: rgba(245,197,66,.12)}
     .screenBody{padding:12px 14px;overflow:auto}
+
     .marketCard{
       border:1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.04);
@@ -256,6 +272,7 @@
     @media (max-width: 520px){
       .marketGrid{grid-template-columns: repeat(2, 1fr)}
     }
+
     .pickBtn{
       padding:10px;border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
@@ -967,118 +984,119 @@
   </div>
 
   <script>
-    const LS = { DB:"cravai_db_v1", AUTH:"cravai_auth_v2", UI:"cravai_ui_v1" };
+    const LS = {
+      DB: "cravai_db_v1",
+      AUTH: "cravai_auth_v2",
+      UI: "cravai_ui_v1"
+    };
+
     const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
-    const $ = (s)=>document.querySelector(s);
-    const $$ = (s)=>Array.from(document.querySelectorAll(s));
-    const fmtCP = (n)=>{ const x=Number(n||0); try{return x.toLocaleString("pt-BR")}catch{return String(x)} };
-    const esc = (str)=>String(str ?? "").replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]));
-    const uid = ()=> (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+\"_\"+Math.random().toString(16).slice(2)));
-    const nowIso = ()=> new Date().toISOString();
-    const isAdminEmail = (email)=> String(email||\"\").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const fmtCP = (n) => {
+      const x = Number(n || 0);
+      try { return x.toLocaleString("pt-BR"); }
+      catch { return String(x); }
+    };
+
+    const esc = (str) => String(str ?? "").replace(/[&<>"']/g, (m) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    }[m]));
+
+    const uid = () => crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    const nowIso = () => new Date().toISOString();
+    const isAdminEmail = (email) => String(email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
     function toast(msg){
-      const t = $(\"#toast\");
+      const t = $("#toast");
       t.textContent = msg;
-      t.style.display = \"block\";
+      t.style.display = "block";
       clearTimeout(toast._tm);
-      toast._tm = setTimeout(()=>{ t.style.display=\"none\"; }, 2200);
+      toast._tm = setTimeout(() => { t.style.display = "none"; }, 2200);
     }
 
     function loadDB(){
-      try{ const raw = localStorage.getItem(LS.DB); if(raw) return JSON.parse(raw); }catch(e){}
+      try{
+        const raw = localStorage.getItem(LS.DB);
+        if(raw) return JSON.parse(raw);
+      }catch{}
       return seedDB();
     }
-    function saveDB(db){ localStorage.setItem(LS.DB, JSON.stringify(db)); }
 
-    function seedDB(){
-      const db = {
-        bets: [],
-        leagues: [],
-        countries: [
-          { id:\"br\", name:\"Brasil\", flag:\"🇧🇷\", leagues:[ { id:\"br-seriea\", name:\"Brasileirão Série A\" }, { id:\"br-serieb\", name:\"Série B\" } ]},
-          { id:\"eng\", name:\"Inglaterra\", flag:\"🏴\", leagues:[{id:\"eng-pl\", name:\"Premier League\"}]},
-          { id:\"esp\", name:\"Espanha\", flag:\"🇪🇸\", leagues:[{id:\"esp-ll\", name:\"LaLiga\"}]},
-          { id:\"ita\", name:\"Itália\", flag:\"🇮🇹\", leagues:[{id:\"ita-sa\", name:\"Serie A\"}]},
-          { id:\"ger\", name:\"Alemanha\", flag:\"🇩🇪\", leagues:[{id:\"ger-bl\", name:\"Bundesliga\"}]},
-          { id:\"fra\", name:\"França\", flag:\"🇫🇷\", leagues:[{id:\"fra-l1\", name:\"Ligue 1\"}]},
-        ],
-        matches: []
-      };
-
-      const baseMatches = [
-        mkMatch(\"br-seriea\",\"Palmeiras\",\"Corinthians\",\"Hoje 19:00\",\"Allianz Parque\"),
-        mkMatch(\"br-seriea\",\"Flamengo\",\"Vasco\",\"Hoje 21:30\",\"Maracanã\"),
-        mkMatch(\"br-serieb\",\"Sport\",\"Ceará\",\"Amanhã 18:00\",\"Ilha do Retiro\"),
-        mkMatch(\"eng-pl\",\"Arsenal\",\"Liverpool\",\"Hoje 17:00\",\"Emirates\"),
-        mkMatch(\"esp-ll\",\"Real Madrid\",\"Barcelona\",\"Hoje 16:00\",\"Bernabéu\"),
-        mkMatch(\"ita-sa\",\"Inter\",\"Milan\",\"Amanhã 16:45\",\"San Siro\"),
-        mkMatch(\"ger-bl\",\"Bayern\",\"Dortmund\",\"Amanhã 15:30\",\"Allianz Arena\"),
-        mkMatch(\"fra-l1\",\"PSG\",\"Marseille\",\"Hoje 15:00\",\"Parc des Princes\"),
-      ];
-      db.matches = baseMatches;
-      saveDB(db);
-      return db;
+    function saveDB(db){
+      localStorage.setItem(LS.DB, JSON.stringify(db));
     }
 
-    function rndOdd(min,max){
-      const v = min + Math.random()*(max-min);
-      return (Math.round(v*100)/100).toFixed(2);
+    function rndOdd(min, max){
+      const v = min + Math.random() * (max - min);
+      return (Math.round(v * 100) / 100).toFixed(2);
     }
 
     function buildMarketsDemo(matchId, home, away){
-      const mk = (tab, title, picks)=>({ id: uid(), matchId, tab, title, picks: picks.map(p=>({ id: uid(), ...p })) });
-      const over = (g, odd)=>({ label:`Mais de ${g}`, odd });
-      const under = (g, odd)=>({ label:`Menos de ${g}`, odd });
+      const mk = (tab, title, picks) => ({
+        id: uid(),
+        matchId,
+        tab,
+        title,
+        picks: picks.map((p) => ({ id: uid(), ...p }))
+      });
+
+      const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
+      const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
 
       return [
-        mk(\"Principais\",\"Resultado (1X2)\", [
+        mk("Principais","Resultado (1X2)", [
           { label: `${home} vence`, odd: rndOdd(1.60,2.80) },
-          { label: `Empate`, odd: rndOdd(2.90,3.80) },
+          { label: "Empate", odd: rndOdd(2.90,3.80) },
           { label: `${away} vence`, odd: rndOdd(1.90,3.60) },
         ]),
-        mk(\"Principais\",\"Dupla chance\", [
+        mk("Principais","Dupla chance", [
           { label:`1X (${home} ou Empate)`, odd: rndOdd(1.20,1.60)},
           { label:`12 (${home} ou ${away})`, odd: rndOdd(1.20,1.90)},
           { label:`X2 (Empate ou ${away})`, odd: rndOdd(1.20,1.70)},
         ]),
-        mk(\"Gols\",\"Ambas marcam\", [
-          { label:`Sim`, odd: rndOdd(1.55,2.20)},
-          { label:`Não`, odd: rndOdd(1.55,2.50)},
+        mk("Gols","Ambas marcam", [
+          { label:"Sim", odd: rndOdd(1.55,2.20)},
+          { label:"Não", odd: rndOdd(1.55,2.50)},
         ]),
-        mk(\"Gols\",\"Total de gols\", [
-          over(\"1.5\", rndOdd(1.25,1.75)),
-          under(\"1.5\", rndOdd(2.00,3.20)),
-          over(\"2.5\", rndOdd(1.55,2.60)),
-          under(\"2.5\", rndOdd(1.45,2.20)),
-          over(\"3.5\", rndOdd(2.10,3.90)),
-          under(\"3.5\", rndOdd(1.20,1.60)),
+        mk("Gols","Total de gols", [
+          over("1.5", rndOdd(1.25,1.75)),
+          under("1.5", rndOdd(2.00,3.20)),
+          over("2.5", rndOdd(1.55,2.60)),
+          under("2.5", rndOdd(1.45,2.20)),
+          over("3.5", rndOdd(2.10,3.90)),
+          under("3.5", rndOdd(1.20,1.60)),
         ]),
-        mk(\"Cartões\",\"Total de cartões\", [
-          over(\"3.5\", rndOdd(1.35,2.10)),
-          under(\"3.5\", rndOdd(1.65,2.70)),
-          over(\"4.5\", rndOdd(1.55,2.60)),
-          under(\"4.5\", rndOdd(1.45,2.40)),
+        mk("Cartões","Total de cartões", [
+          over("3.5", rndOdd(1.35,2.10)),
+          under("3.5", rndOdd(1.65,2.70)),
+          over("4.5", rndOdd(1.55,2.60)),
+          under("4.5", rndOdd(1.45,2.40)),
         ]),
-        mk(\"Escanteios\",\"Total de escanteios\", [
-          over(\"7.5\", rndOdd(1.35,2.20)),
-          under(\"7.5\", rndOdd(1.55,2.60)),
-          over(\"9.5\", rndOdd(1.55,2.80)),
-          under(\"9.5\", rndOdd(1.35,2.40)),
+        mk("Escanteios","Total de escanteios", [
+          over("7.5", rndOdd(1.35,2.20)),
+          under("7.5", rndOdd(1.55,2.60)),
+          over("9.5", rndOdd(1.55,2.80)),
+          under("9.5", rndOdd(1.35,2.40)),
         ]),
-        mk(\"Chutes\",\"Chutes no gol (time)\", [
+        mk("Chutes","Chutes no gol (time)", [
           { label:`${home} +2.5`, odd: rndOdd(1.40,2.30)},
           { label:`${home} -2.5`, odd: rndOdd(1.55,2.80)},
           { label:`${away} +2.5`, odd: rndOdd(1.40,2.30)},
           { label:`${away} -2.5`, odd: rndOdd(1.55,2.80)},
         ]),
-        mk(\"Especiais\",\"Quem marca (qualquer momento)\", [
+        mk("Especiais","Quem marca (qualquer momento)", [
           { label:`Atacante do ${home}`, odd: rndOdd(1.90,3.40)},
           { label:`Atacante do ${away}`, odd: rndOdd(2.10,3.80)},
         ]),
-        mk(\"Escalações\",\"Escalações (demo)\", [
-          { label:`Ver escalação provável`, odd: \"—\", meta:{info:true}},
+        mk("Escalações","Escalações (demo)", [
+          { label:"Ver escalação provável", odd: "—", meta:{ info:true } },
         ]),
       ];
     }
@@ -1087,37 +1105,142 @@
       const id = uid();
       const markets = buildMarketsDemo(id, home, away);
       return {
-        id, leagueId,
-        home, away,
+        id,
+        leagueId,
+        home,
+        away,
         whenTxt,
         stadium,
         featured: Math.random() > 0.45,
         markets,
-        odds1x2: { \"1\": rndOdd(1.60, 2.80), \"X\": rndOdd(2.90, 3.70), \"2\": rndOdd(2.10, 3.40) }
+        odds1x2: {
+          "1": rndOdd(1.60, 2.80),
+          "X": rndOdd(2.90, 3.70),
+          "2": rndOdd(2.10, 3.40)
+        }
       };
     }
 
-    const ODDS_ENDPOINT = \"/.netlify/functions/odds\";
+    function seedDB(){
+      const db = {
+        bets: [],
+        leagues: [],
+        countries: [
+          { id:"br", name:"Brasil", flag:"🇧🇷", leagues:[ { id:"br-seriea", name:"Brasileirão Série A" }, { id:"br-serieb", name:"Série B" } ]},
+          { id:"eng", name:"Inglaterra", flag:"🏴", leagues:[{id:"eng-pl", name:"Premier League"}]},
+          { id:"esp", name:"Espanha", flag:"🇪🇸", leagues:[{id:"esp-ll", name:"LaLiga"}]},
+          { id:"ita", name:"Itália", flag:"🇮🇹", leagues:[{id:"ita-sa", name:"Serie A"}]},
+          { id:"ger", name:"Alemanha", flag:"🇩🇪", leagues:[{id:"ger-bl", name:"Bundesliga"}]},
+          { id:"fra", name:"França", flag:"🇫🇷", leagues:[{id:"fra-l1", name:"Ligue 1"}]},
+        ],
+        matches: []
+      };
+
+      db.matches = [
+        mkMatch("br-seriea","Palmeiras","Corinthians","Hoje 19:00","Allianz Parque"),
+        mkMatch("br-seriea","Flamengo","Vasco","Hoje 21:30","Maracanã"),
+        mkMatch("br-serieb","Sport","Ceará","Amanhã 18:00","Ilha do Retiro"),
+        mkMatch("eng-pl","Arsenal","Liverpool","Hoje 17:00","Emirates"),
+        mkMatch("esp-ll","Real Madrid","Barcelona","Hoje 16:00","Bernabéu"),
+        mkMatch("ita-sa","Inter","Milan","Amanhã 16:45","San Siro"),
+        mkMatch("ger-bl","Bayern","Dortmund","Amanhã 15:30","Allianz Arena"),
+        mkMatch("fra-l1","PSG","Marseille","Hoje 15:00","Parc des Princes"),
+      ];
+
+      saveDB(db);
+      return db;
+    }
+
+    function getAuth(){
+      try{
+        const raw = localStorage.getItem(LS.AUTH);
+        return raw ? JSON.parse(raw) : { email:null };
+      }catch{
+        return { email:null };
+      }
+    }
+
+    function setAuthEmail(email){
+      localStorage.setItem(LS.AUTH, JSON.stringify({ email: email || null }));
+    }
+
+    function loadUI(){
+      try{
+        const raw = localStorage.getItem(LS.UI);
+        if(raw) return JSON.parse(raw);
+      }catch{}
+      return {
+        nav:"home",
+        countryId:"br",
+        leagueId:"br-seriea",
+        builderOn:false,
+        betslipMini:false,
+        activeGameTab:"Principais",
+        search:""
+      };
+    }
+
+    function saveUI(ui){
+      localStorage.setItem(LS.UI, JSON.stringify(ui));
+    }
+
+    const ODDS_ENDPOINT = "/.netlify/functions/odds";
     const REAL_LEAGUE_MAP = {
-      \"br-seriea\": \"soccer_brazil_campeonato\",
-      \"eng-pl\":    \"soccer_epl\",
-      \"esp-ll\":    \"soccer_spain_la_liga\",
-      \"ita-sa\":    \"soccer_italy_serie_a\",
-      \"ger-bl\":    \"soccer_germany_bundesliga\",
-      \"fra-l1\":    \"soccer_france_ligue_one\",
+      "br-seriea": "soccer_brazil_campeonato",
+      "eng-pl": "soccer_epl",
+      "esp-ll": "soccer_spain_la_liga",
+      "ita-sa": "soccer_italy_serie_a",
+      "ger-bl": "soccer_germany_bundesliga",
+      "fra-l1": "soccer_france_ligue_one",
     };
-    const REAL_CFG = { markets:\"h2h\", regions:\"eu\", oddsFormat:\"decimal\" };
-    const realCache = {};
+    const REAL_CFG = { markets:"h2h", regions:"eu", oddsFormat:"decimal" };
     const REAL_COOLDOWN_MS = 60 * 1000;
+    const realCache = {};
+
+    const state = {
+      db: loadDB(),
+      ui: loadUI(),
+      slip: { selections: [], stake: 50 },
+      game: { open:false, matchId:null },
+      session: { profile: null }
+    };
+
+    const TABS = ["Principais","Gols","Cartões","Escanteios","Chutes","Especiais","Escalações"];
+    let authMode = "login";
+    let pendingRegisterPayload = null;
+
+    function getCurrentUser(){
+      return state.session?.profile || null;
+    }
+
+    function ensureDefaults(){
+      const country = state.db.countries.find((c) => c.id === state.ui.countryId) || state.db.countries[0];
+      if(!country) return;
+      const leagueOk = country.leagues.some((l) => l.id === state.ui.leagueId);
+      if(!leagueOk) state.ui.leagueId = country.leagues[0]?.id || null;
+      saveUI(state.ui);
+    }
+
+    function findLeague(leagueId){
+      for(const c of state.db.countries){
+        const l = c.leagues.find((x) => x.id === leagueId);
+        if(l) return l;
+      }
+      return null;
+    }
+
+    function findCountryByLeague(leagueId){
+      return state.db.countries.find((c) => c.leagues.some((l) => l.id === leagueId)) || null;
+    }
 
     function fmtWhenFromISO(iso){
       try{
         const d = new Date(iso);
-        const dia = d.toLocaleDateString(\"pt-BR\",{day:\"2-digit\",month:\"2-digit\"});
-        const hora = d.toLocaleTimeString(\"pt-BR\",{hour:\"2-digit\",minute:\"2-digit\"});
+        const dia = d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+        const hora = d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
         return `${dia} ${hora}`;
       }catch{
-        return \"Em breve\";
+        return "Em breve";
       }
     }
 
@@ -1129,7 +1252,7 @@
         `&regions=${encodeURIComponent(REAL_CFG.regions)}` +
         `&oddsFormat=${encodeURIComponent(REAL_CFG.oddsFormat)}`;
 
-      const res = await fetch(url, { cache:\"no-store\" });
+      const res = await fetch(url, { cache:"no-store" });
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       return Array.isArray(data) ? data : [];
@@ -1141,19 +1264,23 @@
       if(!Array.isArray(ev.bookmakers)) return null;
 
       for(const b of ev.bookmakers){
-        const mk = (b.markets||[]).find(m => m.key === \"h2h\");
+        const mk = (b.markets || []).find((m) => m.key === "h2h");
         if(!mk || !Array.isArray(mk.outcomes)) continue;
 
-        let o1=null, ox=null, o2=null;
+        let o1 = null, ox = null, o2 = null;
         for(const o of mk.outcomes){
-          const name = String(o.name||\"\").toLowerCase();
+          const name = String(o.name || "").toLowerCase();
           const price = Number(o.price);
           if(!Number.isFinite(price)) continue;
+
           if(name === String(home).toLowerCase()) o1 = price;
           else if(name === String(away).toLowerCase()) o2 = price;
-          else if(name === \"draw\") ox = price;
+          else if(name === "draw") ox = price;
         }
-        if(o1 && o2) return {\"1\": o1, \"X\": ox || null, \"2\": o2};
+
+        if(o1 && o2){
+          return { "1": o1, "X": ox || null, "2": o2 };
+        }
       }
       return null;
     }
@@ -1163,140 +1290,92 @@
       const away = ev.away_team;
       const whenTxt = fmtWhenFromISO(ev.commence_time);
 
-      const m = mkMatch(leagueId, home, away, whenTxt, \"—\");
+      const m = mkMatch(leagueId, home, away, whenTxt, "—");
       m.id = ev.id || m.id;
 
       const odds = pickH2HOdds(ev);
-      if(odds && odds[\"1\"] && odds[\"2\"]){
+      if(odds && odds["1"] && odds["2"]){
         const demoX = Number(rndOdd(2.90, 3.70));
         m.odds1x2 = {
-          \"1\": Number(odds[\"1\"]).toFixed(2),
-          \"X\": Number(odds[\"X\"] ?? demoX).toFixed(2),
-          \"2\": Number(odds[\"2\"]).toFixed(2)
+          "1": Number(odds["1"]).toFixed(2),
+          "X": Number(odds["X"] ?? demoX).toFixed(2),
+          "2": Number(odds["2"]).toFixed(2)
         };
       }
+
       m._real = true;
       m.featured = true;
       return m;
     }
 
-    async function updateLeagueReal(leagueId, {force=false} = {}){
+    async function updateLeagueReal(leagueId, { force = false } = {}){
       const sportKey = REAL_LEAGUE_MAP[leagueId];
       if(!sportKey){
-        toast(\"Essa liga está em demo (sem odds reais).\");
+        toast("Essa liga está em demo (sem odds reais).");
         return;
       }
 
       const now = Date.now();
       const prev = realCache[leagueId];
       if(!force && prev && (now - prev.ts) < REAL_COOLDOWN_MS){
-        renderLeagues(); renderMatches(); renderFeatured();
+        renderLeagues();
+        renderMatches();
+        renderFeatured();
         if(state.game.open) renderGameScreen();
         return;
       }
 
       try{
-        toast(\"Buscando jogos reais da liga...\");
+        toast("Buscando jogos reais da liga...");
         const events = await fetchOddsBySportKey(sportKey);
 
         if(!events.length){
-          toast(\"API retornou vazio (mantive demo).\");
+          toast("API retornou vazio (mantive demo).");
           realCache[leagueId] = { ts: now, count: 0 };
           return;
         }
 
-        const realMatches = events.map(ev => realEventToMatch(ev, leagueId)).slice(0, 40);
-
-        state.db.matches = state.db.matches.filter(x => x.leagueId !== leagueId);
+        const realMatches = events.map((ev) => realEventToMatch(ev, leagueId)).slice(0, 40);
+        state.db.matches = state.db.matches.filter((x) => x.leagueId !== leagueId);
         state.db.matches.unshift(...realMatches);
-
         saveDB(state.db);
+
         realCache[leagueId] = { ts: now, count: realMatches.length };
 
         toast(`Liga atualizada: ${realMatches.length} jogos reais ✅`);
-
         renderLeagues();
         renderMatches();
         renderFeatured();
         if(state.game.open) renderGameScreen();
       }catch(e){
-        console.log(\"Erro odds reais:\", e);
-        toast(\"Falha ao puxar odds reais (ver console).\");
+        console.log("Erro odds reais:", e);
+        toast("Falha ao puxar odds reais (ver console).");
       }
-    }
-
-    function getAuth(){
-      try{ const raw = localStorage.getItem(LS.AUTH); return raw ? JSON.parse(raw) : { email:null }; }
-      catch(e){ return { email:null }; }
-    }
-    function setAuthEmail(email){
-      localStorage.setItem(LS.AUTH, JSON.stringify({ email: email || null }));
-    }
-    function getCurrentUser(){
-      return state.session?.profile || null;
-    }
-
-    function loadUI(){
-      try{ const raw = localStorage.getItem(LS.UI); if(raw) return JSON.parse(raw); }catch(e){}
-      return { nav:\"home\", countryId:\"br\", leagueId:\"br-seriea\", builderOn:false, betslipMini:false, activeGameTab:\"Principais\", search:\"\" };
-    }
-    function saveUI(ui){ localStorage.setItem(LS.UI, JSON.stringify(ui)); }
-
-    const state = {
-      db: loadDB(),
-      ui: loadUI(),
-      slip: { selections: [], stake: 50 },
-      game: { open:false, matchId:null },
-      session: { profile: null }
-    };
-
-    const TABS = [\"Principais\",\"Gols\",\"Cartões\",\"Escanteios\",\"Chutes\",\"Especiais\",\"Escalações\"];
-    let authMode = \"login\";
-    let pendingRegisterPayload = null;
-
-    function ensureDefaults(){
-      const country = state.db.countries.find(c=>c.id===state.ui.countryId) || state.db.countries[0];
-      if(!country) return;
-      const leagueOk = country.leagues.some(l=>l.id===state.ui.leagueId);
-      if(!leagueOk) state.ui.leagueId = country.leagues[0]?.id || null;
-      saveUI(state.ui);
-    }
-
-    function findLeague(leagueId){
-      for(const c of state.db.countries){
-        const l = c.leagues.find(x=>x.id===leagueId);
-        if(l) return l;
-      }
-      return null;
-    }
-    function findCountryByLeague(leagueId){
-      return state.db.countries.find(c=>c.leagues.some(l=>l.id===leagueId)) || null;
     }
 
     function renderTopbar(){
       const u = getCurrentUser();
-
-      const pill = $(\"#topAccountPill\");
-      const btnEnter = $(\"#btnEnter\");
-      const btnRegister = $(\"#btnRegister\");
-      const btnLogout = $(\"#btnLogout\");
+      const pill = $("#topAccountPill");
+      const btnEnter = $("#btnEnter");
+      const btnRegister = $("#btnRegister");
+      const btnLogout = $("#btnLogout");
 
       if(!u){
-        pill.classList.add(\"hide\");
-        btnLogout.classList.add(\"hide\");
-        btnEnter.classList.remove(\"hide\");
-        btnRegister.classList.remove(\"hide\");
+        pill.classList.add("hide");
+        btnLogout.classList.add("hide");
+        btnEnter.classList.remove("hide");
+        btnRegister.classList.remove("hide");
       }else{
-        const name = (u.username && String(u.username).trim()) ? String(u.username).trim() : \"Usuário\";
-        const planTxt = (u.plan || \"free\").toUpperCase();
-        pill.innerHTML = `<strong>${esc(name)}</strong> <span style=\"opacity:.65\">•</span> <span>${fmtCP(u.cp)} CP</span> <span style=\"opacity:.65\">•</span> <span>${esc(planTxt)}</span>`;
-        pill.classList.remove(\"hide\");
-        btnLogout.classList.remove(\"hide\");
-        btnEnter.classList.add(\"hide\");
-        btnRegister.classList.add(\"hide\");
+        const name = (u.username && String(u.username).trim()) ? String(u.username).trim() : "Usuário";
+        const planTxt = (u.plan || "free").toUpperCase();
+        pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</span> <span>${fmtCP(u.cp)} CP</span> <span style="opacity:.65">•</span> <span>${esc(planTxt)}</span>`;
+        pill.classList.remove("hide");
+        btnLogout.classList.remove("hide");
+        btnEnter.classList.add("hide");
+        btnRegister.classList.add("hide");
       }
 
-      $(\"#adminLeagueBox\").classList.toggle(\"hide\", !isAdminEmail(u?.email));
+      $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(u?.email));
     }
 
     function setNav(nav){
@@ -1307,20 +1386,20 @@
     }
 
     function renderNav(){
-      $$(\".navBtn\").forEach(b=> b.classList.toggle(\"active\", b.dataset.nav === state.ui.nav));
+      $$(".navBtn").forEach((b) => b.classList.toggle("active", b.dataset.nav === state.ui.nav));
     }
 
-    function openPlans(){ $(\"#plansModal\").classList.add(\"show\"); }
-    function closePlans(){ $(\"#plansModal\").classList.remove(\"show\"); }
+    function openPlans(){ $("#plansModal").classList.add("show"); }
+    function closePlans(){ $("#plansModal").classList.remove("show"); }
 
     function renderAllViews(){
-      $(\"#viewHome\").classList.toggle(\"hide\", state.ui.nav !== \"home\");
-      $(\"#viewHistory\").classList.toggle(\"hide\", state.ui.nav !== \"history\");
-      $(\"#viewLeagues\").classList.toggle(\"hide\", state.ui.nav !== \"leagues\");
+      $("#viewHome").classList.toggle("hide", state.ui.nav !== "home");
+      $("#viewHistory").classList.toggle("hide", state.ui.nav !== "history");
+      $("#viewLeagues").classList.toggle("hide", state.ui.nav !== "leagues");
 
-      if(state.ui.nav === \"plans\"){
+      if(state.ui.nav === "plans"){
         openPlans();
-        state.ui.nav = \"home\";
+        state.ui.nav = "home";
         saveUI(state.ui);
         renderNav();
         renderAllViews();
@@ -1328,20 +1407,24 @@
     }
 
     function renderCountries(){
-      const wrap = $(\"#countryChips\");
-      wrap.innerHTML = \"\";
-      state.db.countries.forEach(c=>{
-        const el = document.createElement(\"div\");
-        el.className = \"chip\" + (c.id===state.ui.countryId ? \" active\":\"\");
-        el.innerHTML = `<span class=\"flag\">${c.flag}</span> ${esc(c.name)}`;
-        el.onclick = ()=>{
+      const wrap = $("#countryChips");
+      wrap.innerHTML = "";
+
+      state.db.countries.forEach((c) => {
+        const el = document.createElement("div");
+        el.className = "chip" + (c.id === state.ui.countryId ? " active" : "");
+        el.innerHTML = `<span class="flag">${c.flag}</span> ${esc(c.name)}`;
+        el.onclick = async () => {
           state.ui.countryId = c.id;
-          state.ui.leagueId = (c.leagues[0]?.id)||null;
+          state.ui.leagueId = c.leagues[0]?.id || null;
           saveUI(state.ui);
-          renderCountries(); renderLeagues(); renderMatches(); renderFeatured();
+          renderCountries();
+          renderLeagues();
+          renderMatches();
+          renderFeatured();
 
           if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
-            updateLeagueReal(state.ui.leagueId);
+            await updateLeagueReal(state.ui.leagueId);
           }
         };
         wrap.appendChild(el);
@@ -1349,121 +1432,130 @@
     }
 
     function renderLeagues(){
-      const c = state.db.countries.find(x=>x.id===state.ui.countryId);
-      const list = $(\"#leagueList\");
-      list.innerHTML = \"\";
+      const c = state.db.countries.find((x) => x.id === state.ui.countryId);
+      const list = $("#leagueList");
+      list.innerHTML = "";
 
       if(!c){
-        list.innerHTML = `<div class=\"smallText\">Sem países.</div>`;
+        list.innerHTML = `<div class="smallText">Sem países.</div>`;
         return;
       }
 
-      c.leagues.forEach(l=>{
-        const gamesCount = state.db.matches.filter(m=>m.leagueId===l.id).length;
+      c.leagues.forEach((l) => {
+        const gamesCount = state.db.matches.filter((m) => m.leagueId === l.id).length;
         const isReal = !!REAL_LEAGUE_MAP[l.id];
-        const el = document.createElement(\"div\");
-        el.className = \"leagueItem\";
+        const active = l.id === state.ui.leagueId;
+
+        const el = document.createElement("div");
+        el.className = "leagueItem" + (active ? " active" : "");
         el.innerHTML = `
           <div>
-            <div class=\"leagueName\">${esc(l.name)} ${isReal ? '<span class=\"badge\" style=\"margin-left:6px\">REAL</span>' : ''}</div>
-            <div class=\"smallText\">${c.flag} ${esc(c.name)} • ${gamesCount} jogos</div>
+            <div class="leagueName">${esc(l.name)} ${isReal ? '<span class="badge" style="margin-left:6px">REAL</span>' : ''}</div>
+            <div class="smallText">${c.flag} ${esc(c.name)} • ${gamesCount} jogos</div>
           </div>
-          <span class=\"badge\">${gamesCount}</span>
+          <span class="badge">${gamesCount}</span>
         `;
-        el.onclick = ()=>{
+        el.onclick = async () => {
           state.ui.leagueId = l.id;
           saveUI(state.ui);
           renderLeagues();
           renderMatches();
-          if(REAL_LEAGUE_MAP[l.id]) updateLeagueReal(l.id);
+          renderFeatured();
+          if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
         };
         list.appendChild(el);
       });
 
-      const selected = c.leagues.find(l=>l.id===state.ui.leagueId);
-      $(\"#selectedLeagueBadge\").textContent = selected ? selected.name : \"Nenhuma liga\";
-      $(\"#leftHint\").textContent = c ? c.name : \"Selecione\";
+      const selected = c.leagues.find((l) => l.id === state.ui.leagueId);
+      $("#selectedLeagueBadge").textContent = selected ? selected.name : "Nenhuma liga";
+      $("#leftHint").textContent = c ? c.name : "Selecione";
     }
 
     function getMatchesFiltered(){
-      const q = (state.ui.search || \"\").trim().toLowerCase();
+      const q = (state.ui.search || "").trim().toLowerCase();
       if(q){
-        return state.db.matches.filter(m=>{
+        return state.db.matches.filter((m) => {
           const league = findLeague(m.leagueId);
           const country = findCountryByLeague(m.leagueId);
-          const hay = [m.home,m.away,m.whenTxt,league?.name,country?.name].filter(Boolean).join(\" \").toLowerCase();
+          const hay = [m.home, m.away, m.whenTxt, league?.name, country?.name].filter(Boolean).join(" ").toLowerCase();
           return hay.includes(q);
         });
       }
+
       if(state.ui.leagueId){
-        return state.db.matches.filter(m=>m.leagueId===state.ui.leagueId);
+        return state.db.matches.filter((m) => m.leagueId === state.ui.leagueId);
       }
+
       return state.db.matches.slice();
     }
 
-    function isSelectedKey(key){ return state.slip.selections.some(s=>s.key===key); }
+    function isSelectedKey(key){
+      return state.slip.selections.some((s) => s.key === key);
+    }
 
     function oddButtonHTML(m, key, lab){
       const odd = m.odds1x2[key];
       const pickLabel =
-        key===\"1\" ? `${m.home} vence` :
-        key===\"2\" ? `${m.away} vence` : \"Empate\";
+        key === "1" ? `${m.home} vence` :
+        key === "2" ? `${m.away} vence` : "Empate";
       const pickKey = `1x2:${m.id}:${key}`;
-      const selected = isSelectedKey(pickKey) ? \" selected\" : \"\";
+      const selected = isSelectedKey(pickKey) ? " selected" : "";
+
       return `
-        <div class=\"oddBtn${selected}\" data-pickkey=\"${esc(pickKey)}\" data-picklabel=\"${esc(pickLabel)}\" data-odd=\"${esc(odd)}\">
-          <div class=\"lab\">${esc(lab)}</div>
-          <div class=\"val\">${esc(odd)}</div>
+        <div class="oddBtn${selected}" data-pickkey="${esc(pickKey)}" data-picklabel="${esc(pickLabel)}" data-odd="${esc(odd)}">
+          <div class="lab">${esc(lab)}</div>
+          <div class="val">${esc(odd)}</div>
         </div>
       `;
     }
 
     function renderMatches(){
-      const list = $(\"#matchesList\");
-      list.innerHTML = \"\";
+      const list = $("#matchesList");
+      list.innerHTML = "";
+
       const ms = getMatchesFiltered();
       const league = findLeague(state.ui.leagueId);
 
-      $(\"#rightTitle\").textContent = state.ui.search ? \"Resultados da busca\" : (league ? league.name : \"Jogos\");
+      $("#rightTitle").textContent = state.ui.search ? "Resultados da busca" : (league ? league.name : "Jogos");
 
-      if(ms.length===0){
-        list.innerHTML = `<div class=\"smallText\">Sem jogos para mostrar.</div>`;
+      if(ms.length === 0){
+        list.innerHTML = `<div class="smallText">Sem jogos para mostrar.</div>`;
         return;
       }
 
-      ms.forEach(m=>{
+      ms.forEach((m) => {
         const league = findLeague(m.leagueId);
         const country = findCountryByLeague(m.leagueId);
 
-        const card = document.createElement(\"div\");
-        card.className = \"matchCard\";
+        const card = document.createElement("div");
+        card.className = "matchCard";
         card.innerHTML = `
-          <div class=\"matchTop\">
+          <div class="matchTop">
             <div>
-              <div class=\"kicker\">${country?.flag||\"\"} ${esc(league?.name||\"\")} • ${esc(m.whenTxt)}</div>
-              <div class=\"teams\">
-                <div class=\"teamRow\"><span class=\"teamName\">${esc(m.home)}</span><span class=\"badge\">Casa</span></div>
-                <div class=\"teamRow\"><span class=\"teamName\">${esc(m.away)}</span><span class=\"badge\">Fora</span></div>
+              <div class="kicker">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
+              <div class="teams">
+                <div class="teamRow"><span class="teamName">${esc(m.home)}</span><span class="badge">Casa</span></div>
+                <div class="teamRow"><span class="teamName">${esc(m.away)}</span><span class="badge">Fora</span></div>
               </div>
             </div>
-            <button class=\"btn small\" data-open=\"${m.id}\">Abrir</button>
+            <button class="btn small" data-open="${m.id}">Abrir</button>
           </div>
 
-          <div class=\"oddsRow\">
-            ${oddButtonHTML(m, \"1\", \"1\")}
-            ${oddButtonHTML(m, \"X\", \"X\")}
-            ${oddButtonHTML(m, \"2\", \"2\")}
+          <div class="oddsRow">
+            ${oddButtonHTML(m, "1", "1")}
+            ${oddButtonHTML(m, "X", "X")}
+            ${oddButtonHTML(m, "2", "2")}
           </div>
         `;
 
-        card.querySelector(`[data-open=\"${m.id}\"]`).onclick = ()=> openGame(m.id);
+        card.querySelector(`[data-open="${m.id}"]`).onclick = () => openGame(m.id);
 
-        card.querySelectorAll(\".oddBtn\").forEach(btn=>{
-          btn.onclick = ()=>{
+        card.querySelectorAll(".oddBtn").forEach((btn) => {
+          btn.onclick = () => {
             const pickKey = btn.dataset.pickkey;
             const pickLabel = btn.dataset.picklabel;
             const odd = btn.dataset.odd;
-            addSelectionFromQuick(m.id, \"Principais\", \"Resultado (1X2)\", pickLabel, odd, pickKey);
+            addSelectionFromQuick(m.id, "Principais", "Resultado (1X2)", pickLabel, odd, pickKey);
           };
         });
 
@@ -1472,35 +1564,37 @@
     }
 
     function renderFeatured(){
-      const list = $(\"#featuredList\");
-      list.innerHTML = \"\";
+      const list = $("#featuredList");
+      list.innerHTML = "";
 
-      const c = state.db.countries.find(x=>x.id===state.ui.countryId);
-      const countryLeagueIds = new Set((c?.leagues||[]).map(l=>l.id));
+      const c = state.db.countries.find((x) => x.id === state.ui.countryId);
+      const countryLeagueIds = new Set((c?.leagues || []).map((l) => l.id));
 
       const featured = state.db.matches
-        .filter(m=>m.featured)
-        .sort((a,b)=> (countryLeagueIds.has(b.leagueId)-countryLeagueIds.has(a.leagueId)) )
+        .filter((m) => m.featured)
+        .sort((a, b) => Number(countryLeagueIds.has(b.leagueId)) - Number(countryLeagueIds.has(a.leagueId)))
         .slice(0, 5);
 
-      if(featured.length===0){
-        list.innerHTML = `<div class=\"smallText\">Sem destaques agora.</div>`;
+      if(featured.length === 0){
+        list.innerHTML = `<div class="smallText">Sem destaques agora.</div>`;
         return;
       }
 
-      featured.forEach(m=>{
+      featured.forEach((m) => {
         const league = findLeague(m.leagueId);
         const country = findCountryByLeague(m.leagueId);
-        const el = document.createElement(\"div\");
-        el.className = \"itemRow\";
+
+        const el = document.createElement("div");
+        el.className = "itemRow";
         el.innerHTML = `
           <div>
             <strong>${esc(m.home)} x ${esc(m.away)}</strong>
-            <div class=\"smallText\">${country?.flag||\"\"} ${esc(league?.name||\"\")} • ${esc(m.whenTxt)}</div>
+            <div class="smallText">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
           </div>
-          <button class=\"btn small\" data-open=\"${m.id}\">Abrir</button>
+          <button class="btn small" data-open="${m.id}">Abrir</button>
         `;
-        el.querySelector(`[data-open=\"${m.id}\"]`).onclick = ()=>openGame(m.id);
+
+        el.querySelector(`[data-open="${m.id}"]`).onclick = () => openGame(m.id);
         list.appendChild(el);
       });
     }
@@ -1508,44 +1602,47 @@
     function openGame(matchId){
       state.game.open = true;
       state.game.matchId = matchId;
-      saveUI(state.ui);
       renderGameScreen();
-      $(\"#gameScreen\").classList.add(\"show\");
+      $("#gameScreen").classList.add("show");
     }
+
     function closeGame(){
       state.game.open = false;
       state.game.matchId = null;
-      $(\"#gameScreen\").classList.remove(\"show\");
+      $("#gameScreen").classList.remove("show");
     }
 
     function renderGameScreen(){
       if(!state.game.open || !state.game.matchId){
-        $(\"#gameScreen\").classList.remove(\"show\");
+        $("#gameScreen").classList.remove("show");
         return;
       }
 
-      const m = state.db.matches.find(x=>x.id===state.game.matchId);
-      if(!m){ closeGame(); return; }
+      const m = state.db.matches.find((x) => x.id === state.game.matchId);
+      if(!m){
+        closeGame();
+        return;
+      }
 
       const league = findLeague(m.leagueId);
       const country = findCountryByLeague(m.leagueId);
 
-      $(\"#gameTitle\").textContent = `${m.home} x ${m.away}`;
-      $(\"#gameSub\").textContent = `${country?.flag||\"\"} ${league?.name||\"\"} • ${m.whenTxt} • ${m.stadium}`;
+      $("#gameTitle").textContent = `${m.home} x ${m.away}`;
+      $("#gameSub").textContent = `${country?.flag || ""} ${league?.name || ""} • ${m.whenTxt} • ${m.stadium}`;
 
-      const sw = $(\"#builderSwitchGame\");
-      sw.classList.toggle(\"on\", !!state.ui.builderOn);
-      $(\"#builderBadge\").textContent = state.ui.builderOn ? \"ON\" : \"OFF\";
-      $(\"#builderBadge\").style.borderColor = state.ui.builderOn ? \"rgba(23,201,100,.32)\" : \"rgba(255,255,255,.12)\";
-      $(\"#builderBadge\").style.background = state.ui.builderOn ? \"rgba(23,201,100,.12)\" : \"rgba(255,255,255,.05)\";
+      const sw = $("#builderSwitchGame");
+      sw.classList.toggle("on", !!state.ui.builderOn);
+      $("#builderBadge").textContent = state.ui.builderOn ? "ON" : "OFF";
+      $("#builderBadge").style.borderColor = state.ui.builderOn ? "rgba(23,201,100,.32)" : "rgba(255,255,255,.12)";
+      $("#builderBadge").style.background = state.ui.builderOn ? "rgba(23,201,100,.12)" : "rgba(255,255,255,.05)";
 
-      const tabsWrap = $(\"#gameTabs\");
-      tabsWrap.innerHTML = \"\";
-      TABS.forEach(t=>{
-        const el = document.createElement(\"div\");
-        el.className = \"tab\" + (t===state.ui.activeGameTab ? \" active\":\"\");
+      const tabsWrap = $("#gameTabs");
+      tabsWrap.innerHTML = "";
+      TABS.forEach((t) => {
+        const el = document.createElement("div");
+        el.className = "tab" + (t === state.ui.activeGameTab ? " active" : "");
         el.textContent = t;
-        el.onclick = ()=>{
+        el.onclick = () => {
           state.ui.activeGameTab = t;
           saveUI(state.ui);
           renderGameScreen();
@@ -1553,47 +1650,51 @@
         tabsWrap.appendChild(el);
       });
 
-      const area = $(\"#marketsArea\");
-      area.innerHTML = \"\";
+      const area = $("#marketsArea");
+      area.innerHTML = "";
 
-      const markets = (m.markets||[]).filter(x=>x.tab===state.ui.activeGameTab);
-      if(markets.length===0){
-        area.innerHTML = `<div class=\"smallText\">Sem mercados nessa aba (demo).</div>`;
+      const markets = (m.markets || []).filter((x) => x.tab === state.ui.activeGameTab);
+
+      if(markets.length === 0){
+        area.innerHTML = `<div class="smallText">Sem mercados nessa aba (demo).</div>`;
         return;
       }
 
       for(const mk of markets){
-        const card = document.createElement(\"div\");
-        card.className = \"marketCard open\";
+        const card = document.createElement("div");
+        card.className = "marketCard open";
         card.innerHTML = `
-          <div class=\"marketHead\">
-            <div class=\"title\">${esc(mk.title)}</div>
-            <div class=\"badge\">Recolher</div>
+          <div class="marketHead">
+            <div class="title">${esc(mk.title)}</div>
+            <div class="badge">Recolher</div>
           </div>
-          <div class=\"marketBody\">
-            <div class=\"marketGrid\"></div>
+          <div class="marketBody">
+            <div class="marketGrid"></div>
           </div>
         `;
 
-        const head = card.querySelector(\".marketHead\");
-        head.onclick = ()=>{
-          card.classList.toggle(\"open\");
-          card.querySelector(\".badge\").textContent = card.classList.contains(\"open\") ? \"Recolher\" : \"Abrir\";
+        const head = card.querySelector(".marketHead");
+        head.onclick = () => {
+          card.classList.toggle("open");
+          card.querySelector(".badge").textContent = card.classList.contains("open") ? "Recolher" : "Abrir";
         };
 
-        const grid = card.querySelector(\".marketGrid\");
+        const grid = card.querySelector(".marketGrid");
 
-        mk.picks.forEach(p=>{
+        mk.picks.forEach((p) => {
           const isInfo = p.meta?.info;
           const key = `pick:${m.id}:${mk.id}:${p.id}`;
           const selected = isSelectedKey(key);
 
-          const btn = document.createElement(\"div\");
-          btn.className = \"pickBtn\" + (selected ? \" selected\":\"\");
-          btn.innerHTML = `<div class=\"lab\">${esc(p.label)}</div><div class=\"val\">${esc(p.odd)}</div>`;
+          const btn = document.createElement("div");
+          btn.className = "pickBtn" + (selected ? " selected" : "");
+          btn.innerHTML = `<div class="lab">${esc(p.label)}</div><div class="val">${esc(p.odd)}</div>`;
 
-          btn.onclick = ()=>{
-            if(isInfo){ toast(\"Escalação demo (sem dados reais).\"); return; }
+          btn.onclick = () => {
+            if(isInfo){
+              toast("Escalação demo (sem dados reais).");
+              return;
+            }
             addSelection(m, mk, p, key);
           };
 
@@ -1605,31 +1706,32 @@
     }
 
     function addSelectionFromQuick(matchId, tab, marketTitle, pickLabel, odd, pickKey){
-      const m = state.db.matches.find(x=>x.id===matchId);
+      const m = state.db.matches.find((x) => x.id === matchId);
       if(!m) return;
       addSelection(m, { title: marketTitle, tab }, { label: pickLabel, odd }, pickKey);
     }
 
     function addSelection(match, market, pick, key){
       if(isSelectedKey(key)){
-        state.slip.selections = state.slip.selections.filter(s=>s.key!==key);
-        renderBetslip(); renderAll();
+        state.slip.selections = state.slip.selections.filter((s) => s.key !== key);
+        renderBetslip();
+        renderAll();
         return;
       }
 
-      const isSameMatch = (s)=> s.matchId === match.id;
+      const isSameMatch = (s) => s.matchId === match.id;
 
       if(!state.ui.builderOn){
-        state.slip.selections = state.slip.selections.filter(s => !isSameMatch(s));
+        state.slip.selections = state.slip.selections.filter((s) => !isSameMatch(s));
       }else{
-        state.slip.selections = state.slip.selections.filter(s => {
+        state.slip.selections = state.slip.selections.filter((s) => {
           const sameMatch = s.matchId === match.id;
           const sameMarket = s.marketTitle === market.title && s.tab === market.tab;
           return !(sameMatch && sameMarket);
         });
       }
 
-      const groupKey = \"m:\" + match.id;
+      const groupKey = `m:${match.id}`;
 
       state.slip.selections.push({
         matchId: match.id,
@@ -1650,11 +1752,11 @@
 
       renderBetslip();
       renderAll();
-      toast(state.ui.builderOn ? \"Bet Builder (mesmo jogo)\" : \"Adicionado (múltipla por jogos)\");
+      toast(state.ui.builderOn ? "Bet Builder (mesmo jogo)" : "Adicionado (múltipla por jogos)");
     }
 
     function calcTotalOdds(){
-      if(state.slip.selections.length===0) return 1;
+      if(state.slip.selections.length === 0) return 1;
       let t = 1;
       for(const s of state.slip.selections){
         const o = Number(s.odd);
@@ -1665,85 +1767,93 @@
 
     function groupSlip(){
       const map = new Map();
+
       for(const s of state.slip.selections){
         if(!map.has(s.groupKey)) map.set(s.groupKey, []);
         map.get(s.groupKey).push(s);
       }
+
       const out = [];
       for(const [gk, items] of map.entries()){
-        const m = state.db.matches.find(x=>x.id===items[0].matchId);
+        const m = state.db.matches.find((x) => x.id === items[0].matchId);
         const league = findLeague(items[0].leagueId);
         const country = findCountryByLeague(items[0].leagueId);
         out.push({
           groupKey: gk,
-          title: `${m?.home||\"\"} x ${m?.away||\"\"}`,
-          subtitle: `${country?.flag||\"\"} ${league?.name||\"\"} • ${m?.whenTxt||\"\"}`,
+          title: `${m?.home || ""} x ${m?.away || ""}`,
+          subtitle: `${country?.flag || ""} ${league?.name || ""} • ${m?.whenTxt || ""}`,
           items
         });
       }
+
       return out;
     }
 
     function renderBetslip(){
-      const slipEl = $(\"#betslip\");
+      const slipEl = $("#betslip");
       const u = getCurrentUser();
 
-      slipEl.classList.toggle(\"hide\", state.slip.selections.length===0);
-      slipEl.classList.toggle(\"mini\", !!state.ui.betslipMini);
-      $(\"#btnMini\").textContent = state.ui.betslipMini ? \"Expandir\" : \"Mini\";
-      $(\"#slipCount\").textContent = String(state.slip.selections.length);
+      slipEl.classList.toggle("hide", state.slip.selections.length === 0);
+      slipEl.classList.toggle("mini", !!state.ui.betslipMini);
 
-      $(\"#modeLabel\").textContent = state.slip.selections.length > 1 ? \"Múltipla\" : \"Simples\";
-      $(\"#modeHint\").textContent = state.ui.builderOn
-        ? \"Bet Builder ON (mesmo jogo) + múltipla entre jogos\"
-        : \"Bet Builder OFF (1 seleção por jogo) + múltipla entre jogos\";
+      $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Mini";
+      $("#slipCount").textContent = String(state.slip.selections.length);
 
-      const itemsWrap = $(\"#slipItems\");
-      itemsWrap.innerHTML = \"\";
+      $("#modeLabel").textContent = state.slip.selections.length > 1 ? "Múltipla" : "Simples";
+      $("#modeHint").textContent = state.ui.builderOn
+        ? "Bet Builder ON (mesmo jogo) + múltipla entre jogos"
+        : "Bet Builder OFF (1 seleção por jogo) + múltipla entre jogos";
+
+      const itemsWrap = $("#slipItems");
+      itemsWrap.innerHTML = "";
 
       const groups = groupSlip();
+
       for(const g of groups){
-        const groupBox = document.createElement(\"div\");
-        groupBox.className = \"slipItem\";
+        const groupBox = document.createElement("div");
+        groupBox.className = "slipItem";
         groupBox.innerHTML = `
-          <div class=\"slipTop\">
+          <div class="slipTop">
             <div>
-              <div class=\"slipPick\">${esc(g.title)}</div>
-              <div class=\"slipMeta\">${esc(g.subtitle)}</div>
+              <div class="slipPick">${esc(g.title)}</div>
+              <div class="slipMeta">${esc(g.subtitle)}</div>
             </div>
-            <button class=\"btn small danger\" data-delgroup=\"${esc(g.groupKey)}\">Remover</button>
+            <button class="btn small danger" data-delgroup="${esc(g.groupKey)}">Remover</button>
           </div>
-          <div class=\"stack\" style=\"gap:8px\" data-group=\"${esc(g.groupKey)}\"></div>
+          <div class="stack" style="gap:8px" data-group="${esc(g.groupKey)}"></div>
         `;
 
-        const inner = groupBox.querySelector(`[data-group=\"${g.groupKey}\"]`);
+        const inner = groupBox.querySelector(`[data-group="${g.groupKey}"]`);
 
-        g.items.forEach(it=>{
-          const row = document.createElement(\"div\");
-          row.className = \"itemRow\";
-          row.style.padding = \"10px\";
+        g.items.forEach((it) => {
+          const row = document.createElement("div");
+          row.className = "itemRow";
+          row.style.padding = "10px";
           row.innerHTML = `
             <div>
               <strong>${esc(it.pickLabel)}</strong>
-              <div class=\"smallText\">${esc(it.marketTitle)} • ${esc(it.tab)}</div>
+              <div class="smallText">${esc(it.marketTitle)} • ${esc(it.tab)}</div>
             </div>
-            <div style=\"display:flex;flex-direction:column;align-items:flex-end;gap:6px\">
-              <span class=\"badge\">${esc(it.odd)}</span>
-              <button class=\"btn small danger\" data-del=\"${esc(it.key)}\">X</button>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+              <span class="badge">${esc(it.odd)}</span>
+              <button class="btn small danger" data-del="${esc(it.key)}">X</button>
             </div>
           `;
           inner.appendChild(row);
         });
 
-        groupBox.querySelector(`[data-delgroup=\"${g.groupKey}\"]`).onclick = ()=>{
-          state.slip.selections = state.slip.selections.filter(s=>s.groupKey!==g.groupKey);
-          renderBetslip(); renderAll();
+        groupBox.querySelector(`[data-delgroup="${g.groupKey}"]`).onclick = (e) => {
+          e.stopPropagation();
+          state.slip.selections = state.slip.selections.filter((s) => s.groupKey !== g.groupKey);
+          renderBetslip();
+          renderAll();
         };
 
-        groupBox.querySelectorAll(\"[data-del]\").forEach(btn=>{
-          btn.onclick = ()=>{
+        groupBox.querySelectorAll("[data-del]").forEach((btn) => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
             const k = btn.dataset.del;
-            state.slip.selections = state.slip.selections.filter(s=>s.key!==k);
+            state.slip.selections = state.slip.selections.filter((s) => s.key !== k);
             renderBetslip();
             renderAll();
           };
@@ -1752,63 +1862,62 @@
         itemsWrap.appendChild(groupBox);
       }
 
-      $(\"#stakeInput\").value = String(state.slip.stake || 50);
+      $("#stakeInput").value = String(state.slip.stake || 50);
 
       const totalOdds = calcTotalOdds();
-      $(\"#totalOdds\").textContent = totalOdds.toFixed(2);
+      $("#totalOdds").textContent = totalOdds.toFixed(2);
 
-      const stake = Number(state.slip.stake||0);
+      const stake = Number(state.slip.stake || 0);
       const est = Math.floor(stake * totalOdds);
-      $(\"#estReturn\").textContent = `${fmtCP(est)} CP`;
-      $(\"#slipBalance\").textContent = `${fmtCP(u?.cp || 0)} CP`;
+      $("#estReturn").textContent = `${fmtCP(est)} CP`;
+      $("#slipBalance").textContent = `${fmtCP(u?.cp || 0)} CP`;
 
-      $(\"#miniSlipTitle\").textContent =
-        state.slip.selections.length > 1
-          ? `Bilhete (${state.slip.selections.length})`
-          : \"Bilhete\";
+      $("#miniSlipTitle").textContent = state.slip.selections.length > 1 ? `Bilhete (${state.slip.selections.length})` : "Bilhete";
+      $("#miniSlipSub").textContent =
+        state.slip.selections.length === 0 ? "Sem seleções" :
+        state.slip.selections.length === 1 ? "1 seleção" :
+        `${state.slip.selections.length} seleções`;
 
-      $(\"#miniSlipSub\").textContent =
-        state.slip.selections.length === 0
-          ? \"Sem seleções\"
-          : state.slip.selections.length === 1
-            ? \"1 seleção\"
-            : `${state.slip.selections.length} seleções`;
+      $("#miniSlipOdds").textContent = totalOdds.toFixed(2);
 
-      $(\"#miniSlipOdds\").textContent = totalOdds.toFixed(2);
-
-      $(\"#btnPlaceBet\").disabled = !u;
-      $(\"#btnPlaceBet\").style.opacity = u ? \"1\" : \".5\";
-
-      slipEl.onclick = ()=>{
-        if(state.ui.betslipMini){
-          state.ui.betslipMini = false;
-          saveUI(state.ui);
-          renderBetslip();
-        }
-      };
+      $("#btnPlaceBet").disabled = !u;
+      $("#btnPlaceBet").style.opacity = u ? "1" : ".5";
     }
 
     async function persistProfilePatch(email, patch){
       try{
-        await fetch(\"/.netlify/functions/profile-upsert\", {
-          method:\"POST\",
-          headers:{ \"Content-Type\":\"application/json\" },
+        await fetch("/.netlify/functions/profile-upsert", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({ email, ...patch })
         });
-      }catch(e){}
+      }catch{}
     }
 
     function placeBet(){
       const u = getCurrentUser();
-      if(!u){ toast(\"Entre para apostar.\"); return; }
-      if(state.slip.selections.length===0){ toast(\"Bilhete vazio.\"); return; }
+
+      if(!u){
+        toast("Entre para apostar.");
+        return;
+      }
+      if(state.slip.selections.length === 0){
+        toast("Bilhete vazio.");
+        return;
+      }
 
       const stake = Math.floor(Number(state.slip.stake || 0));
-      if(!Number.isFinite(stake) || stake <= 0){ toast(\"Stake inválida.\"); return; }
+      if(!Number.isFinite(stake) || stake <= 0){
+        toast("Stake inválida.");
+        return;
+      }
 
-      if(Number(u.cp||0) < stake){ toast(\"CP insuficiente.\"); return; }
+      if(Number(u.cp || 0) < stake){
+        toast("CP insuficiente.");
+        return;
+      }
 
-      u.cp = Number(u.cp||0) - stake;
+      u.cp = Number(u.cp || 0) - stake;
       persistProfilePatch(u.email, { cp: u.cp });
 
       const totalOdds = calcTotalOdds();
@@ -1818,19 +1927,19 @@
         id: uid(),
         userEmail: u.email,
         createdAt: nowIso(),
-        status: \"ABERTA\",
-        title: (state.slip.selections.length > 1 ? `Múltipla (${state.slip.selections.length})` : \"Simples\"),
+        status: "ABERTA",
+        title: state.slip.selections.length > 1 ? `Múltipla (${state.slip.selections.length})` : "Simples",
         stake,
         totalOdds,
         estimatedReturn: estReturn,
         payout: 0,
-        selections: JSON.parse(JSON.stringify(state.slip.selections)),
+        selections: JSON.parse(JSON.stringify(state.slip.selections))
       });
 
       state.slip.selections = [];
       saveDB(state.db);
 
-      toast(\"Aposta criada (ABERTA).\");
+      toast("Aposta criada (ABERTA).");
       renderTopbar();
       renderBetslip();
       renderHistory();
@@ -1840,36 +1949,43 @@
 
     function settleBet(betId, result){
       const admin = getCurrentUser();
-      if(!isAdminEmail(admin?.email)){ toast(\"Somente admin.\"); return; }
+      if(!isAdminEmail(admin?.email)){
+        toast("Somente admin.");
+        return;
+      }
 
-      const bet = state.db.bets.find(b=>b.id===betId);
-      if(!bet || bet.status!==\"ABERTA\"){ toast(\"Não disponível.\"); return; }
+      const bet = state.db.bets.find((b) => b.id === betId);
+      if(!bet || bet.status !== "ABERTA"){
+        toast("Não disponível.");
+        return;
+      }
 
-      if(result===\"GANHA\"){
-        bet.status = \"GANHA\";
+      if(result === "GANHA"){
+        bet.status = "GANHA";
         bet.payout = Math.floor(bet.stake * bet.totalOdds);
       }else{
-        bet.status = \"PERDIDA\";
+        bet.status = "PERDIDA";
         bet.payout = 0;
       }
 
       saveDB(state.db);
 
-      if(result===\"GANHA\"){
+      if(result === "GANHA"){
         fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(bet.userEmail)}`)
-          .then(r=>r.json())
-          .then(j=>{
-            const newCp = Number(j.cp||0) + Number(bet.payout||0);
+          .then((r) => r.json())
+          .then((j) => {
+            const newCp = Number(j.cp || 0) + Number(bet.payout || 0);
             persistProfilePatch(bet.userEmail, { cp: newCp });
+
             if(state.session.profile && state.session.profile.email === bet.userEmail){
               state.session.profile.cp = newCp;
               renderTopbar();
             }
           })
-          .catch(()=>{});
+          .catch(() => {});
       }
 
-      toast(\"Liquidação: \" + bet.status);
+      toast("Liquidação: " + bet.status);
       renderTopbar();
       renderHistory();
       renderLeaguesView();
@@ -1877,42 +1993,43 @@
 
     function renderHistory(){
       const u = getCurrentUser();
-      const list = $(\"#historyList\");
-      list.innerHTML = \"\";
+      const list = $("#historyList");
+      list.innerHTML = "";
 
       if(!u){
-        list.innerHTML = `<div class=\"smallText\">Entre para ver seu histórico.</div>`;
-        $(\"#historyCount\").textContent = \"0\";
+        list.innerHTML = `<div class="smallText">Entre para ver seu histórico.</div>`;
+        $("#historyCount").textContent = "0";
         return;
       }
 
       const bets = state.db.bets
-        .filter(b=>b.userEmail===u.email)
-        .sort((a,b)=> (b.createdAt.localeCompare(a.createdAt)));
+        .filter((b) => b.userEmail === u.email)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
-      $(\"#historyCount\").textContent = String(bets.length);
+      $("#historyCount").textContent = String(bets.length);
 
-      if(bets.length===0){
-        list.innerHTML = `<div class=\"smallText\">Sem apostas ainda.</div>`;
+      if(bets.length === 0){
+        list.innerHTML = `<div class="smallText">Sem apostas ainda.</div>`;
         return;
       }
 
       for(const b of bets){
         const st = b.status;
-        const stClass = st===\"GANHA\" ? \"won\" : st===\"PERDIDA\" ? \"lost\" : \"open\";
-        const picks = b.selections.map(s=>`${s.pickLabel} (${s.odd})`).join(\" • \");
-        const ret = b.status===\"GANHA\" ? `${fmtCP(b.payout)} CP` : (b.status===\"PERDIDA\" ? \"0 CP\" : `≈ ${fmtCP(b.estimatedReturn)} CP`);
-        const row = document.createElement(\"div\");
-        row.className = \"itemRow\";
+        const stClass = st === "GANHA" ? "won" : st === "PERDIDA" ? "lost" : "open";
+        const picks = b.selections.map((s) => `${s.pickLabel} (${s.odd})`).join(" • ");
+        const ret = b.status === "GANHA" ? `${fmtCP(b.payout)} CP` : (b.status === "PERDIDA" ? "0 CP" : `≈ ${fmtCP(b.estimatedReturn)} CP`);
+
+        const row = document.createElement("div");
+        row.className = "itemRow";
         row.innerHTML = `
-          <div style=\"min-width:0\">
+          <div style="min-width:0">
             <strong>${esc(b.title)}</strong>
-            <div class=\"smallText\">${esc(new Date(b.createdAt).toLocaleString(\"pt-BR\"))} • Stake: ${fmtCP(b.stake)} CP • Odds: ${b.totalOdds.toFixed(2)}</div>
-            <div class=\"smallText\" style=\"margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\">${esc(picks)}</div>
+            <div class="smallText">${esc(new Date(b.createdAt).toLocaleString("pt-BR"))} • Stake: ${fmtCP(b.stake)} CP • Odds: ${b.totalOdds.toFixed(2)}</div>
+            <div class="smallText" style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(picks)}</div>
           </div>
-          <div style=\"display:flex;flex-direction:column;align-items:flex-end;gap:8px\">
-            <span class=\"status ${stClass}\">${esc(st)}</span>
-            <span class=\"badge\">${esc(ret)}</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+            <span class="status ${stClass}">${esc(st)}</span>
+            <span class="badge">${esc(ret)}</span>
           </div>
         `;
         list.appendChild(row);
@@ -1920,81 +2037,103 @@
     }
 
     function makeCode(){
-      const alphabet = \"ABCDEFGHJKMNPQRSTUVWXYZ23456789\";
-      let c = \"\";
-      for(let i=0;i<6;i++) c += alphabet[Math.floor(Math.random()*alphabet.length)];
+      const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+      let c = "";
+      for(let i = 0; i < 6; i++) c += alphabet[Math.floor(Math.random() * alphabet.length)];
       return c;
     }
 
     function createLeague(){
       const u = getCurrentUser();
-      if(!isAdminEmail(u?.email)){ toast(\"Somente admin.\"); return; }
 
-      const name = ($(\"#newLeagueName\").value || \"\").trim();
-      if(name.length < 3){ toast(\"Nome muito curto.\"); return; }
+      if(!isAdminEmail(u?.email)){
+        toast("Somente admin.");
+        return;
+      }
+
+      const name = ($("#newLeagueName").value || "").trim();
+      if(name.length < 3){
+        toast("Nome muito curto.");
+        return;
+      }
 
       const code = makeCode();
-      const L = { id: uid(), name, code, createdAt: nowIso(), ownerEmail: u.email, members:[u.email] };
+      const L = {
+        id: uid(),
+        name,
+        code,
+        createdAt: nowIso(),
+        ownerEmail: u.email,
+        members:[u.email]
+      };
+
       state.db.leagues.push(L);
       saveDB(state.db);
-      $(\"#newLeagueName\").value = \"\";
-      toast(\"Liga criada! Código: \" + code);
+      $("#newLeagueName").value = "";
+      toast("Liga criada! Código: " + code);
       renderLeaguesView();
     }
 
     function joinByCode(){
       const u = getCurrentUser();
-      if(!u){ toast(\"Entre para entrar em ligas.\"); return; }
-      const code = prompt(\"Digite o código da liga:\");
+      if(!u){
+        toast("Entre para entrar em ligas.");
+        return;
+      }
+
+      const code = prompt("Digite o código da liga:");
       if(!code) return;
 
-      const L = state.db.leagues.find(x=>x.code.toLowerCase()===code.trim().toLowerCase());
-      if(!L){ toast(\"Código inválido.\"); return; }
+      const L = state.db.leagues.find((x) => x.code.toLowerCase() === code.trim().toLowerCase());
+      if(!L){
+        toast("Código inválido.");
+        return;
+      }
 
       if(!L.members.includes(u.email)) L.members.push(u.email);
       saveDB(state.db);
-      toast(\"Entrou na liga!\");
+      toast("Entrou na liga!");
       renderLeaguesView();
     }
 
     function renderAdminSettle(){
       const u = getCurrentUser();
-      const wrap = $(\"#adminSettleList\");
-      wrap.innerHTML = \"\";
+      const wrap = $("#adminSettleList");
+      wrap.innerHTML = "";
 
       if(!isAdminEmail(u?.email)){
-        wrap.innerHTML = `<div class=\"smallText\">Somente admin pode liquidar apostas.</div>`;
+        wrap.innerHTML = `<div class="smallText">Somente admin pode liquidar apostas.</div>`;
         return;
       }
 
       const openBets = state.db.bets
-        .filter(b=>b.status===\"ABERTA\")
-        .sort((a,b)=> (b.createdAt.localeCompare(a.createdAt)));
+        .filter((b) => b.status === "ABERTA")
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
-      if(openBets.length===0){
-        wrap.innerHTML = `<div class=\"smallText\">Nenhuma aposta aberta para liquidar.</div>`;
+      if(openBets.length === 0){
+        wrap.innerHTML = `<div class="smallText">Nenhuma aposta aberta para liquidar.</div>`;
         return;
       }
 
       for(const b of openBets){
-        const row = document.createElement(\"div\");
-        row.className = \"itemRow\";
+        const row = document.createElement("div");
+        row.className = "itemRow";
         row.innerHTML = `
-          <div style=\"min-width:0\">
+          <div style="min-width:0">
             <strong>${esc(b.title)}</strong>
-            <div class=\"smallText\">Usuário: ${esc(b.userEmail)} • Stake: ${fmtCP(b.stake)} CP • Odds: ${b.totalOdds.toFixed(2)}</div>
-            <div class=\"smallText\" style=\"margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\">
-              ${esc(b.selections.map(s=>s.pickLabel).join(\" • \"))}
+            <div class="smallText">Usuário: ${esc(b.userEmail)} • Stake: ${fmtCP(b.stake)} CP • Odds: ${b.totalOdds.toFixed(2)}</div>
+            <div class="smallText" style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${esc(b.selections.map((s) => s.pickLabel).join(" • "))}
             </div>
           </div>
-          <div style=\"display:flex;flex-direction:column;align-items:flex-end;gap:8px\">
-            <button class=\"btn small primary\" data-win=\"${esc(b.id)}\">Marcar GANHA</button>
-            <button class=\"btn small danger\" data-lose=\"${esc(b.id)}\">Marcar PERDIDA</button>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+            <button class="btn small primary" data-win="${esc(b.id)}">Marcar GANHA</button>
+            <button class="btn small danger" data-lose="${esc(b.id)}">Marcar PERDIDA</button>
           </div>
         `;
 
-        row.querySelector(`[data-win=\"${b.id}\"]`).onclick = ()=> settleBet(b.id, \"GANHA\");
-        row.querySelector(`[data-lose=\"${b.id}\"]`).onclick = ()=> settleBet(b.id, \"PERDIDA\");
+        row.querySelector(`[data-win="${b.id}"]`).onclick = () => settleBet(b.id, "GANHA");
+        row.querySelector(`[data-lose="${b.id}"]`).onclick = () => settleBet(b.id, "PERDIDA");
 
         wrap.appendChild(row);
       }
@@ -2002,38 +2141,40 @@
 
     function renderLeaguesView(){
       const u = getCurrentUser();
-      const myList = $(\"#myLeaguesList\");
-      myList.innerHTML = \"\";
+      const myList = $("#myLeaguesList");
+      myList.innerHTML = "";
 
       if(!u){
-        myList.innerHTML = `<div class=\"smallText\">Entre para ver/participar de ligas.</div>`;
-        $(\"#leagueCount\").textContent = \"0\";
-        $(\"#adminSettleList\").innerHTML = `<div class=\"smallText\">Entre como admin para liquidar apostas.</div>`;
+        myList.innerHTML = `<div class="smallText">Entre para ver/participar de ligas.</div>`;
+        $("#leagueCount").textContent = "0";
+        $("#adminSettleList").innerHTML = `<div class="smallText">Entre como admin para liquidar apostas.</div>`;
         return;
       }
 
-      const mine = state.db.leagues.filter(L=> (L.members||[]).includes(u.email));
-      $(\"#leagueCount\").textContent = String(mine.length);
+      const mine = state.db.leagues.filter((L) => (L.members || []).includes(u.email));
+      $("#leagueCount").textContent = String(mine.length);
 
-      if(mine.length===0){
-        myList.innerHTML = `<div class=\"smallText\">Você ainda não entrou em nenhuma liga. Use \"Entrar por código\".</div>`;
+      if(mine.length === 0){
+        myList.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga. Use "Entrar por código".</div>`;
       }else{
-        mine.forEach(L=>{
-          const row = document.createElement(\"div\");
-          row.className = \"itemRow\";
+        mine.forEach((L) => {
+          const row = document.createElement("div");
+          row.className = "itemRow";
           row.innerHTML = `
             <div>
               <strong>${esc(L.name)}</strong>
-              <div class=\"smallText\">Código: <strong>${esc(L.code)}</strong> • Membros: ${L.members.length}</div>
+              <div class="smallText">Código: <strong>${esc(L.code)}</strong> • Membros: ${L.members.length}</div>
             </div>
-            <button class=\"btn small danger\" data-leave=\"${esc(L.id)}\">Sair</button>
+            <button class="btn small danger" data-leave="${esc(L.id)}">Sair</button>
           `;
-          row.querySelector(`[data-leave=\"${L.id}\"]`).onclick = ()=>{
-            L.members = L.members.filter(em=>em!==u.email);
+
+          row.querySelector(`[data-leave="${L.id}"]`).onclick = () => {
+            L.members = L.members.filter((em) => em !== u.email);
             saveDB(state.db);
             renderLeaguesView();
-            toast(\"Você saiu da liga.\");
+            toast("Você saiu da liga.");
           };
+
           myList.appendChild(row);
         });
       }
@@ -2043,170 +2184,249 @@
 
     function openAuth(mode){
       authMode = mode;
-      $(\"#authModal\").classList.add(\"show\");
+      $("#authModal").classList.add("show");
 
-      const isLogin = mode === \"login\";
-      const isRegister = mode === \"register\";
-      const isVerify = mode === \"verify\";
+      const isLogin = mode === "login";
+      const isRegister = mode === "register";
+      const isVerify = mode === "verify";
 
-      $(\"#authTitle\").textContent = isLogin ? \"Entrar\" : isRegister ? \"Registrar\" : \"Confirmar e-mail\";
-      $(\"#authHint\").textContent = isLogin
-        ? \"Entre com email e senha.\"
+      $("#authTitle").textContent = isLogin ? "Entrar" : isRegister ? "Registrar" : "Confirmar e-mail";
+      $("#authHint").textContent = isLogin
+        ? "Entre com email e senha."
         : isRegister
-          ? \"Crie sua conta. Vamos enviar um código para confirmar seu e-mail.\"
-          : \"Digite o código que enviamos por e-mail.\";
+          ? "Crie sua conta. Vamos enviar um código para confirmar seu e-mail."
+          : "Digite o código que enviamos por e-mail.";
 
-      $(\"#btnSwitchAuth\").textContent = isLogin ? \"Ir para Registrar\" : \"Ir para Entrar\";
+      $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
 
-      $(\"#loginBox\").classList.toggle(\"hide\", !isLogin);
-      $(\"#registerBox\").classList.toggle(\"hide\", !isRegister);
-      $(\"#verifyBox\").classList.toggle(\"hide\", !isVerify);
+      $("#loginBox").classList.toggle("hide", !isLogin);
+      $("#registerBox").classList.toggle("hide", !isRegister);
+      $("#verifyBox").classList.toggle("hide", !isVerify);
 
-      if(isLogin){
-        $(\"#authPass\").value = \"\";
-      }
       if(isRegister){
         pendingRegisterPayload = null;
       }
     }
-    function closeAuth(){ $(\"#authModal\").classList.remove(\"show\"); }
 
-    async function doLogin(){
-      const email = ($(\"#authEmail\").value || \"\").trim().toLowerCase();
-      const pass = ($(\"#authPass\").value || \"\").trim();
-      if(!email.includes(\"@\") || pass.length < 4){ toast(\"Email/senha inválidos.\"); return; }
-
-      const res = await fetch(\"/.netlify/functions/auth-login\",{
-        method:\"POST\",
-        headers:{ \"Content-Type\":\"application/json\" },
-        body: JSON.stringify({ email, pass })
-      });
-      const j = await res.json();
-      if(!res.ok){ toast(j?.error || \"Falha no login\"); return; }
-
-      state.session.profile = j.profile;
-      setAuthEmail(email);
-      toast(\"Entrou!\");
-      closeAuth();
-      renderAll();
+    function closeAuth(){
+      $("#authModal").classList.remove("show");
     }
 
     function pickGender(g){
-      $(\"#regGender\").value = g;
-      $(\"#genderM\").classList.toggle(\"active\", g===\"Masculino\");
-      $(\"#genderF\").classList.toggle(\"active\", g===\"Feminino\");
+      $("#regGender").value = g;
+      $("#genderM").classList.toggle("active", g === "Masculino");
+      $("#genderF").classList.toggle("active", g === "Feminino");
+    }
+
+    async function doLogin(){
+      const email = ($("#authEmail").value || "").trim().toLowerCase();
+      const pass = ($("#authPass").value || "").trim();
+
+      if(!email.includes("@") || pass.length < 4){
+        toast("Email/senha inválidos.");
+        return;
+      }
+
+      try{
+        const res = await fetch("/.netlify/functions/auth-login",{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ email, pass })
+        });
+
+        const j = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(j?.error || "Falha no login");
+          return;
+        }
+
+        state.session.profile = j.profile;
+        setAuthEmail(email);
+        toast("Entrou!");
+        closeAuth();
+        renderAll();
+      }catch{
+        toast("Erro ao conectar no login.");
+      }
     }
 
     async function sendRegisterCode(){
-      const email = ($(\"#regEmail\").value || \"\").trim().toLowerCase();
-      const pass  = ($(\"#regPass\").value || \"\").trim();
-      const username = ($(\"#regUsername\").value || \"\").trim();
+      const email = ($("#regEmail").value || "").trim().toLowerCase();
+      const pass = ($("#regPass").value || "").trim();
+      const username = ($("#regUsername").value || "").trim();
 
-      if(!email.includes(\"@\") || pass.length < 4){ toast(\"Email/senha inválidos.\"); return; }
-      if(username.length < 3){ toast(\"Nome de usuário muito curto.\"); return; }
+      if(!email.includes("@") || pass.length < 4){
+        toast("Email/senha inválidos.");
+        return;
+      }
+
+      if(username.length < 3){
+        toast("Nome de usuário muito curto.");
+        return;
+      }
 
       const payload = {
         email,
         pass,
         username,
-        country: ($(\"#regCountry\").value || \"Brasil\"),
-        phone: `${($(\"#regDDD\").value||\"+55\")} ${($(\"#regPhone\").value||\"\")}`.trim(),
-        gender: ($(\"#regGender\").value || \"Masculino\"),
-        firstName: ($(\"#regFirstName\").value || \"\").trim(),
-        lastName: ($(\"#regLastName\").value || \"\").trim(),
-        birthDay: ($(\"#regBirthDay\").value || \"\").trim(),
-        birthMonth: ($(\"#regBirthMonth\").value || \"\").trim(),
-        birthYear: ($(\"#regBirthYear\").value || \"\").trim(),
-        cpf: ($(\"#regCPF\").value || \"\").trim(),
-        fullname: `${($(\"#regFirstName\").value||\"\").trim()} ${($(\"#regLastName\").value||\"\").trim()}`.trim()
+        country: ($("#regCountry").value || "Brasil"),
+        phone: `${($("#regDDD").value || "+55")} ${($("#regPhone").value || "")}`.trim(),
+        gender: ($("#regGender").value || "Masculino"),
+        firstName: ($("#regFirstName").value || "").trim(),
+        lastName: ($("#regLastName").value || "").trim(),
+        birthDay: ($("#regBirthDay").value || "").trim(),
+        birthMonth: ($("#regBirthMonth").value || "").trim(),
+        birthYear: ($("#regBirthYear").value || "").trim(),
+        cpf: ($("#regCPF").value || "").trim(),
+        fullname: `${($("#regFirstName").value || "").trim()} ${($("#regLastName").value || "").trim()}`.trim()
       };
 
       pendingRegisterPayload = payload;
 
-      const res = await fetch(\"/.netlify/functions/auth-register-start\",{
-        method:\"POST\",
-        headers:{ \"Content-Type\":\"application/json\" },
-        body: JSON.stringify(payload)
-      });
-      const j = await res.json();
-      if(!res.ok){ toast(j?.error || \"Erro ao enviar código\"); return; }
+      try{
+        const res = await fetch("/.netlify/functions/auth-register-start",{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
 
-      $(\"#verifyEmailBadge\").textContent = email;
-      toast(\"Código enviado ✅\");
-      openAuth(\"verify\");
+        const j = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(j?.error || "Erro ao enviar código");
+          return;
+        }
+
+        $("#verifyEmailBadge").textContent = email;
+        toast("Código enviado ✅");
+        openAuth("verify");
+      }catch{
+        toast("Erro ao conectar no registro.");
+      }
     }
 
     async function verifyRegisterCode(){
       if(!pendingRegisterPayload?.email){
-        toast(\"Volte e envie o código novamente.\");
-        openAuth(\"register\");
+        toast("Volte e envie o código novamente.");
+        openAuth("register");
         return;
       }
 
       const email = pendingRegisterPayload.email;
-      const code = ($(\"#regCode\").value || \"\").trim();
+      const code = ($("#regCode").value || "").trim();
 
       if(code.length !== 6){
-        toast(\"Digite os 6 dígitos.\");
+        toast("Digite os 6 dígitos.");
         return;
       }
 
-      const res = await fetch(\"/.netlify/functions/auth-register-verify\",{
-        method:\"POST\",
-        headers:{ \"Content-Type\":\"application/json\" },
-        body: JSON.stringify({ email, code })
-      });
-      const j = await res.json();
-      if(!res.ok){
-        toast(j?.error || \"Código inválido\");
-        return;
-      }
+      try{
+        const res = await fetch("/.netlify/functions/auth-register-verify",{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ email, code })
+        });
 
-      toast(\"E-mail confirmado. Agora entre na sua conta.\");
-      $(\"#authEmail\").value = email;
-      $(\"#authPass\").value = \"\";
-      openAuth(\"login\");
+        const j = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(j?.error || "Código inválido");
+          return;
+        }
+
+        toast("E-mail confirmado. Agora entre na sua conta.");
+        $("#authEmail").value = email;
+        $("#authPass").value = "";
+        openAuth("login");
+      }catch{
+        toast("Erro ao confirmar código.");
+      }
     }
 
     async function resendCode(){
-      if(!pendingRegisterPayload?.email){ toast(\"Volte e preencha o cadastro.\"); openAuth(\"register\"); return; }
-      const res = await fetch(\"/.netlify/functions/auth-register-start\",{
-        method:\"POST\",
-        headers:{ \"Content-Type\":\"application/json\" },
-        body: JSON.stringify(pendingRegisterPayload)
-      });
-      const j = await res.json();
-      if(!res.ok){ toast(j?.error || \"Erro ao reenviar\"); return; }
-      toast(\"Código reenviado ✅\");
+      if(!pendingRegisterPayload?.email){
+        toast("Volte e preencha o cadastro.");
+        openAuth("register");
+        return;
+      }
+
+      try{
+        const res = await fetch("/.netlify/functions/auth-register-start",{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(pendingRegisterPayload)
+        });
+
+        const j = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(j?.error || "Erro ao reenviar");
+          return;
+        }
+
+        toast("Código reenviado ✅");
+      }catch{
+        toast("Erro ao reenviar código.");
+      }
     }
 
     async function startCheckout(plan){
       const u = getCurrentUser();
       if(!u){
-        toast(\"Entre para assinar um plano.\");
-        openAuth(\"login\");
+        toast("Entre para assinar um plano.");
+        openAuth("login");
         return;
       }
-      const res = await fetch(\"/.netlify/functions/create-checkout\", {
-        method:\"POST\",
-        headers:{ \"Content-Type\":\"application/json\" },
-        body: JSON.stringify({ email: u.email, plan })
-      });
-      const data = await res.json();
-      if(!res.ok){
-        toast(data?.error || \"Erro no checkout\");
-        return;
-      }
-      if(data?.url){
-        window.location.href = data.url;
-      }else{
-        toast(\"Checkout sem URL\");
+
+      try{
+        const res = await fetch("/.netlify/functions/create-checkout", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ email: u.email, plan })
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(data?.error || "Erro no checkout");
+          return;
+        }
+
+        if(data?.url){
+          window.location.href = data.url;
+        }else{
+          toast("Checkout sem URL");
+        }
+      }catch{
+        toast("Erro ao iniciar checkout.");
       }
     }
 
     async function registerSW(){
-      if(!(\"serviceWorker\" in navigator)) return;
-      try{ await navigator.serviceWorker.register(\"./sw.js\"); }catch(e){}
+      if(!("serviceWorker" in navigator)) return;
+      try{
+        await navigator.serviceWorker.register("./sw.js");
+      }catch{}
+    }
+
+    async function restoreSessionFromServer(){
+      const a = getAuth();
+      if(!a?.email) return;
+
+      try{
+        const r = await fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(a.email)}`);
+        const j = await r.json().catch(() => ({}));
+
+        if(r.ok && j){
+          state.session.profile = {
+            email: a.email,
+            username: j.username || "Usuário",
+            fullname: j.fullname || "",
+            plan: j.plan || "free",
+            cp: Number(j.cp || 0)
+          };
+        }else{
+          setAuthEmail(null);
+        }
+      }catch{
+        setAuthEmail(null);
+      }
     }
 
     function renderAll(){
@@ -2224,19 +2444,21 @@
     }
 
     function hookUI(){
-      $$(\".navBtn\").forEach(b=> b.onclick = ()=> setNav(b.dataset.nav));
+      $$(".navBtn").forEach((b) => {
+        b.onclick = () => setNav(b.dataset.nav);
+      });
 
-      $(\"#btnRefresh\").onclick = async ()=> {
+      $("#btnRefresh").onclick = async () => {
         if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
           await updateLeagueReal(state.ui.leagueId, { force:true });
         }else{
-          toast(\"Atualizado (demo).\");
+          toast("Atualizado (demo).");
           renderFeatured();
         }
       };
 
-      $(\"#btnSeed\").onclick = ()=>{
-        if(confirm(\"Resetar demo? (apaga dados locais)\")){
+      $("#btnSeed").onclick = () => {
+        if(confirm("Resetar demo? (apaga dados locais)")){
           localStorage.removeItem(LS.DB);
           localStorage.removeItem(LS.AUTH);
           localStorage.removeItem(LS.UI);
@@ -2244,112 +2466,121 @@
         }
       };
 
-      $(\"#searchInput\").value = state.ui.search || \"\";
-      $(\"#searchInput\").oninput = (e)=>{
+      $("#searchInput").value = state.ui.search || "";
+      $("#searchInput").oninput = (e) => {
         state.ui.search = e.target.value;
         saveUI(state.ui);
-        renderMatches(); renderFeatured();
+        renderMatches();
+        renderFeatured();
       };
 
-      $(\"#btnRegister\").onclick = ()=> openAuth(\"register\");
-      $(\"#btnEnter\").onclick = ()=> openAuth(\"login\");
-      $(\"#btnLogout\").onclick = ()=>{
+      $("#btnRegister").onclick = () => openAuth("register");
+      $("#btnEnter").onclick = () => openAuth("login");
+      $("#btnLogout").onclick = () => {
         setAuthEmail(null);
         state.session.profile = null;
-        toast(\"Saiu.\");
+        toast("Saiu.");
         renderAll();
       };
-      $(\"#goHome\").onclick = ()=> setNav(\"home\");
 
-      $(\"#btnCloseAuth\").onclick = closeAuth;
-      $(\"#btnSwitchAuth\").onclick = ()=>{
-        openAuth(authMode === \"login\" ? \"register\" : \"login\");
+      $("#goHome").onclick = () => setNav("home");
+
+      $("#btnCloseAuth").onclick = closeAuth;
+      $("#btnSwitchAuth").onclick = () => {
+        openAuth(authMode === "login" ? "register" : "login");
       };
 
-      $(\"#btnSubmitAuth\").onclick = doLogin;
-      $(\"#btnSendCode\").onclick = sendRegisterCode;
-      $(\"#btnVerifyCode\").onclick = verifyRegisterCode;
-      $(\"#btnBackRegister\").onclick = ()=> openAuth(\"register\");
-      $(\"#btnResendCode\").onclick = resendCode;
+      $("#btnSubmitAuth").onclick = doLogin;
+      $("#btnSendCode").onclick = sendRegisterCode;
+      $("#btnVerifyCode").onclick = verifyRegisterCode;
+      $("#btnBackRegister").onclick = () => openAuth("register");
+      $("#btnResendCode").onclick = resendCode;
 
-      $(\"#genderM\").onclick = ()=> pickGender(\"Masculino\");
-      $(\"#genderF\").onclick = ()=> pickGender(\"Feminino\");
+      $("#genderM").onclick = () => pickGender("Masculino");
+      $("#genderF").onclick = () => pickGender("Feminino");
 
-      $(\"#btnCloseGame\").onclick = closeGame;
+      $("#btnCloseGame").onclick = closeGame;
 
-      $(\"#toggleBuilderGame\").onclick = ()=>{
+      $("#toggleBuilderGame").onclick = () => {
         state.ui.builderOn = !state.ui.builderOn;
         saveUI(state.ui);
-        toast(\"Criar aposta: \" + (state.ui.builderOn ? \"ON (Bet Builder no jogo)\" : \"OFF (1 seleção por jogo)\"));
+        toast("Criar aposta: " + (state.ui.builderOn ? "ON (Bet Builder no jogo)" : "OFF (1 seleção por jogo)"));
         renderGameScreen();
         renderBetslip();
         renderAll();
       };
 
-      $(\"#btnMini\").onclick = (e)=>{
+      $("#btnMini").onclick = (e) => {
         e.stopPropagation();
         state.ui.betslipMini = !state.ui.betslipMini;
         saveUI(state.ui);
         renderBetslip();
       };
 
-      $(\"#betslipMiniBar\").onclick = ()=>{
+      $("#betslipMiniBar").onclick = (e) => {
+        e.stopPropagation();
         state.ui.betslipMini = false;
         saveUI(state.ui);
         renderBetslip();
       };
 
-      $$(\"[data-stakeadd]\").forEach(el=>{
-        el.onclick = ()=>{
+      $$(".stakeChip").forEach((el) => {
+        el.onclick = () => {
           const add = Number(el.dataset.stakeadd || 0);
           state.slip.stake = Math.max(0, Number(state.slip.stake || 0) + add);
           renderBetslip();
         };
       });
 
-      $(\"#stakeInput\").oninput = (e)=>{
+      $("#stakeInput").oninput = (e) => {
         state.slip.stake = Math.floor(Number(e.target.value || 0));
         renderBetslip();
       };
-      $(\"#btnPlaceBet\").onclick = placeBet;
 
-      $(\"#btnEditSlip\").onclick = ()=> toast(\"Editar: remova seleções no bilhete (X).\");
-      $(\"#btnCombos\").onclick = ()=>{
+      $("#btnPlaceBet").onclick = placeBet;
+      $("#btnEditSlip").onclick = () => toast("Editar: remova seleções no bilhete (X).");
+      $("#btnCombos").onclick = () => {
         const n = state.slip.selections.length;
-        if(n < 2){ toast(\"Adicione 2+ seleções para combinações.\"); return; }
-        toast(\"Combinações demo: odds total = produto.\");
+        if(n < 2){
+          toast("Adicione 2+ seleções para combinações.");
+          return;
+        }
+        toast("Combinações demo: odds total = produto.");
       };
 
-      $(\"#btnClearHistory\").onclick = ()=>{
+      $("#btnClearHistory").onclick = () => {
         const u = getCurrentUser();
-        if(!u){ toast(\"Entre.\"); return; }
-        if(confirm(\"Limpar seu histórico?\")){
-          state.db.bets = state.db.bets.filter(b=>b.userEmail!==u.email);
+        if(!u){
+          toast("Entre.");
+          return;
+        }
+        if(confirm("Limpar seu histórico?")){
+          state.db.bets = state.db.bets.filter((b) => b.userEmail !== u.email);
           saveDB(state.db);
           renderHistory();
           renderLeaguesView();
-          toast(\"Histórico limpo.\");
+          toast("Histórico limpo.");
         }
       };
 
-      $(\"#btnJoinByCode\").onclick = joinByCode;
-      $(\"#btnCreateLeague\").onclick = createLeague;
-      $(\"#btnRefreshAdmin\").onclick = ()=> renderLeaguesView();
+      $("#btnJoinByCode").onclick = joinByCode;
+      $("#btnCreateLeague").onclick = createLeague;
+      $("#btnRefreshAdmin").onclick = () => renderLeaguesView();
 
-      $(\"#btnClosePlans\").onclick = closePlans;
-      $(\"#btnBuyPro\").onclick = ()=> startCheckout(\"pro\");
-      $(\"#btnBuyElite\").onclick = ()=> startCheckout(\"elite\");
+      $("#btnClosePlans").onclick = closePlans;
+      $("#btnBuyPro").onclick = () => startCheckout("pro");
+      $("#btnBuyElite").onclick = () => startCheckout("elite");
 
-      document.addEventListener(\"pointerdown\", (e)=>{
-        const slip = $(\"#betslip\");
-        if(!slip || slip.classList.contains(\"hide\")) return;
+      document.addEventListener("pointerdown", (e) => {
+        const slip = $("#betslip");
+        if(!slip || slip.classList.contains("hide")) return;
 
-        if($(\"#authModal\")?.classList.contains(\"show\")) return;
-        if($(\"#plansModal\")?.classList.contains(\"show\")) return;
-        if($(\"#gameScreen\")?.classList.contains(\"show\")) return;
+        if($("#authModal")?.classList.contains("show")) return;
+        if($("#plansModal")?.classList.contains("show")) return;
+        if($("#gameScreen")?.classList.contains("show")) return;
 
-        const clickedInside = (slip === e.target) || slip.contains(e.target);
-        if(!clickedInside && !state.ui.betslipMini){
+        const insideSlip = slip.contains(e.target);
+        if(!insideSlip && !state.ui.betslipMini){
           state.ui.betslipMini = true;
           saveUI(state.ui);
           renderBetslip();
@@ -2362,32 +2593,13 @@
       ensureDefaults();
       renderAll();
       await registerSW();
-
-      const a = getAuth();
-      if(a?.email){
-        try{
-          const r = await fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(a.email)}`);
-          const j = await r.json();
-          if(r.ok && j){
-            state.session.profile = {
-              email: a.email,
-              username: j.username || \"Usuário\",
-              fullname: j.fullname || \"\",
-              plan: j.plan || \"free\",
-              cp: Number(j.cp || 0)
-            };
-            renderAll();
-          }else{
-            setAuthEmail(null);
-          }
-        }catch(e){
-          setAuthEmail(null);
-        }
-      }
+      await restoreSessionFromServer();
 
       if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
         await updateLeagueReal(state.ui.leagueId, { force:true });
       }
+
+      renderAll();
     }
 
     init();
