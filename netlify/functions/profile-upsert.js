@@ -1,34 +1,43 @@
-const { createClient } = require("@supabase/supabase-js");
+import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
+const supa = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  { auth: { persistSession: false } }
 );
 
-exports.handler = async (event) => {
+const json = (statusCode, body) => ({
+  statusCode,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  },
+  body: JSON.stringify(body)
+});
+
+export async function handler(event) {
   try {
-    if (event.httpMethod !== "POST") {
-      return { statusCode: 405, body: JSON.stringify({ error: "Use POST" }) };
-    }
+    if (event.httpMethod !== "POST") return json(405, { error: "Use POST" });
 
-    const { email, username, fullname } = JSON.parse(event.body || "{}");
-    if (!email || !String(email).includes("@")) {
-      return { statusCode: 400, body: JSON.stringify({ error: "Email inválido" }) };
-    }
+    const body = JSON.parse(event.body || "{}");
+    const email = String(body.email || "").trim().toLowerCase();
+    if (!email) return json(400, { error: "email obrigatório" });
 
-    // garante que existe (free por padrão)
-    const { error } = await supabase
+    const patch = {};
+    if (body.username != null) patch.username = String(body.username);
+    if (body.fullname != null) patch.fullname = String(body.fullname);
+    if (body.plan != null) patch.plan = String(body.plan);
+    if (body.cp != null) patch.cp = Number(body.cp);
+
+    const { data, error } = await supa
       .from("profiles")
-      .upsert(
-        { email, plan: "free", username: username || null, fullname: fullname || null },
-        { onConflict: "email" }
-      );
+      .upsert({ email, ...patch }, { onConflict: "email" })
+      .select("email, username, fullname, plan, cp")
+      .single();
 
-    if (error) throw error;
-
-    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    if (error) return json(500, { error: error.message });
+    return json(200, { ok: true, profile: data });
   } catch (e) {
-    console.error(e);
-    return { statusCode: 500, body: JSON.stringify({ error: e.message || String(e) }) };
+    return json(500, { error: String(e?.message || e) });
   }
-};
+}

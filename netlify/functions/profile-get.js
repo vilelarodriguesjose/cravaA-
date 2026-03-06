@@ -1,36 +1,36 @@
-const { createClient } = require("@supabase/supabase-js");
+import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
+const supa = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  { auth: { persistSession: false } }
 );
 
-exports.handler = async (event) => {
+const json = (statusCode, body) => ({
+  statusCode,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  },
+  body: JSON.stringify(body)
+});
+
+export async function handler(event) {
   try {
-    if (event.httpMethod !== "GET") {
-      return { statusCode: 405, body: JSON.stringify({ error: "Use GET" }) };
-    }
+    const email = String(event.queryStringParameters?.email || "").trim().toLowerCase();
+    if (!email) return json(400, { error: "email obrigatório" });
 
-    const email = (event.queryStringParameters?.email || "").trim().toLowerCase();
-    if (!email || !email.includes("@")) {
-      return { statusCode: 400, body: JSON.stringify({ error: "Email inválido" }) };
-    }
-
-    const { data, error } = await supabase
+    const { data, error } = await supa
       .from("profiles")
-      .select("email, plan")
+      .select("email, username, fullname, plan, cp")
       .eq("email", email)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return json(500, { error: error.message });
+    if (!data) return json(404, { error: "perfil não encontrado" });
 
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plan: data?.plan || "free" }),
-    };
+    return json(200, data);
   } catch (e) {
-    console.error(e);
-    return { statusCode: 500, body: JSON.stringify({ error: e.message || String(e) }) };
+    return json(500, { error: String(e?.message || e) });
   }
-};
+}

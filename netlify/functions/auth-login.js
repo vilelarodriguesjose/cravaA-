@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-const sb = () => createClient(
+const supa = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,
   { auth: { persistSession: false } }
@@ -13,7 +13,7 @@ const json = (statusCode, body) => ({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*"
   },
-  body: JSON.stringify(body),
+  body: JSON.stringify(body)
 });
 
 function verifyPass(pass, stored) {
@@ -38,8 +38,6 @@ export async function handler(event) {
     if (!email.includes("@") || pass.length < 4) {
       return json(400, { error: "Email/senha inválidos" });
     }
-
-    const supa = sb();
 
     const { data: authRow, error: e1 } = await supa
       .from("auth_local")
