@@ -9,64 +9,74 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <style>
     :root{
-      --bg:#07130b;
-      --panel:#0b1a10;
-      --panel2:#0e2315;
-      --card:#0f2718;
-      --muted:#9bb7a6;
-      --text:#e8f4ec;
+      --bg:#06110a;
+      --bgSoft:#09160d;
+      --panel:#0a1710;
+      --panel2:#0d2015;
+      --card:#101d15;
+      --card2:#13251a;
+      --muted:#97ad9f;
+      --text:#ecf6ef;
       --line:rgba(255,255,255,.08);
+      --line2:rgba(255,255,255,.12);
       --green:#17c964;
+      --green2:#14b85a;
       --yellow:#f5c542;
       --danger:#ff4d4d;
-      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --shadow:0 14px 40px rgba(0,0,0,.35);
+      --shadow2:0 20px 55px rgba(0,0,0,.42);
       --radius:18px;
       --radius2:14px;
+      --radius3:12px;
       --fieldBg:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      --oddBg:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
+      --oddBgHover:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      --sportGlow:radial-gradient(1200px 500px at 50% -10%, rgba(23,201,100,.10), transparent 60%);
     }
 
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
 
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background:
-        radial-gradient(900px 600px at 20% 0%, rgba(23,201,100,.10), transparent 55%),
-        radial-gradient(900px 600px at 80% 0%, rgba(245,197,66,.08), transparent 55%),
+        radial-gradient(1000px 700px at 20% 0%, rgba(23,201,100,.10), transparent 58%),
+        radial-gradient(1000px 700px at 80% 0%, rgba(245,197,66,.07), transparent 58%),
         var(--bg);
       color:var(--text);
       min-height:100vh;
       padding-bottom:92px;
     }
 
-    .wrap{max-width:1100px;margin:0 auto;padding:14px}
+    .wrap{max-width:1180px;margin:0 auto;padding:14px}
 
     .topbar{
       position:sticky;top:0;z-index:50;
-      backdrop-filter: blur(12px);
-      background: rgba(7,19,11,.72);
+      backdrop-filter:blur(12px);
+      background:rgba(6,17,10,.78);
       border-bottom:1px solid var(--line);
     }
     .topbarInner{
-      max-width:1100px;margin:0 auto;padding:10px 14px;
+      max-width:1180px;margin:0 auto;padding:10px 14px;
       display:flex;align-items:center;gap:10px;
     }
 
     .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.2px}
     .logo{
       width:38px;height:38px;border-radius:12px;
-      background: linear-gradient(135deg, rgba(23,201,100,.22), rgba(245,197,66,.18));
+      background:linear-gradient(135deg, rgba(23,201,100,.22), rgba(245,197,66,.18));
       border:1px solid rgba(255,255,255,.10);
       display:grid;place-items:center;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
       position:relative;overflow:hidden;
     }
     .logo:before{
       content:"";
       position:absolute; inset:-40%;
-      background: conic-gradient(from 180deg, rgba(23,201,100,.35), rgba(245,197,66,.30), rgba(23,201,100,.35));
-      animation: spin 7s linear infinite;
-      filter: blur(2px);
+      background:conic-gradient(from 180deg, rgba(23,201,100,.35), rgba(245,197,66,.30), rgba(23,201,100,.35));
+      animation:spin 7s linear infinite;
+      filter:blur(2px);
     }
     .logo span{position:relative;font-weight:900}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -76,9 +86,9 @@
     .pill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
-      background: rgba(255,255,255,.06);
+      background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
-      color: rgba(232,244,236,.92);
+      color:rgba(232,244,236,.92);
       font-size:13px;
       white-space:nowrap;
     }
@@ -87,26 +97,26 @@
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
       padding:10px 12px;border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
       cursor:pointer;
       user-select:none;
-      transition:.15s transform ease, .15s background ease, .15s border ease;
+      transition:.15s transform ease, .15s background ease, .15s border ease, .15s opacity ease;
       font-weight:800;
       font-size:14px;
     }
-    .btn:hover{transform: translateY(-1px);background: rgba(255,255,255,.08)}
-    .btn:active{transform: translateY(0px)}
-    .btn.primary{background: rgba(23,201,100,.14);border-color: rgba(23,201,100,.28)}
-    .btn.yellow{background: rgba(245,197,66,.14);border-color: rgba(245,197,66,.28)}
-    .btn.danger{background: rgba(255,77,77,.14);border-color: rgba(255,77,77,.28)}
-    .btn.ghost{background: transparent}
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.08)}
+    .btn:active{transform:translateY(0px)}
+    .btn.primary{background:rgba(23,201,100,.14);border-color:rgba(23,201,100,.28)}
+    .btn.yellow{background:rgba(245,197,66,.14);border-color:rgba(245,197,66,.28)}
+    .btn.danger{background:rgba(255,77,77,.14);border-color:rgba(255,77,77,.28)}
+    .btn.ghost{background:transparent}
     .btn.small{padding:8px 10px;border-radius:10px;font-size:13px}
     .hide{display:none !important}
 
     .grid{
       display:grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns:320px 1fr;
       gap:14px;
       align-items:start;
     }
@@ -115,17 +125,17 @@
     }
 
     .panel{
-      background: rgba(255,255,255,.04);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
       border:1px solid rgba(255,255,255,.08);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
       overflow:hidden;
     }
     .panelHead{
       display:flex;align-items:center;justify-content:space-between;
       padding:12px 12px;
       border-bottom:1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), transparent);
     }
     .panelTitle{font-weight:900;font-size:14px;letter-spacing:.2px}
     .muted{color:var(--muted)}
@@ -134,8 +144,8 @@
 
     .search{
       display:flex;gap:10px;align-items:center;
-      padding:10px;border-radius:14px;
-      background: rgba(255,255,255,.05);
+      padding:10px 12px;border-radius:14px;
+      background:rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
     }
     .search input{
@@ -147,63 +157,229 @@
     .chip{
       padding:8px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      background:rgba(255,255,255,.05);
       cursor:pointer;
       font-weight:800;
       font-size:13px;
       user-select:none;
       display:inline-flex;align-items:center;gap:8px;
+      transition:.15s ease;
     }
-    .chip.active{border-color: rgba(23,201,100,.30); background: rgba(23,201,100,.12)}
+    .chip:hover{background:rgba(255,255,255,.075)}
+    .chip.active{border-color:rgba(23,201,100,.30); background:rgba(23,201,100,.12)}
     .chip .flag{font-size:16px}
 
     .leagueList{display:flex;flex-direction:column;gap:8px}
     .leagueItem{
-      padding:10px 10px;border-radius:14px;
+      padding:11px 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
       cursor:pointer;
       display:flex;align-items:center;justify-content:space-between;gap:10px;
-      transition:.15s transform ease, .15s background ease;
+      transition:.15s transform ease, .15s background ease, .15s border ease;
+      position:relative;
+      overflow:hidden;
     }
-    .leagueItem:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
-    .leagueItem.active{border-color: rgba(23,201,100,.30); background: rgba(23,201,100,.10)}
-    .leagueName{font-weight:900}
+    .leagueItem:before{
+      content:"";
+      position:absolute;left:0;top:0;bottom:0;width:4px;
+      background:transparent;
+      transition:.15s ease;
+    }
+    .leagueItem:hover{transform:translateY(-1px); background:rgba(255,255,255,.06)}
+    .leagueItem.active{
+      border-color:rgba(23,201,100,.30);
+      background:linear-gradient(180deg, rgba(23,201,100,.12), rgba(23,201,100,.06));
+    }
+    .leagueItem.active:before{background:linear-gradient(180deg, var(--green), rgba(245,197,66,.9))}
+    .leagueName{font-weight:950}
     .badge{
       padding:6px 8px;border-radius:999px;
       font-weight:900;font-size:12px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color: rgba(232,244,236,.90);
+      background:rgba(255,255,255,.05);
+      color:rgba(232,244,236,.90);
       white-space:nowrap;
     }
 
-    .matchCard{
-      padding:12px;border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      box-shadow: 0 14px 40px rgba(0,0,0,.25);
+    .matchesSportsbook{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
-    .matchTop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-    .kicker{font-size:12px;color:var(--muted);font-weight:800}
-    .teams{display:flex;flex-direction:column;gap:6px}
-    .teamRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .teamName{font-weight:1000}
-    .oddsRow{display:grid;grid-template-columns: repeat(3, 1fr);gap:8px;margin-top:10px}
+
+    .matchCard{
+      padding:0;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+      box-shadow:0 14px 40px rgba(0,0,0,.22);
+      overflow:hidden;
+      transition:.15s transform ease, .15s border ease, .15s background ease;
+    }
+    .matchCard:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+    }
+
+    .matchTopLine{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:8px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.02);
+    }
+
+    .leagueStrip{
+      display:flex;align-items:center;gap:8px;min-width:0;
+      font-size:12px;font-weight:900;color:var(--muted);
+    }
+    .liveDot{
+      width:8px;height:8px;border-radius:999px;
+      background:var(--green);
+      box-shadow:0 0 0 5px rgba(23,201,100,.10);
+      flex:none;
+    }
+
+    .matchMain{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 280px 88px;
+      gap:10px;
+      align-items:stretch;
+      padding:10px 12px 12px;
+    }
+    @media (max-width: 860px){
+      .matchMain{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .matchTeams{
+      display:flex;flex-direction:column;gap:8px;justify-content:center;
+      min-width:0;
+    }
+
+    .teamLine{
+      display:grid;
+      grid-template-columns:34px 1fr auto;
+      align-items:center;
+      gap:10px;
+      min-height:30px;
+    }
+
+    .teamName{
+      font-weight:950;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .teamTag{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:900;
+    }
+
+    .teamCrest{
+      width:34px;height:34px;border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      display:grid;place-items:center;
+      overflow:hidden;
+      position:relative;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      flex:none;
+    }
+    .teamCrest img{
+      width:100%;height:100%;object-fit:contain;display:block;
+      background:#fff;
+    }
+    .teamCrestFallback{
+      width:100%;height:100%;
+      display:grid;place-items:center;
+      font-size:12px;font-weight:1000;color:#f4fff7;
+      background:linear-gradient(135deg, rgba(23,201,100,.22), rgba(245,197,66,.18));
+    }
+    .teamCrest.lg{width:56px;height:56px;border-radius:16px}
+    .teamCrest.xl{width:68px;height:68px;border-radius:18px}
+
+    .matchInfoCol{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:6px;
+      min-width:0;
+    }
+    .matchTime{
+      font-size:13px;font-weight:1000;
+    }
+    .matchVenue{
+      font-size:12px;color:var(--muted);font-weight:850;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+
+    .oddsRow{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:8px;
+      align-self:center;
+    }
     .oddBtn{
-      padding:10px;border-radius:14px;
+      min-height:58px;
+      padding:8px 8px;
+      border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      background:var(--oddBg);
       cursor:pointer;
-      display:flex;flex-direction:column;gap:3px;
-      transition:.15s transform ease, .15s background ease;
+      display:flex;flex-direction:column;justify-content:center;gap:3px;
+      transition:.15s transform ease, .15s background ease, .15s border ease, .15s box-shadow ease;
       user-select:none;
       text-align:center;
+      position:relative;
+      overflow:hidden;
     }
-    .oddBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.07)}
-    .oddBtn .lab{font-size:12px;color:var(--muted);font-weight:900}
-    .oddBtn .val{font-size:14px;font-weight:1000}
-    .oddBtn.selected{border-color: rgba(23,201,100,.35); background: rgba(23,201,100,.12)}
+    .oddBtn:before{
+      content:"";
+      position:absolute;left:0;top:0;right:0;height:2px;
+      background:transparent;
+      transition:.15s ease;
+    }
+    .oddBtn:hover{
+      transform:translateY(-1px);
+      background:var(--oddBgHover);
+      border-color:rgba(255,255,255,.14);
+    }
+    .oddBtn .lab{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:1000;
+      letter-spacing:.2px;
+    }
+    .oddBtn .val{
+      font-size:16px;
+      font-weight:1000;
+      letter-spacing:.2px;
+      line-height:1;
+    }
+    .oddBtn.selected{
+      border-color:rgba(23,201,100,.40);
+      background:linear-gradient(180deg, rgba(23,201,100,.16), rgba(23,201,100,.10));
+      box-shadow:inset 0 0 0 1px rgba(23,201,100,.20);
+    }
+    .oddBtn.selected:before{background:var(--green)}
+
+    .matchOpenCol{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    @media (max-width: 860px){
+      .matchOpenCol{justify-content:stretch}
+      .matchOpenCol .btn{width:100%}
+    }
 
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .sep{height:1px;background:var(--line);margin:10px 0}
@@ -211,88 +387,205 @@
     .screen{
       position:fixed; inset:0;
       z-index:80;
-      background: rgba(7,19,11,.88);
-      backdrop-filter: blur(10px);
+      background:rgba(6,17,10,.90);
+      backdrop-filter:blur(10px);
       display:none;
     }
     .screen.show{display:block}
     .screenInner{
-      max-width:1100px;
+      max-width:1180px;
       margin:0 auto;
       height:100%;
       display:flex;
       flex-direction:column;
     }
+
     .screenHead{
       padding:10px 14px;
       display:flex;align-items:center;gap:10px;
       border-bottom:1px solid var(--line);
-      background: rgba(7,19,11,.55);
+      background:rgba(7,19,11,.58);
+      position:relative;
+      z-index:2;
     }
     .screenTitle{font-weight:1000}
+
+    .gameHero{
+      position:relative;
+      padding:18px 16px 14px;
+      border-bottom:1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
+        radial-gradient(600px 180px at 50% 0%, rgba(23,201,100,.12), transparent 70%),
+        linear-gradient(180deg, rgba(10,23,16,.95), rgba(8,16,12,.98));
+      overflow:hidden;
+    }
+    .gameHero:before{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        linear-gradient(transparent 0 76%, rgba(255,255,255,.04) 76% 77%, transparent 77%),
+        repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.03) 8% 8.4%, transparent 8.4% 16.8%);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .gameHeroInner{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:14px;
+    }
+    @media (max-width: 760px){
+      .gameHeroInner{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+    }
+
+    .heroTeam{
+      display:flex;align-items:center;gap:12px;
+      min-width:0;
+    }
+    .heroTeam.right{justify-content:flex-end}
+    @media (max-width: 760px){
+      .heroTeam,.heroTeam.right{justify-content:center}
+    }
+
+    .heroTeamMeta{
+      display:flex;flex-direction:column;gap:4px;
+      min-width:0;
+    }
+    .heroTeamName{
+      font-size:22px;font-weight:1000;line-height:1.05;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .heroTeamSub{
+      font-size:12px;color:var(--muted);font-weight:900;
+      text-transform:uppercase;letter-spacing:.4px;
+    }
+
+    .heroCenter{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+      min-width:180px;
+    }
+    .heroVs{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:1000;
+      letter-spacing:1.1px;
+    }
+    .heroTime{
+      font-size:18px;
+      font-weight:1000;
+    }
+    .heroLeague{
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      font-size:12px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+    .heroVenue{
+      font-size:12px;color:var(--muted);font-weight:900;
+      text-align:center;
+    }
+
+    .gameQuickOdds{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+    }
+    @media (max-width: 520px){
+      .gameQuickOdds{grid-template-columns:1fr}
+    }
+
     .tabs{
       display:flex;gap:8px;flex-wrap:wrap;
       padding:10px 14px;
       border-bottom:1px solid var(--line);
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
     }
     .tab{
-      padding:8px 10px;border-radius:999px;
+      padding:9px 11px;border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       cursor:pointer;
       font-weight:950;font-size:13px;
       user-select:none;
+      transition:.15s ease;
     }
-    .tab.active{border-color: rgba(245,197,66,.32); background: rgba(245,197,66,.12)}
-    .screenBody{padding:12px 14px;overflow:auto}
+    .tab:hover{background:rgba(255,255,255,.07)}
+    .tab.active{
+      border-color:rgba(245,197,66,.32);
+      background:rgba(245,197,66,.12);
+      color:#fff4cb;
+    }
+
+    .screenBody{
+      padding:12px 14px 120px;
+      overflow:auto;
+    }
 
     .marketCard{
       border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       border-radius:16px;
       overflow:hidden;
       margin-bottom:10px;
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
     }
     .marketHead{
       padding:12px;
       display:flex;align-items:center;justify-content:space-between;gap:10px;
       cursor:pointer;
       user-select:none;
-      background: linear-gradient(180deg, rgba(255,255,255,.05), transparent);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), transparent);
     }
     .marketHead .title{font-weight:1000}
     .marketBody{padding:12px;display:none}
     .marketCard.open .marketBody{display:block}
     .marketGrid{
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns:repeat(3, 1fr);
       gap:8px;
     }
     @media (max-width: 520px){
-      .marketGrid{grid-template-columns: repeat(2, 1fr)}
+      .marketGrid{grid-template-columns:repeat(2, 1fr)}
     }
 
     .pickBtn{
-      padding:10px;border-radius:14px;
+      min-height:60px;
+      padding:10px;border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      background:var(--oddBg);
       cursor:pointer;
-      display:flex;flex-direction:column;gap:3px;
+      display:flex;flex-direction:column;justify-content:center;gap:3px;
       user-select:none;
-      transition:.15s transform ease, .15s background ease;
+      transition:.15s transform ease, .15s background ease, .15s border ease;
       text-align:center;
+      position:relative;
+      overflow:hidden;
     }
-    .pickBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.07)}
-    .pickBtn .lab{font-size:12px;color:var(--muted);font-weight:900}
+    .pickBtn:hover{transform:translateY(-1px); background:var(--oddBgHover)}
+    .pickBtn .lab{font-size:12px;color:var(--muted);font-weight:1000}
     .pickBtn .val{font-size:14px;font-weight:1000}
-    .pickBtn.selected{border-color: rgba(23,201,100,.35); background: rgba(23,201,100,.12)}
+    .pickBtn.selected{
+      border-color:rgba(23,201,100,.35);
+      background:linear-gradient(180deg, rgba(23,201,100,.15), rgba(23,201,100,.09));
+    }
 
     .toggle{
       display:inline-flex;align-items:center;gap:8px;
       padding:6px 8px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
+      background:rgba(255,255,255,.05);
       font-size:12px;font-weight:950;
       user-select:none;
       cursor:pointer;
@@ -300,72 +593,89 @@
     .switch{
       width:40px;height:22px;border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
+      background:rgba(255,255,255,.08);
       position:relative;
     }
     .knob{
       width:18px;height:18px;border-radius:999px;
-      background: rgba(232,244,236,.92);
+      background:rgba(232,244,236,.92);
       position:absolute;top:1px;left:2px;
       transition:.15s left ease, .15s background ease;
     }
-    .switch.on{background: rgba(23,201,100,.22); border-color: rgba(23,201,100,.30)}
-    .switch.on .knob{left:19px; background: rgba(255,255,255,.95)}
+    .switch.on{background:rgba(23,201,100,.22); border-color:rgba(23,201,100,.30)}
+    .switch.on .knob{left:19px; background:rgba(255,255,255,.95)}
 
     .bottomNav{
       position:fixed;left:0;right:0;bottom:0;z-index:60;
-      background: rgba(7,19,11,.82);
+      background:rgba(7,19,11,.84);
       border-top:1px solid var(--line);
-      backdrop-filter: blur(12px);
+      backdrop-filter:blur(12px);
     }
     .bottomNavInner{
-      max-width:1100px;margin:0 auto;
+      max-width:1180px;margin:0 auto;
       padding:10px 14px;
-      display:grid;grid-template-columns: repeat(4, 1fr);
+      display:grid;grid-template-columns:repeat(4, 1fr);
       gap:10px;
     }
     .navBtn{
       padding:10px;border-radius:16px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       cursor:pointer;
       text-align:center;
       font-weight:950;
       user-select:none;
+      transition:.15s ease;
     }
-    .navBtn.active{border-color: rgba(23,201,100,.32); background: rgba(23,201,100,.12)}
+    .navBtn:hover{background:rgba(255,255,255,.07)}
+    .navBtn.active{border-color:rgba(23,201,100,.32); background:rgba(23,201,100,.12)}
     .navBtn span{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-top:2px}
 
     .betslip{
       position:fixed;
       right:14px;
       bottom:98px;
-      width:360px;
-      max-width: calc(100vw - 28px);
+      width:388px;
+      max-width:calc(100vw - 28px);
       z-index:70;
       border-radius:18px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(11,26,16,.94);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      max-height: calc(100vh - 130px);
+      background:
+        linear-gradient(180deg, rgba(15,31,20,.98), rgba(10,18,13,.98));
+      backdrop-filter:blur(10px);
+      box-shadow:var(--shadow2);
+      max-height:calc(100vh - 130px);
       display:flex;
       flex-direction:column;
     }
     @media (max-width: 920px){
       .betslip{left:14px;right:14px;width:auto}
     }
+
     .betslipHead{
-      padding:10px 12px;
+      padding:12px 12px;
       display:flex;align-items:center;justify-content:space-between;gap:10px;
       border-bottom:1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), transparent);
-      position: sticky;
-      top: 0;
-      z-index: 2;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), transparent);
+      position:sticky;
+      top:0;
+      z-index:2;
     }
     .betslipTitle{font-weight:1000}
+    .betslipHeadLeft{
+      display:flex;align-items:center;gap:10px;
+    }
+    .ticketMark{
+      width:34px;height:34px;border-radius:10px;
+      display:grid;place-items:center;
+      font-size:15px;font-weight:1000;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(23,201,100,.18), rgba(23,201,100,.08));
+      color:#d9ffe8;
+    }
+
     .betslipBody{
       padding:10px 12px;
       display:block;
@@ -373,12 +683,14 @@
       -webkit-overflow-scrolling:touch;
     }
     .betslip.mini .betslipBody{display:none}
+
     .betslipMiniBar{
       display:none;
       padding:12px;
       cursor:pointer;
       border-top:1px solid var(--line);
-      background: rgba(255,255,255,.03);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
     }
     .betslip.mini .betslipMiniBar{
       display:flex;
@@ -390,16 +702,51 @@
     .miniMain strong{font-size:14px}
     .miniSub{font-size:12px;color:var(--muted);font-weight:900}
 
+    .slipModeBar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);
+      margin-bottom:10px;
+    }
+
     .slipItem{
       padding:10px;border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      display:flex;flex-direction:column;gap:6px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      display:flex;flex-direction:column;gap:8px;
+      position:relative;
+      overflow:hidden;
+    }
+    .slipItem:before{
+      content:"";
+      position:absolute;left:0;top:0;bottom:0;width:3px;
+      background:linear-gradient(180deg, var(--green), rgba(245,197,66,.85));
     }
     .slipTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
     .slipPick{font-weight:1000;font-size:14px}
     .slipMeta{font-size:12px;color:var(--muted);font-weight:850}
     .slipActions{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+    .ticketSel{
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+    }
+    .ticketSel strong{font-weight:1000}
+    .ticketOdd{
+      min-width:54px;
+      text-align:center;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid rgba(23,201,100,.22);
+      background:rgba(23,201,100,.10);
+      font-weight:1000;
+    }
+
     .slipFooter{
       margin-top:10px;
       padding-top:10px;
@@ -409,10 +756,10 @@
     .stakeRow{display:flex;gap:10px;align-items:center}
     .stakeRow input{
       flex:1;
-      padding:10px 12px;border-radius:12px;
+      padding:12px 12px;border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color: var(--text);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
       outline:none;
       font-weight:950;
     }
@@ -421,31 +768,32 @@
       padding:8px 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      background:rgba(255,255,255,.05);
       cursor:pointer;
       font-weight:900;
       font-size:12px;
       user-select:none;
+      transition:.15s ease;
     }
-    .stakeChip:hover{background: rgba(255,255,255,.08)}
+    .stakeChip:hover{background:rgba(255,255,255,.08)}
     .summaryBox{
       padding:10px 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       display:flex;align-items:center;justify-content:space-between;gap:10px;
       font-weight:1000;
     }
     .summaryBox.big{
       font-size:16px;
-      background: rgba(23,201,100,.10);
-      border-color: rgba(23,201,100,.25);
+      background:linear-gradient(180deg, rgba(23,201,100,.15), rgba(23,201,100,.08));
+      border-color:rgba(23,201,100,.25);
     }
 
     .modal{
       position:fixed; inset:0;
       z-index:90;
-      background: rgba(7,19,11,.88);
-      backdrop-filter: blur(10px);
+      background:rgba(7,19,11,.88);
+      backdrop-filter:blur(10px);
       display:none;
     }
     .modal.show{display:flex;align-items:center;justify-content:center;padding:14px}
@@ -454,8 +802,8 @@
       max-height:min(92vh, 920px);
       border-radius:18px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(11,26,16,.96);
-      box-shadow: var(--shadow);
+      background:rgba(11,26,16,.96);
+      box-shadow:var(--shadow);
       overflow:hidden;
     }
     .modalHead{padding:12px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
@@ -469,8 +817,8 @@
     .field input, .field select{
       padding:14px 14px;border-radius:12px;
       border:1px solid rgba(255,255,255,.14);
-      background: var(--fieldBg);
-      color: var(--text);
+      background:var(--fieldBg);
+      color:var(--text);
       outline:none;
       font-weight:900;
       font-size:15px;
@@ -482,14 +830,14 @@
       border:1px solid rgba(255,255,255,.14);
       border-radius:12px;
       overflow:hidden;
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
     }
     .segBtn{
       flex:1;
       padding:14px;
       border:0;
       border-right:1px solid rgba(255,255,255,.12);
-      background: transparent;
+      background:transparent;
       font-weight:1000;
       cursor:pointer;
       text-align:center;
@@ -497,18 +845,18 @@
     }
     .segBtn:last-child{border-right:0}
     .segBtn.active{
-      background: rgba(23,201,100,.10);
+      background:rgba(23,201,100,.10);
       color:#40ffc1;
-      box-shadow: inset 0 0 0 1px rgba(64,255,193,.55);
+      box-shadow:inset 0 0 0 1px rgba(64,255,193,.55);
     }
-    .authGrid2{display:grid;grid-template-columns: 110px 1fr;gap:10px}
+    .authGrid2{display:grid;grid-template-columns:110px 1fr;gap:10px}
     .authGridName{
       display:grid;grid-template-columns:1fr 1fr;
       gap:0;
       border:1px solid rgba(255,255,255,.14);
       border-radius:12px;
       overflow:hidden;
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
     }
     .authGridName input{border:0;border-radius:0;background:transparent}
     .authGridName input + input{border-left:1px solid rgba(255,255,255,.12)}
@@ -518,7 +866,7 @@
       border:1px solid rgba(255,255,255,.14);
       border-radius:12px;
       overflow:hidden;
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
     }
     .birthGrid input{border:0;border-radius:0;background:transparent;padding:14px 16px}
     .birthGrid input + input{border-left:1px solid rgba(255,255,255,.12)}
@@ -529,11 +877,11 @@
       z-index:120;
       padding:10px 12px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
+      background:rgba(0,0,0,.55);
+      backdrop-filter:blur(10px);
       font-weight:950;
       display:none;
-      max-width: calc(100vw - 28px);
+      max-width:calc(100vw - 28px);
       text-align:center;
     }
 
@@ -541,20 +889,20 @@
     .itemRow{
       padding:12px;border-radius:16px;
       border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
+      background:rgba(255,255,255,.04);
       display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
     }
     .itemRow strong{font-weight:1000}
     .status{
       padding:6px 8px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
+      background:rgba(255,255,255,.05);
       font-weight:1000;font-size:12px;
       white-space:nowrap;
     }
-    .status.open{border-color: rgba(245,197,66,.30); background: rgba(245,197,66,.12)}
-    .status.won{border-color: rgba(23,201,100,.32); background: rgba(23,201,100,.12)}
-    .status.lost{border-color: rgba(255,77,77,.30); background: rgba(255,77,77,.12)}
+    .status.open{border-color:rgba(245,197,66,.30); background:rgba(245,197,66,.12)}
+    .status.won{border-color:rgba(23,201,100,.32); background:rgba(23,201,100,.12)}
+    .status.lost{border-color:rgba(255,77,77,.30); background:rgba(255,77,77,.12)}
     .smallText{font-size:12px;color:var(--muted);font-weight:850}
     .h2{margin:0 0 8px 0;font-size:16px;font-weight:1000}
   </style>
@@ -617,7 +965,7 @@
           </div>
         </div>
         <div class="panelBody">
-          <div id="matchesList" class="list"></div>
+          <div id="matchesList" class="matchesSportsbook"></div>
 
           <div class="sep"></div>
 
@@ -716,6 +1064,8 @@
         <span class="badge" id="builderBadge">OFF</span>
       </div>
 
+      <div id="gameHero" class="gameHero"></div>
+      <div id="gameQuickOdds" class="gameQuickOdds"></div>
       <div class="tabs" id="gameTabs"></div>
       <div class="screenBody">
         <div id="marketsArea"></div>
@@ -725,17 +1075,20 @@
 
   <div id="betslip" class="betslip hide">
     <div class="betslipHead">
-      <div class="row" style="gap:10px">
-        <div class="betslipTitle">Bilhete</div>
-        <span class="badge" id="slipCount">0</span>
+      <div class="betslipHeadLeft">
+        <div class="ticketMark">🎟️</div>
+        <div class="row" style="gap:10px">
+          <div class="betslipTitle">Bilhete</div>
+          <span class="badge" id="slipCount">0</span>
+        </div>
       </div>
       <div class="row" style="gap:8px">
-        <button class="btn small" id="btnMini">Mini</button>
+        <button class="btn small" id="btnMini">Diminuir</button>
       </div>
     </div>
 
     <div class="betslipBody" id="betslipBody">
-      <div class="row" style="justify-content:space-between">
+      <div class="slipModeBar">
         <div class="smallText">
           <strong id="modeLabel">Múltipla</strong>
           <span style="opacity:.8">•</span>
@@ -746,8 +1099,6 @@
           <button class="btn small yellow" id="btnCombos">Combinações</button>
         </div>
       </div>
-
-      <div class="sep"></div>
 
       <div class="stack" id="slipItems"></div>
 
@@ -1013,6 +1364,25 @@
     const nowIso = () => new Date().toISOString();
     const isAdminEmail = (email) => String(email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
+    const TEAM_ASSETS = {
+      "Palmeiras": { short:"PAL" },
+      "Corinthians": { short:"COR" },
+      "Flamengo": { short:"FLA" },
+      "Vasco": { short:"VAS" },
+      "Sport": { short:"SPT" },
+      "Ceará": { short:"CEA" },
+      "Arsenal": { short:"ARS" },
+      "Liverpool": { short:"LIV" },
+      "Real Madrid": { short:"RMA" },
+      "Barcelona": { short:"BAR" },
+      "Inter": { short:"INT" },
+      "Milan": { short:"MIL" },
+      "Bayern": { short:"BAY" },
+      "Dortmund": { short:"BVB" },
+      "PSG": { short:"PSG" },
+      "Marseille": { short:"OM" }
+    };
+
     function toast(msg){
       const t = $("#toast");
       t.textContent = msg;
@@ -1036,6 +1406,26 @@
     function rndOdd(min, max){
       const v = min + Math.random() * (max - min);
       return (Math.round(v * 100) / 100).toFixed(2);
+    }
+
+    function getTeamAsset(team){
+      return TEAM_ASSETS[team] || { short:getInitials(team) };
+    }
+
+    function getInitials(name){
+      const words = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if(!words.length) return "TM";
+      if(words.length === 1) return words[0].slice(0,3).toUpperCase();
+      return (words[0][0] + words[1][0] + (words[2]?.[0] || "")).toUpperCase();
+    }
+
+    function teamCrestHTML(team, sizeClass=""){
+      const asset = getTeamAsset(team);
+      const cls = `teamCrest ${sizeClass}`.trim();
+      if(asset.logo){
+        return `<div class="${cls}"><img src="${esc(asset.logo)}" alt="${esc(team)}" loading="lazy" /></div>`;
+      }
+      return `<div class="${cls}"><div class="teamCrestFallback">${esc(asset.short || getInitials(team))}</div></div>`;
     }
 
     function buildMarketsDemo(matchId, home, away){
@@ -1096,7 +1486,7 @@
           { label:`Atacante do ${away}`, odd: rndOdd(2.10,3.80)},
         ]),
         mk("Escalações","Escalações (demo)", [
-          { label:"Ver escalação provável", odd: "—", meta:{ info:true } },
+          { label:"Ver escalação provável", odd:"—", meta:{ info:true } },
         ]),
       ];
     }
@@ -1530,21 +1920,39 @@
         const card = document.createElement("div");
         card.className = "matchCard";
         card.innerHTML = `
-          <div class="matchTop">
-            <div>
-              <div class="kicker">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
-              <div class="teams">
-                <div class="teamRow"><span class="teamName">${esc(m.home)}</span><span class="badge">Casa</span></div>
-                <div class="teamRow"><span class="teamName">${esc(m.away)}</span><span class="badge">Fora</span></div>
-              </div>
+          <div class="matchTopLine">
+            <div class="leagueStrip">
+              <span class="liveDot"></span>
+              <span>${country?.flag || ""} ${esc(league?.name || "")}</span>
+              <span style="opacity:.55">•</span>
+              <span>${esc(m.whenTxt)}</span>
             </div>
-            <button class="btn small" data-open="${m.id}">Abrir</button>
+            <div class="smallText">${esc(m.stadium || "—")}</div>
           </div>
 
-          <div class="oddsRow">
-            ${oddButtonHTML(m, "1", "1")}
-            ${oddButtonHTML(m, "X", "X")}
-            ${oddButtonHTML(m, "2", "2")}
+          <div class="matchMain">
+            <div class="matchTeams">
+              <div class="teamLine">
+                ${teamCrestHTML(m.home)}
+                <div class="teamName">${esc(m.home)}</div>
+                <div class="teamTag">Casa</div>
+              </div>
+              <div class="teamLine">
+                ${teamCrestHTML(m.away)}
+                <div class="teamName">${esc(m.away)}</div>
+                <div class="teamTag">Fora</div>
+              </div>
+            </div>
+
+            <div class="oddsRow">
+              ${oddButtonHTML(m, "1", "1")}
+              ${oddButtonHTML(m, "X", "X")}
+              ${oddButtonHTML(m, "2", "2")}
+            </div>
+
+            <div class="matchOpenCol">
+              <button class="btn small" data-open="${m.id}">Abrir</button>
+            </div>
           </div>
         `;
 
@@ -1587,9 +1995,12 @@
         const el = document.createElement("div");
         el.className = "itemRow";
         el.innerHTML = `
-          <div>
-            <strong>${esc(m.home)} x ${esc(m.away)}</strong>
-            <div class="smallText">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
+          <div style="display:flex;gap:10px;align-items:flex-start;min-width:0">
+            ${teamCrestHTML(m.home)}
+            <div>
+              <strong>${esc(m.home)} x ${esc(m.away)}</strong>
+              <div class="smallText">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
+            </div>
           </div>
           <button class="btn small" data-open="${m.id}">Abrir</button>
         `;
@@ -1612,6 +2023,53 @@
       $("#gameScreen").classList.remove("show");
     }
 
+    function renderGameHero(m, league, country){
+      $("#gameHero").innerHTML = `
+        <div class="gameHeroInner">
+          <div class="heroTeam">
+            ${teamCrestHTML(m.home, "xl")}
+            <div class="heroTeamMeta">
+              <div class="heroTeamSub">Mandante</div>
+              <div class="heroTeamName">${esc(m.home)}</div>
+            </div>
+          </div>
+
+          <div class="heroCenter">
+            <div class="heroLeague">${country?.flag || ""} ${esc(league?.name || "")}</div>
+            <div class="heroVs">VS</div>
+            <div class="heroTime">${esc(m.whenTxt)}</div>
+            <div class="heroVenue">${esc(m.stadium || "Estádio indefinido")}</div>
+          </div>
+
+          <div class="heroTeam right">
+            <div class="heroTeamMeta" style="text-align:right">
+              <div class="heroTeamSub">Visitante</div>
+              <div class="heroTeamName">${esc(m.away)}</div>
+            </div>
+            ${teamCrestHTML(m.away, "xl")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGameQuickOdds(m){
+      const wrap = $("#gameQuickOdds");
+      wrap.innerHTML = `
+        ${oddButtonHTML(m, "1", m.home)}
+        ${oddButtonHTML(m, "X", "Empate")}
+        ${oddButtonHTML(m, "2", m.away)}
+      `;
+
+      wrap.querySelectorAll(".oddBtn").forEach((btn) => {
+        btn.onclick = () => {
+          const pickKey = btn.dataset.pickkey;
+          const pickLabel = btn.dataset.picklabel;
+          const odd = btn.dataset.odd;
+          addSelectionFromQuick(m.id, "Principais", "Resultado (1X2)", pickLabel, odd, pickKey);
+        };
+      });
+    }
+
     function renderGameScreen(){
       if(!state.game.open || !state.game.matchId){
         $("#gameScreen").classList.remove("show");
@@ -1629,6 +2087,9 @@
 
       $("#gameTitle").textContent = `${m.home} x ${m.away}`;
       $("#gameSub").textContent = `${country?.flag || ""} ${league?.name || ""} • ${m.whenTxt} • ${m.stadium}`;
+
+      renderGameHero(m, league, country);
+      renderGameQuickOdds(m);
 
       const sw = $("#builderSwitchGame");
       sw.classList.toggle("on", !!state.ui.builderOn);
@@ -1796,7 +2257,7 @@
       slipEl.classList.toggle("hide", state.slip.selections.length === 0);
       slipEl.classList.toggle("mini", !!state.ui.betslipMini);
 
-      $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Mini";
+      $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Diminuir";
       $("#slipCount").textContent = String(state.slip.selections.length);
 
       $("#modeLabel").textContent = state.slip.selections.length > 1 ? "Múltipla" : "Simples";
@@ -1827,15 +2288,14 @@
 
         g.items.forEach((it) => {
           const row = document.createElement("div");
-          row.className = "itemRow";
-          row.style.padding = "10px";
+          row.className = "ticketSel";
           row.innerHTML = `
             <div>
               <strong>${esc(it.pickLabel)}</strong>
               <div class="smallText">${esc(it.marketTitle)} • ${esc(it.tab)}</div>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-              <span class="badge">${esc(it.odd)}</span>
+              <span class="ticketOdd">${esc(it.odd)}</span>
               <button class="btn small danger" data-del="${esc(it.key)}">X</button>
             </div>
           `;
