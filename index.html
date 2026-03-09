@@ -1414,7 +1414,6 @@ async function fetchTeamAssets(teamName){
   jersey: team.strTeamJersey || null,
   teamName: team.strTeam || name
 } : {
-    } : {
       badge:null,
       logo:null,
       jersey:null,
@@ -1479,24 +1478,7 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
     const nowIso = () => new Date().toISOString();
     const isAdminEmail = (email) => String(email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-    const TEAM_ASSETS = {
-      "Palmeiras": { short:"PAL" },
-      "Corinthians": { short:"COR" },
-      "Flamengo": { short:"FLA" },
-      "Vasco": { short:"VAS" },
-      "Sport": { short:"SPT" },
-      "Ceará": { short:"CEA" },
-      "Arsenal": { short:"ARS" },
-      "Liverpool": { short:"LIV" },
-      "Real Madrid": { short:"RMA" },
-      "Barcelona": { short:"BAR" },
-      "Inter": { short:"INT" },
-      "Milan": { short:"MIL" },
-      "Bayern": { short:"BAY" },
-      "Dortmund": { short:"BVB" },
-      "PSG": { short:"PSG" },
-      "Marseille": { short:"OM" }
-    };
+    
 
     function toast(msg){
       const t = $("#toast");
@@ -1523,25 +1505,7 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
       return (Math.round(v * 100) / 100).toFixed(2);
     }
 
-    function getTeamAsset(team){
-      return TEAM_ASSETS[team] || { short:getInitials(team) };
-    }
 
-    function getInitials(name){
-      const words = String(name || "").trim().split(/\s+/).filter(Boolean);
-      if(!words.length) return "TM";
-      if(words.length === 1) return words[0].slice(0,3).toUpperCase();
-      return (words[0][0] + words[1][0] + (words[2]?.[0] || "")).toUpperCase();
-    }
-
-    function teamCrestHTML(team, sizeClass=""){
-      const asset = getTeamAsset(team);
-      const cls = `teamCrest ${sizeClass}`.trim();
-      if(asset.logo){
-        return `<div class="${cls}"><img src="${esc(asset.logo)}" alt="${esc(team)}" loading="lazy" /></div>`;
-      }
-      return `<div class="${cls}"><div class="teamCrestFallback">${esc(asset.short || getInitials(team))}</div></div>`;
-    }
 
     function buildMarketsDemo(matchId, home, away){
       const mk = (tab, title, picks) => ({
@@ -3168,7 +3132,7 @@ const league = findLeague(m.leagueId);
 
     async function init(){
       localStorage.removeItem(TEAM_ASSET_CACHE_KEY);
-      
+
       hookUI();
       ensureDefaults();
       renderAll();
