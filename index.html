@@ -277,6 +277,36 @@
       text-overflow:ellipsis;
     }
 
+.teamCrest{
+  width:22px;
+  height:22px;
+  border-radius:6px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  flex:none;
+}
+
+.teamCrest img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:#fff;
+}
+
+.teamCrestFallback{
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
+  font-size:10px;
+  font-weight:1000;
+  background:linear-gradient(135deg, rgba(23,201,100,.22), rgba(245,197,66,.18));
+  color:#f3fff7;
+}
     .teamTag{
       font-size:11px;
       color:var(--muted);
@@ -1341,7 +1371,92 @@
       UI: "cravai_ui_v1"
     };
 
-    const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
+    const SPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/123";
+const TEAM_ASSET_CACHE_KEY = "cravai_team_assets_v1";
+
+function loadTeamAssetCache(){
+  try{
+    return JSON.parse(localStorage.getItem(TEAM_ASSET_CACHE_KEY) || "{}");
+  }catch{
+    return {};
+  }
+}
+
+function saveTeamAssetCache(cache){
+  localStorage.setItem(TEAM_ASSET_CACHE_KEY, JSON.stringify(cache));
+}
+
+const teamAssetCache = loadTeamAssetCache();
+
+async function fetchTeamAssets(teamName){
+
+  const name = String(teamName || "").trim();
+
+  if(!name) return null;
+
+  if(teamAssetCache[name]){
+    return teamAssetCache[name];
+  }
+
+  try{
+
+    const url = `${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(name)}`;
+
+    const res = await fetch(url);
+
+    const data = await res.json();
+
+    const team = Array.isArray(data?.teams) ? data.teams[0] : null;
+
+    const asset = team ? {
+  badge: team.strTeamBadge || null,
+  logo: team.strTeamLogo || null,
+  jersey: team.strTeamJersey || null,
+  teamName: team.strTeam || name
+} : {
+    } : {
+      badge:null,
+      logo:null,
+      jersey:null,
+      teamName:name
+    };
+
+    teamAssetCache[name] = asset;
+
+    saveTeamAssetCache(teamAssetCache);
+
+    return asset;
+
+  }catch(e){
+
+    console.log("Erro ao buscar escudo:",teamName,e);
+
+    return {
+      badge:null,
+      logo:null,
+      jersey:null,
+      teamName:name
+    };
+
+  }
+
+}
+   function getTeamInitials(name){
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if(parts.length === 0) return "TM";
+  if(parts.length === 1) return parts[0].slice(0, 3).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+function teamCrestHTML(teamName, asset){
+  if(asset?.badge){
+    return `<div class="teamCrest"><img src="${esc(asset.badge)}" alt="${esc(teamName)}" loading="lazy" /></div>`;
+  }
+
+  return `<div class="teamCrest"><div class="teamCrestFallback">${esc(getTeamInitials(teamName))}</div></div>`;
+}
+
+const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
     const $ = (s) => document.querySelector(s);
     const $$ = (s) => Array.from(document.querySelectorAll(s));
@@ -1899,7 +2014,7 @@
       `;
     }
 
-    function renderMatches(){
+    async function renderMatches(){
       const list = $("#matchesList");
       list.innerHTML = "";
 
@@ -1913,8 +2028,11 @@
         return;
       }
 
-      ms.forEach((m) => {
-        const league = findLeague(m.leagueId);
+      for (const m of ms) {
+        const homeAsset = await fetchTeamAssets(m.home);
+const awayAsset = await fetchTeamAssets(m.away);
+        
+const league = findLeague(m.leagueId);
         const country = findCountryByLeague(m.leagueId);
 
         const card = document.createElement("div");
@@ -1933,12 +2051,12 @@
           <div class="matchMain">
             <div class="matchTeams">
               <div class="teamLine">
-                ${teamCrestHTML(m.home)}
+                ${teamCrestHTML(m.home, homeAsset)}
                 <div class="teamName">${esc(m.home)}</div>
                 <div class="teamTag">Casa</div>
               </div>
               <div class="teamLine">
-                ${teamCrestHTML(m.away)}
+                ${teamCrestHTML(m.away, awayAsset)}
                 <div class="teamName">${esc(m.away)}</div>
                 <div class="teamTag">Fora</div>
               </div>
@@ -1968,7 +2086,7 @@
         });
 
         list.appendChild(card);
-      });
+      }
     }
 
     function renderFeatured(){
@@ -3049,6 +3167,8 @@
     }
 
     async function init(){
+      localStorage.removeItem(TEAM_ASSET_CACHE_KEY);
+      
       hookUI();
       ensureDefaults();
       renderAll();
