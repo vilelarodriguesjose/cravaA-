@@ -209,7 +209,7 @@
     }
     .matchMain{
       display:grid;
-      grid-template-columns:minmax(0,1fr) 280px 88px;
+      grid-template-columns:minmax(0,1fr) 320px 88px;
       gap:10px;align-items:stretch;
       padding:10px 12px 12px;
     }
@@ -245,28 +245,61 @@
     .teamCrest.lg{width:56px;height:56px;border-radius:16px}
     .teamCrest.xl{width:68px;height:68px;border-radius:18px}
 
-    .oddsRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:center}
+    .oddsBox{
+      display:flex;
+      flex-direction:column;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      align-self:center;
+    }
+    .oddsHead{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.02);
+    }
+    .oddsHead div{
+      padding:6px 4px;
+      text-align:center;
+      font-size:10px;
+      font-weight:1000;
+      color:var(--muted);
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+    .oddsHead div + div{
+      border-left:1px solid rgba(255,255,255,.06);
+    }
+    .oddsRow{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:0;
+      align-self:center;
+    }
     .oddBtn{
-      min-height:58px;padding:8px 8px;border-radius:12px;
-      border:1px solid rgba(255,255,255,.10);
+      min-height:64px;padding:8px 8px;border-radius:0;
+      border:0;
+      border-right:1px solid rgba(255,255,255,.07);
       background:var(--oddBg);cursor:pointer;
       display:flex;flex-direction:column;justify-content:center;gap:3px;
       transition:.15s transform ease, .15s background ease, .15s border ease, .15s box-shadow ease;
       user-select:none;text-align:center;position:relative;overflow:hidden;
     }
+    .oddBtn:last-child{border-right:0}
     .oddBtn:before{
       content:"";position:absolute;left:0;top:0;right:0;height:2px;
       background:transparent;transition:.15s ease;
     }
     .oddBtn:hover{
-      transform:translateY(-1px);
+      transform:none;
       background:var(--oddBgHover);
-      border-color:rgba(255,255,255,.14);
     }
     .oddBtn .lab{font-size:11px;color:var(--muted);font-weight:1000;letter-spacing:.2px}
     .oddBtn .val{font-size:16px;font-weight:1000;letter-spacing:.2px;line-height:1}
     .oddBtn.selected{
-      border-color:rgba(23,201,100,.40);
+      border-color:rgba(23,201,100,.18);
       background:linear-gradient(180deg, rgba(23,201,100,.16), rgba(23,201,100,.10));
       box-shadow:inset 0 0 0 1px rgba(23,201,100,.20);
     }
@@ -276,6 +309,7 @@
     @media (max-width:860px){
       .matchOpenCol{justify-content:stretch}
       .matchOpenCol .btn{width:100%}
+      .oddsBox{margin-top:4px}
     }
 
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -1085,9 +1119,28 @@
     };
 
     const SPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/123";
-    const TEAM_ASSET_CACHE_KEY = "cravai_team_assets_v1";
+    const TEAM_ASSET_CACHE_KEY = "cravai_team_assets_v2";
     const ODDS_ENDPOINT = "/.netlify/functions/odds";
     const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
+
+    const TEAM_NAME_ALIASES = {
+      "Palmeiras": ["Palmeiras", "SE Palmeiras"],
+      "Corinthians": ["Corinthians", "Sport Club Corinthians Paulista"],
+      "Flamengo": ["Flamengo", "Clube de Regatas do Flamengo"],
+      "Vasco": ["Vasco", "Vasco da Gama", "CR Vasco da Gama"],
+      "Sport": ["Sport", "Sport Recife", "Sport Club do Recife"],
+      "Ceará": ["Ceará", "Ceara", "Ceará Sporting Club"],
+      "Arsenal": ["Arsenal", "Arsenal FC"],
+      "Liverpool": ["Liverpool", "Liverpool FC"],
+      "Real Madrid": ["Real Madrid", "Real Madrid CF"],
+      "Barcelona": ["Barcelona", "FC Barcelona"],
+      "Inter": ["Inter", "Inter Milan", "Internazionale"],
+      "Milan": ["Milan", "AC Milan"],
+      "Bayern": ["Bayern", "Bayern Munich", "FC Bayern Munich"],
+      "Dortmund": ["Dortmund", "Borussia Dortmund"],
+      "PSG": ["PSG", "Paris Saint-Germain", "Paris SG"],
+      "Marseille": ["Marseille", "Olympique de Marseille"]
+    };
 
     const REAL_LEAGUE_MAP = {
       "br-seriea": "soccer_brazil_campeonato",
@@ -1141,6 +1194,14 @@
       toast._tm = setTimeout(() => { t.style.display = "none"; }, 2200);
     }
 
+    function normalizeTeamCacheKey(name){
+      return String(name || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+    }
+
     function loadTeamAssetCache(){
       try{ return JSON.parse(localStorage.getItem(TEAM_ASSET_CACHE_KEY) || "{}"); }
       catch{ return {}; }
@@ -1155,42 +1216,90 @@
     function getTeamInitials(name){
       const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
       if(!parts.length) return "TM";
-      if(parts.length === 1) return parts[0].slice(0,3).toUpperCase();
+      if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
 
+    function getTeamSearchNames(teamName){
+      const direct = TEAM_NAME_ALIASES[teamName] || [];
+      const generic = [teamName];
+      const unique = [];
+
+      for(const n of [...direct, ...generic]){
+        const v = String(n || "").trim();
+        if(!v) continue;
+        if(!unique.includes(v)) unique.push(v);
+      }
+
+      return unique;
+    }
+
+    async function searchTeamOnSportsDB(searchName){
+      const url = `${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(searchName)}`;
+      const res = await fetch(url, { cache:"no-store" });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      const teams = Array.isArray(data?.teams) ? data.teams : [];
+      if(!teams.length) return null;
+
+      const wanted = normalizeTeamCacheKey(searchName);
+
+      const scored = teams.map((team) => {
+        const names = [
+          team?.strTeam,
+          team?.strTeamShort,
+          team?.strAlternate,
+          team?.strLeague
+        ].filter(Boolean).map(normalizeTeamCacheKey);
+
+        let score = 0;
+        if(names.includes(wanted)) score += 100;
+        if(names.some((n) => n.includes(wanted) || wanted.includes(n))) score += 40;
+        if(team?.strSport === "Soccer") score += 15;
+
+        return { team, score };
+      }).sort((a, b) => b.score - a.score);
+
+      return scored[0]?.team || null;
+    }
+
     async function fetchTeamAssets(teamName){
-      const name = String(teamName || "").trim();
-      if(!name) return { badge:null, logo:null, jersey:null, teamName:"" };
-      if(teamAssetCache[name]) return teamAssetCache[name];
+      const rawName = String(teamName || "").trim();
+      if(!rawName) return { badge:null, logo:null, jersey:null, teamName:"" };
 
-      try{
-        const url = `${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(name)}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const team = Array.isArray(data?.teams) ? data.teams[0] : null;
+      const cacheKey = normalizeTeamCacheKey(rawName);
+      if(teamAssetCache[cacheKey]) return teamAssetCache[cacheKey];
 
-        const asset = team
-          ? {
-              badge: team.strTeamBadge || null,
-              logo: team.strTeamLogo || null,
+      const searchNames = getTeamSearchNames(rawName);
+
+      for(const searchName of searchNames){
+        try{
+          const team = await searchTeamOnSportsDB(searchName);
+
+          if(team){
+            const asset = {
+              badge: team.strBadge || team.strTeamBadge || null,
+              logo: team.strLogo || team.strTeamLogo || null,
               jersey: team.strTeamJersey || null,
-              teamName: team.strTeam || name
-            }
-          : {
-              badge:null,
-              logo:null,
-              jersey:null,
-              teamName:name
+              teamName: team.strTeam || rawName
             };
 
-        teamAssetCache[name] = asset;
-        saveTeamAssetCache(teamAssetCache);
-        return asset;
-      }catch(e){
-        console.log("Erro ao buscar escudo:", teamName, e);
-        return { badge:null, logo:null, jersey:null, teamName:name };
+            if(asset.badge || asset.logo){
+              teamAssetCache[cacheKey] = asset;
+              saveTeamAssetCache(teamAssetCache);
+              return asset;
+            }
+          }
+        }catch(e){
+          console.log("Erro ao buscar escudo:", searchName, e);
+        }
       }
+
+      const fallback = { badge:null, logo:null, jersey:null, teamName:rawName };
+      teamAssetCache[cacheKey] = fallback;
+      saveTeamAssetCache(teamAssetCache);
+      return fallback;
     }
 
     function teamCrestHTML(teamName, asset = null, sizeClass = ""){
@@ -1198,9 +1307,16 @@
       const badge = asset?.badge || asset?.logo || null;
 
       if(badge){
+        const fallback = `<div class=&quot;teamCrestFallback&quot;>${esc(getTeamInitials(teamName))}</div>`;
         return `
           <div class="${cls}">
-            <img src="${esc(badge)}" alt="${esc(teamName)}" loading="lazy" />
+            <img
+              src="${esc(badge)}"
+              alt="${esc(teamName)}"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              onerror="this.closest('.teamCrest').innerHTML='${fallback}'"
+            />
           </div>
         `;
       }
@@ -1725,6 +1841,23 @@
       `;
     }
 
+    function oddsBoxHTML(m){
+      return `
+        <div class="oddsBox">
+          <div class="oddsHead">
+            <div>1</div>
+            <div>X</div>
+            <div>2</div>
+          </div>
+          <div class="oddsRow">
+            ${oddButtonHTML(m, "1", "Casa")}
+            ${oddButtonHTML(m, "X", "Empate")}
+            ${oddButtonHTML(m, "2", "Fora")}
+          </div>
+        </div>
+      `;
+    }
+
     async function renderMatches(){
       const list = $("#matchesList");
       list.innerHTML = "";
@@ -1775,11 +1908,7 @@
               </div>
             </div>
 
-            <div class="oddsRow">
-              ${oddButtonHTML(m, "1", "1")}
-              ${oddButtonHTML(m, "X", "X")}
-              ${oddButtonHTML(m, "2", "2")}
-            </div>
+            ${oddsBoxHTML(m)}
 
             <div class="matchOpenCol">
               <button class="btn small" data-open="${m.id}">Abrir</button>
@@ -1820,7 +1949,10 @@
       }
 
       for(const m of featured){
-        const homeAsset = await fetchTeamAssets(m.home);
+        const [homeAsset, awayAsset] = await Promise.all([
+          fetchTeamAssets(m.home),
+          fetchTeamAssets(m.away)
+        ]);
         const league = findLeague(m.leagueId);
         const country = findCountryByLeague(m.leagueId);
 
@@ -1828,7 +1960,10 @@
         el.className = "itemRow";
         el.innerHTML = `
           <div style="display:flex;gap:10px;align-items:flex-start;min-width:0">
-            ${teamCrestHTML(m.home, homeAsset)}
+            <div style="display:flex;gap:6px;align-items:center;flex:none">
+              ${teamCrestHTML(m.home, homeAsset)}
+              ${teamCrestHTML(m.away, awayAsset)}
+            </div>
             <div>
               <strong>${esc(m.home)} x ${esc(m.away)}</strong>
               <div class="smallText">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
@@ -2728,6 +2863,7 @@
           localStorage.removeItem(LS.DB);
           localStorage.removeItem(LS.AUTH);
           localStorage.removeItem(LS.UI);
+          localStorage.removeItem(TEAM_ASSET_CACHE_KEY);
           location.reload();
         }
       };
