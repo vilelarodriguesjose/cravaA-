@@ -7,6 +7,7 @@
   <meta name="description" content="CravaAí: palpites por Crava Points (CP), mercados, bilhete e ligas." />
   <meta name="theme-color" content="#0E8A3B" />
   <link rel="manifest" href="manifest.webmanifest" />
+
   <style>
     :root{
       --bg:#06110a;
@@ -33,10 +34,8 @@
       --oddBgHover:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
       --sportGlow:radial-gradient(1200px 500px at 50% -10%, rgba(23,201,100,.10), transparent 60%);
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-
     body{
       margin:0;
       font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -48,9 +47,7 @@
       min-height:100vh;
       padding-bottom:92px;
     }
-
     .wrap{max-width:1180px;margin:0 auto;padding:14px}
-
     .topbar{
       position:sticky;top:0;z-index:50;
       backdrop-filter:blur(12px);
@@ -61,7 +58,6 @@
       max-width:1180px;margin:0 auto;padding:10px 14px;
       display:flex;align-items:center;gap:10px;
     }
-
     .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.2px}
     .logo{
       width:38px;height:38px;border-radius:12px;
@@ -73,37 +69,30 @@
     }
     .logo:before{
       content:"";
-      position:absolute; inset:-40%;
+      position:absolute;inset:-40%;
       background:conic-gradient(from 180deg, rgba(23,201,100,.35), rgba(245,197,66,.30), rgba(23,201,100,.35));
       animation:spin 7s linear infinite;
       filter:blur(2px);
     }
     .logo span{position:relative;font-weight:900}
     @keyframes spin{to{transform:rotate(360deg)}}
-
     .spacer{flex:1}
-
     .pill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
       color:rgba(232,244,236,.92);
-      font-size:13px;
-      white-space:nowrap;
+      font-size:13px;white-space:nowrap;
     }
-
     .btn{
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
       padding:10px 12px;border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06);
-      color:var(--text);
-      cursor:pointer;
-      user-select:none;
+      color:var(--text);cursor:pointer;user-select:none;
       transition:.15s transform ease, .15s background ease, .15s border ease, .15s opacity ease;
-      font-weight:800;
-      font-size:14px;
+      font-weight:800;font-size:14px;
     }
     .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.08)}
     .btn:active{transform:translateY(0px)}
@@ -117,12 +106,9 @@
     .grid{
       display:grid;
       grid-template-columns:320px 1fr;
-      gap:14px;
-      align-items:start;
+      gap:14px;align-items:start;
     }
-    @media (max-width: 920px){
-      .grid{grid-template-columns:1fr}
-    }
+    @media (max-width:920px){ .grid{grid-template-columns:1fr} }
 
     .panel{
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
@@ -141,7 +127,6 @@
     .muted{color:var(--muted)}
     .panelBody{padding:12px}
     .stack{display:flex;flex-direction:column;gap:10px}
-
     .search{
       display:flex;gap:10px;align-items:center;
       padding:10px 12px;border-radius:14px;
@@ -152,40 +137,31 @@
       flex:1;border:0;outline:0;background:transparent;color:var(--text);
       font-weight:700;
     }
-
     .chips{display:flex;gap:8px;flex-wrap:wrap}
     .chip{
       padding:8px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.05);
-      cursor:pointer;
-      font-weight:800;
-      font-size:13px;
-      user-select:none;
-      display:inline-flex;align-items:center;gap:8px;
+      cursor:pointer;font-weight:800;font-size:13px;
+      user-select:none;display:inline-flex;align-items:center;gap:8px;
       transition:.15s ease;
     }
     .chip:hover{background:rgba(255,255,255,.075)}
-    .chip.active{border-color:rgba(23,201,100,.30); background:rgba(23,201,100,.12)}
+    .chip.active{border-color:rgba(23,201,100,.30);background:rgba(23,201,100,.12)}
     .chip .flag{font-size:16px}
-
     .leagueList{display:flex;flex-direction:column;gap:8px}
     .leagueItem{
       padding:11px 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
-      cursor:pointer;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+      cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;
       transition:.15s transform ease, .15s background ease, .15s border ease;
-      position:relative;
-      overflow:hidden;
+      position:relative;overflow:hidden;
     }
     .leagueItem:before{
       content:"";
       position:absolute;left:0;top:0;bottom:0;width:4px;
-      background:transparent;
-      transition:.15s ease;
+      background:transparent;transition:.15s ease;
     }
     .leagueItem:hover{transform:translateY(-1px); background:rgba(255,255,255,.06)}
     .leagueItem.active{
@@ -199,22 +175,14 @@
       font-weight:900;font-size:12px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.05);
-      color:rgba(232,244,236,.90);
-      white-space:nowrap;
+      color:rgba(232,244,236,.90);white-space:nowrap;
     }
 
-    .matchesSportsbook{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
+    .matchesSportsbook{display:flex;flex-direction:column;gap:10px}
     .matchCard{
-      padding:0;
-      border-radius:16px;
+      padding:0;border-radius:16px;
       border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
       box-shadow:0 14px 40px rgba(0,0,0,.22);
       overflow:hidden;
       transition:.15s transform ease, .15s border ease, .15s background ease;
@@ -224,14 +192,11 @@
       border-color:rgba(255,255,255,.12);
       background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
     }
-
     .matchTopLine{
       display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:8px 12px;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);
       background:rgba(255,255,255,.02);
     }
-
     .leagueStrip{
       display:flex;align-items:center;gap:8px;min-width:0;
       font-size:12px;font-weight:900;color:var(--muted);
@@ -242,90 +207,34 @@
       box-shadow:0 0 0 5px rgba(23,201,100,.10);
       flex:none;
     }
-
     .matchMain{
       display:grid;
       grid-template-columns:minmax(0,1fr) 280px 88px;
-      gap:10px;
-      align-items:stretch;
+      gap:10px;align-items:stretch;
       padding:10px 12px 12px;
     }
-    @media (max-width: 860px){
-      .matchMain{
-        grid-template-columns:1fr;
-      }
-    }
+    @media (max-width:860px){ .matchMain{grid-template-columns:1fr} }
 
-    .matchTeams{
-      display:flex;flex-direction:column;gap:8px;justify-content:center;
-      min-width:0;
-    }
-
+    .matchTeams{display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:0}
     .teamLine{
-      display:grid;
-      grid-template-columns:34px 1fr auto;
-      align-items:center;
-      gap:10px;
-      min-height:30px;
+      display:grid;grid-template-columns:34px 1fr auto;
+      align-items:center;gap:10px;min-height:30px;
     }
-
     .teamName{
-      font-weight:950;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:950;min-width:0;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-
-.teamCrest{
-  width:22px;
-  height:22px;
-  border-radius:6px;
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  flex:none;
-}
-
-.teamCrest img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  background:#fff;
-}
-
-.teamCrestFallback{
-  width:100%;
-  height:100%;
-  display:grid;
-  place-items:center;
-  font-size:10px;
-  font-weight:1000;
-  background:linear-gradient(135deg, rgba(23,201,100,.22), rgba(245,197,66,.18));
-  color:#f3fff7;
-}
-    .teamTag{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:900;
-    }
+    .teamTag{font-size:11px;color:var(--muted);font-weight:900}
 
     .teamCrest{
       width:34px;height:34px;border-radius:10px;
       border:1px solid rgba(255,255,255,.12);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      display:grid;place-items:center;
-      overflow:hidden;
-      position:relative;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-      flex:none;
+      display:grid;place-items:center;overflow:hidden;position:relative;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);flex:none;
     }
     .teamCrest img{
-      width:100%;height:100%;object-fit:contain;display:block;
-      background:#fff;
+      width:100%;height:100%;object-fit:contain;display:block;background:#fff;
     }
     .teamCrestFallback{
       width:100%;height:100%;
@@ -336,64 +245,26 @@
     .teamCrest.lg{width:56px;height:56px;border-radius:16px}
     .teamCrest.xl{width:68px;height:68px;border-radius:18px}
 
-    .matchInfoCol{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:6px;
-      min-width:0;
-    }
-    .matchTime{
-      font-size:13px;font-weight:1000;
-    }
-    .matchVenue{
-      font-size:12px;color:var(--muted);font-weight:850;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-
-    .oddsRow{
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:8px;
-      align-self:center;
-    }
+    .oddsRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:center}
     .oddBtn{
-      min-height:58px;
-      padding:8px 8px;
-      border-radius:12px;
+      min-height:58px;padding:8px 8px;border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
-      background:var(--oddBg);
-      cursor:pointer;
+      background:var(--oddBg);cursor:pointer;
       display:flex;flex-direction:column;justify-content:center;gap:3px;
       transition:.15s transform ease, .15s background ease, .15s border ease, .15s box-shadow ease;
-      user-select:none;
-      text-align:center;
-      position:relative;
-      overflow:hidden;
+      user-select:none;text-align:center;position:relative;overflow:hidden;
     }
     .oddBtn:before{
-      content:"";
-      position:absolute;left:0;top:0;right:0;height:2px;
-      background:transparent;
-      transition:.15s ease;
+      content:"";position:absolute;left:0;top:0;right:0;height:2px;
+      background:transparent;transition:.15s ease;
     }
     .oddBtn:hover{
       transform:translateY(-1px);
       background:var(--oddBgHover);
       border-color:rgba(255,255,255,.14);
     }
-    .oddBtn .lab{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-    .oddBtn .val{
-      font-size:16px;
-      font-weight:1000;
-      letter-spacing:.2px;
-      line-height:1;
-    }
+    .oddBtn .lab{font-size:11px;color:var(--muted);font-weight:1000;letter-spacing:.2px}
+    .oddBtn .val{font-size:16px;font-weight:1000;letter-spacing:.2px;line-height:1}
     .oddBtn.selected{
       border-color:rgba(23,201,100,.40);
       background:linear-gradient(180deg, rgba(23,201,100,.16), rgba(23,201,100,.10));
@@ -401,12 +272,8 @@
     }
     .oddBtn.selected:before{background:var(--green)}
 
-    .matchOpenCol{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    @media (max-width: 860px){
+    .matchOpenCol{display:flex;align-items:center;justify-content:flex-end}
+    @media (max-width:860px){
       .matchOpenCol{justify-content:stretch}
       .matchOpenCol .btn{width:100%}
     }
@@ -415,35 +282,21 @@
     .sep{height:1px;background:var(--line);margin:10px 0}
 
     .screen{
-      position:fixed; inset:0;
-      z-index:80;
-      background:rgba(6,17,10,.90);
-      backdrop-filter:blur(10px);
+      position:fixed;inset:0;z-index:80;
+      background:rgba(6,17,10,.90);backdrop-filter:blur(10px);
       display:none;
     }
     .screen.show{display:block}
-    .screenInner{
-      max-width:1180px;
-      margin:0 auto;
-      height:100%;
-      display:flex;
-      flex-direction:column;
-    }
-
+    .screenInner{max-width:1180px;margin:0 auto;height:100%;display:flex;flex-direction:column}
     .screenHead{
-      padding:10px 14px;
-      display:flex;align-items:center;gap:10px;
+      padding:10px 14px;display:flex;align-items:center;gap:10px;
       border-bottom:1px solid var(--line);
-      background:rgba(7,19,11,.58);
-      position:relative;
-      z-index:2;
+      background:rgba(7,19,11,.58);position:relative;z-index:2;
     }
     .screenTitle{font-weight:1000}
 
     .gameHero{
-      position:relative;
-      padding:18px 16px 14px;
-      border-bottom:1px solid var(--line);
+      position:relative;padding:18px 16px 14px;border-bottom:1px solid var(--line);
       background:
         linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
         radial-gradient(600px 180px at 50% 0%, rgba(23,201,100,.12), transparent 70%),
@@ -451,42 +304,26 @@
       overflow:hidden;
     }
     .gameHero:before{
-      content:"";
-      position:absolute;inset:0;
+      content:"";position:absolute;inset:0;
       background:
         linear-gradient(transparent 0 76%, rgba(255,255,255,.04) 76% 77%, transparent 77%),
         repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.03) 8% 8.4%, transparent 8.4% 16.8%);
-      opacity:.55;
-      pointer-events:none;
+      opacity:.55;pointer-events:none;
     }
     .gameHeroInner{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
-      gap:14px;
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:1fr auto 1fr;
+      align-items:center;gap:14px;
     }
-    @media (max-width: 760px){
-      .gameHeroInner{
-        grid-template-columns:1fr;
-        text-align:center;
-      }
+    @media (max-width:760px){
+      .gameHeroInner{grid-template-columns:1fr;text-align:center}
     }
-
-    .heroTeam{
-      display:flex;align-items:center;gap:12px;
-      min-width:0;
-    }
+    .heroTeam{display:flex;align-items:center;gap:12px;min-width:0}
     .heroTeam.right{justify-content:flex-end}
-    @media (max-width: 760px){
+    @media (max-width:760px){
       .heroTeam,.heroTeam.right{justify-content:center}
     }
-
-    .heroTeamMeta{
-      display:flex;flex-direction:column;gap:4px;
-      min-width:0;
-    }
+    .heroTeamMeta{display:flex;flex-direction:column;gap:4px;min-width:0}
     .heroTeamName{
       font-size:22px;font-weight:1000;line-height:1.05;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -495,61 +332,39 @@
       font-size:12px;color:var(--muted);font-weight:900;
       text-transform:uppercase;letter-spacing:.4px;
     }
-
     .heroCenter{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-      min-width:180px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:8px;min-width:180px;
     }
-    .heroVs{
-      font-size:13px;
-      color:var(--muted);
-      font-weight:1000;
-      letter-spacing:1.1px;
-    }
-    .heroTime{
-      font-size:18px;
-      font-weight:1000;
-    }
+    .heroVs{font-size:13px;color:var(--muted);font-weight:1000;letter-spacing:1.1px}
+    .heroTime{font-size:18px;font-weight:1000}
     .heroLeague{
-      padding:7px 12px;
-      border-radius:999px;
+      padding:7px 12px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.05);
-      font-size:12px;
-      font-weight:1000;
-      white-space:nowrap;
+      font-size:12px;font-weight:1000;white-space:nowrap;
     }
-    .heroVenue{
-      font-size:12px;color:var(--muted);font-weight:900;
-      text-align:center;
-    }
+    .heroVenue{font-size:12px;color:var(--muted);font-weight:900;text-align:center}
 
     .gameQuickOdds{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
-      gap:10px;
-      padding:12px 14px;
+      display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;padding:12px 14px;
       border-bottom:1px solid var(--line);
       background:rgba(255,255,255,.025);
     }
-    @media (max-width: 520px){
-      .gameQuickOdds{grid-template-columns:1fr}
-    }
+    @media (max-width:520px){ .gameQuickOdds{grid-template-columns:1fr} }
 
     .tabs{
       display:flex;gap:8px;flex-wrap:wrap;
-      padding:10px 14px;
-      border-bottom:1px solid var(--line);
+      padding:10px 14px;border-bottom:1px solid var(--line);
       background:rgba(255,255,255,.03);
     }
     .tab{
       padding:9px 11px;border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.04);
-      cursor:pointer;
-      font-weight:950;font-size:13px;
-      user-select:none;
-      transition:.15s ease;
+      cursor:pointer;font-weight:950;font-size:13px;
+      user-select:none;transition:.15s ease;
     }
     .tab:hover{background:rgba(255,255,255,.07)}
     .tab.active{
@@ -558,52 +373,33 @@
       color:#fff4cb;
     }
 
-    .screenBody{
-      padding:12px 14px 120px;
-      overflow:auto;
-    }
-
+    .screenBody{padding:12px 14px 120px;overflow:auto}
     .marketCard{
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.04);
-      border-radius:16px;
-      overflow:hidden;
-      margin-bottom:10px;
-      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      border-radius:16px;overflow:hidden;
+      margin-bottom:10px;box-shadow:0 10px 28px rgba(0,0,0,.18);
     }
     .marketHead{
-      padding:12px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      cursor:pointer;
-      user-select:none;
+      padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+      cursor:pointer;user-select:none;
       background:linear-gradient(180deg, rgba(255,255,255,.05), transparent);
     }
     .marketHead .title{font-weight:1000}
     .marketBody{padding:12px;display:none}
     .marketCard.open .marketBody{display:block}
-    .marketGrid{
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:8px;
-    }
-    @media (max-width: 520px){
-      .marketGrid{grid-template-columns:repeat(2, 1fr)}
-    }
+    .marketGrid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px}
+    @media (max-width:520px){ .marketGrid{grid-template-columns:repeat(2,1fr)} }
 
     .pickBtn{
-      min-height:60px;
-      padding:10px;border-radius:12px;
+      min-height:60px;padding:10px;border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
-      background:var(--oddBg);
-      cursor:pointer;
+      background:var(--oddBg);cursor:pointer;
       display:flex;flex-direction:column;justify-content:center;gap:3px;
-      user-select:none;
-      transition:.15s transform ease, .15s background ease, .15s border ease;
-      text-align:center;
-      position:relative;
-      overflow:hidden;
+      user-select:none;transition:.15s transform ease, .15s background ease, .15s border ease;
+      text-align:center;position:relative;overflow:hidden;
     }
-    .pickBtn:hover{transform:translateY(-1px); background:var(--oddBgHover)}
+    .pickBtn:hover{transform:translateY(-1px);background:var(--oddBgHover)}
     .pickBtn .lab{font-size:12px;color:var(--muted);font-weight:1000}
     .pickBtn .val{font-size:14px;font-weight:1000}
     .pickBtn.selected{
@@ -616,15 +412,12 @@
       padding:6px 8px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.05);
-      font-size:12px;font-weight:950;
-      user-select:none;
-      cursor:pointer;
+      font-size:12px;font-weight:950;user-select:none;cursor:pointer;
     }
     .switch{
       width:40px;height:22px;border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.08);
-      position:relative;
+      background:rgba(255,255,255,.08);position:relative;
     }
     .knob{
       width:18px;height:18px;border-radius:999px;
@@ -632,101 +425,70 @@
       position:absolute;top:1px;left:2px;
       transition:.15s left ease, .15s background ease;
     }
-    .switch.on{background:rgba(23,201,100,.22); border-color:rgba(23,201,100,.30)}
-    .switch.on .knob{left:19px; background:rgba(255,255,255,.95)}
+    .switch.on{background:rgba(23,201,100,.22);border-color:rgba(23,201,100,.30)}
+    .switch.on .knob{left:19px;background:rgba(255,255,255,.95)}
 
     .bottomNav{
       position:fixed;left:0;right:0;bottom:0;z-index:60;
-      background:rgba(7,19,11,.84);
-      border-top:1px solid var(--line);
+      background:rgba(7,19,11,.84);border-top:1px solid var(--line);
       backdrop-filter:blur(12px);
     }
     .bottomNavInner{
       max-width:1180px;margin:0 auto;
       padding:10px 14px;
-      display:grid;grid-template-columns:repeat(4, 1fr);
-      gap:10px;
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
     }
     .navBtn{
       padding:10px;border-radius:16px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.04);
-      cursor:pointer;
-      text-align:center;
-      font-weight:950;
-      user-select:none;
-      transition:.15s ease;
+      cursor:pointer;text-align:center;font-weight:950;
+      user-select:none;transition:.15s ease;
     }
     .navBtn:hover{background:rgba(255,255,255,.07)}
-    .navBtn.active{border-color:rgba(23,201,100,.32); background:rgba(23,201,100,.12)}
-    .navBtn span{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-top:2px}
+    .navBtn.active{
+      border-color:rgba(23,201,100,.32);
+      background:rgba(23,201,100,.12)
+    }
+    .navBtn span{
+      display:block;font-size:12px;color:var(--muted);
+      font-weight:900;margin-top:2px;
+    }
 
     .betslip{
-      position:fixed;
-      right:14px;
-      bottom:98px;
-      width:388px;
-      max-width:calc(100vw - 28px);
-      z-index:70;
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg, rgba(15,31,20,.98), rgba(10,18,13,.98));
-      backdrop-filter:blur(10px);
-      box-shadow:var(--shadow2);
-      max-height:calc(100vh - 130px);
-      display:flex;
-      flex-direction:column;
+      position:fixed;right:14px;bottom:98px;width:388px;
+      max-width:calc(100vw - 28px);z-index:70;border-radius:18px;
+      overflow:hidden;border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(15,31,20,.98), rgba(10,18,13,.98));
+      backdrop-filter:blur(10px);box-shadow:var(--shadow2);
+      max-height:calc(100vh - 130px);display:flex;flex-direction:column;
     }
-    @media (max-width: 920px){
-      .betslip{left:14px;right:14px;width:auto}
-    }
+    @media (max-width:920px){ .betslip{left:14px;right:14px;width:auto} }
 
     .betslipHead{
-      padding:12px 12px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;
       border-bottom:1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), transparent);
-      position:sticky;
-      top:0;
-      z-index:2;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), transparent);
+      position:sticky;top:0;z-index:2;
     }
     .betslipTitle{font-weight:1000}
-    .betslipHeadLeft{
-      display:flex;align-items:center;gap:10px;
-    }
+    .betslipHeadLeft{display:flex;align-items:center;gap:10px}
     .ticketMark{
-      width:34px;height:34px;border-radius:10px;
-      display:grid;place-items:center;
-      font-size:15px;font-weight:1000;
-      border:1px solid rgba(255,255,255,.10);
+      width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+      font-size:15px;font-weight:1000;border:1px solid rgba(255,255,255,.10);
       background:linear-gradient(180deg, rgba(23,201,100,.18), rgba(23,201,100,.08));
       color:#d9ffe8;
     }
-
     .betslipBody{
-      padding:10px 12px;
-      display:block;
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
+      padding:10px 12px;display:block;overflow:auto;-webkit-overflow-scrolling:touch;
     }
     .betslip.mini .betslipBody{display:none}
-
     .betslipMiniBar{
-      display:none;
-      padding:12px;
-      cursor:pointer;
-      border-top:1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      display:none;padding:12px;cursor:pointer;border-top:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
     }
     .betslip.mini .betslipMiniBar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
     }
     .miniMain{display:flex;flex-direction:column;gap:4px}
     .miniMain strong{font-size:14px}
@@ -734,25 +496,16 @@
 
     .slipModeBar{
       display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.035);
-      margin-bottom:10px;
+      padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);margin-bottom:10px;
     }
-
     .slipItem{
-      padding:10px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      display:flex;flex-direction:column;gap:8px;
-      position:relative;
-      overflow:hidden;
+      padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;
     }
     .slipItem:before{
-      content:"";
-      position:absolute;left:0;top:0;bottom:0;width:3px;
+      content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
       background:linear-gradient(180deg, var(--green), rgba(245,197,66,.85));
     }
     .slipTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
@@ -760,184 +513,122 @@
     .slipMeta{font-size:12px;color:var(--muted);font-weight:850}
     .slipActions{display:flex;gap:8px;align-items:center;justify-content:flex-end}
     .ticketSel{
-      padding:10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+      padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
     }
     .ticketSel strong{font-weight:1000}
     .ticketOdd{
-      min-width:54px;
-      text-align:center;
-      padding:8px 10px;
-      border-radius:10px;
-      border:1px solid rgba(23,201,100,.22);
-      background:rgba(23,201,100,.10);
-      font-weight:1000;
+      min-width:54px;text-align:center;padding:8px 10px;border-radius:10px;
+      border:1px solid rgba(23,201,100,.22);background:rgba(23,201,100,.10);font-weight:1000;
     }
 
     .slipFooter{
-      margin-top:10px;
-      padding-top:10px;
-      border-top:1px solid var(--line);
+      margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
       display:flex;flex-direction:column;gap:10px;
     }
     .stakeRow{display:flex;gap:10px;align-items:center}
     .stakeRow input{
-      flex:1;
-      padding:12px 12px;border-radius:12px;
+      flex:1;padding:12px 12px;border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      outline:none;
-      font-weight:950;
+      background:rgba(255,255,255,.05);color:var(--text);
+      outline:none;font-weight:950;
     }
     .stakeQuick{display:flex;gap:8px;flex-wrap:wrap}
     .stakeChip{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.05);
-      cursor:pointer;
-      font-weight:900;
-      font-size:12px;
-      user-select:none;
-      transition:.15s ease;
+      padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);cursor:pointer;font-weight:900;font-size:12px;
+      user-select:none;transition:.15s ease;
     }
     .stakeChip:hover{background:rgba(255,255,255,.08)}
     .summaryBox{
-      padding:10px 12px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      font-weight:1000;
+      padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:space-between;
+      gap:10px;font-weight:1000;
     }
     .summaryBox.big{
-      font-size:16px;
-      background:linear-gradient(180deg, rgba(23,201,100,.15), rgba(23,201,100,.08));
+      font-size:16px;background:linear-gradient(180deg, rgba(23,201,100,.15), rgba(23,201,100,.08));
       border-color:rgba(23,201,100,.25);
     }
 
     .modal{
-      position:fixed; inset:0;
-      z-index:90;
-      background:rgba(7,19,11,.88);
-      backdrop-filter:blur(10px);
-      display:none;
+      position:fixed;inset:0;z-index:90;background:rgba(7,19,11,.88);
+      backdrop-filter:blur(10px);display:none;
     }
     .modal.show{display:flex;align-items:center;justify-content:center;padding:14px}
     .modalCard{
-      width:580px;max-width:100%;
-      max-height:min(92vh, 920px);
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(11,26,16,.96);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+      width:580px;max-width:100%;max-height:min(92vh, 920px);
+      border-radius:18px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(11,26,16,.96);box-shadow:var(--shadow);overflow:hidden;
     }
-    .modalHead{padding:12px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+    .modalHead{
+      padding:12px 12px;border-bottom:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;
+    }
     .modalHead h3{margin:0;font-size:15px;font-weight:1000}
     .modalBody{padding:0;max-height:calc(92vh - 58px);overflow:auto}
-
     .authShell{padding:14px}
     .authSub{padding:0 14px 14px 14px;color:var(--muted);font-size:13px;font-weight:700}
     .field{display:flex;flex-direction:column;gap:6px}
     .field label{font-size:12px;color:var(--muted);font-weight:900}
-    .field input, .field select{
-      padding:14px 14px;border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background:var(--fieldBg);
-      color:var(--text);
-      outline:none;
-      font-weight:900;
-      font-size:15px;
+    .field input,.field select{
+      padding:14px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+      background:var(--fieldBg);color:var(--text);outline:none;font-weight:900;font-size:15px;
     }
     .field input::placeholder{color:rgba(232,244,236,.62)}
     .fieldHint{font-size:12px;color:var(--muted);line-height:1.45}
     .segRow{
-      display:flex;gap:0;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:12px;
-      overflow:hidden;
-      background:rgba(255,255,255,.03);
+      display:flex;gap:0;border:1px solid rgba(255,255,255,.14);
+      border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03);
     }
     .segBtn{
-      flex:1;
-      padding:14px;
-      border:0;
-      border-right:1px solid rgba(255,255,255,.12);
-      background:transparent;
-      font-weight:1000;
-      cursor:pointer;
-      text-align:center;
-      user-select:none;
+      flex:1;padding:14px;border:0;border-right:1px solid rgba(255,255,255,.12);
+      background:transparent;font-weight:1000;cursor:pointer;text-align:center;user-select:none;
     }
     .segBtn:last-child{border-right:0}
     .segBtn.active{
-      background:rgba(23,201,100,.10);
-      color:#40ffc1;
+      background:rgba(23,201,100,.10);color:#40ffc1;
       box-shadow:inset 0 0 0 1px rgba(64,255,193,.55);
     }
     .authGrid2{display:grid;grid-template-columns:110px 1fr;gap:10px}
     .authGridName{
-      display:grid;grid-template-columns:1fr 1fr;
-      gap:0;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:12px;
-      overflow:hidden;
-      background:rgba(255,255,255,.03);
+      display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(255,255,255,.14);
+      border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03);
     }
     .authGridName input{border:0;border-radius:0;background:transparent}
     .authGridName input + input{border-left:1px solid rgba(255,255,255,.12)}
     .birthGrid{
-      display:grid;grid-template-columns:1fr 1fr 1fr;
-      gap:0;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:12px;
-      overflow:hidden;
-      background:rgba(255,255,255,.03);
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid rgba(255,255,255,.14);
+      border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03);
     }
     .birthGrid input{border:0;border-radius:0;background:transparent;padding:14px 16px}
     .birthGrid input + input{border-left:1px solid rgba(255,255,255,.12)}
     .registerStack{display:flex;flex-direction:column;gap:14px}
-
     .toast{
-      position:fixed; left:50%; bottom:110px; transform:translateX(-50%);
-      z-index:120;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.55);
-      backdrop-filter:blur(10px);
-      font-weight:950;
-      display:none;
-      max-width:calc(100vw - 28px);
-      text-align:center;
+      position:fixed;left:50%;bottom:110px;transform:translateX(-50%);
+      z-index:120;padding:10px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.55);
+      backdrop-filter:blur(10px);font-weight:950;display:none;
+      max-width:calc(100vw - 28px);text-align:center;
     }
-
     .list{display:flex;flex-direction:column;gap:10px}
     .itemRow{
-      padding:12px;border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+      padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
     }
     .itemRow strong{font-weight:1000}
     .status{
-      padding:6px 8px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      font-weight:1000;font-size:12px;
-      white-space:nowrap;
+      padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);font-weight:1000;font-size:12px;white-space:nowrap;
     }
-    .status.open{border-color:rgba(245,197,66,.30); background:rgba(245,197,66,.12)}
-    .status.won{border-color:rgba(23,201,100,.32); background:rgba(23,201,100,.12)}
-    .status.lost{border-color:rgba(255,77,77,.30); background:rgba(255,77,77,.12)}
+    .status.open{border-color:rgba(245,197,66,.30);background:rgba(245,197,66,.12)}
+    .status.won{border-color:rgba(23,201,100,.32);background:rgba(23,201,100,.12)}
+    .status.lost{border-color:rgba(255,77,77,.30);background:rgba(255,77,77,.12)}
     .smallText{font-size:12px;color:var(--muted);font-weight:850}
     .h2{margin:0 0 8px 0;font-size:16px;font-weight:1000}
   </style>
 </head>
 <body>
+
   <div class="topbar">
     <div class="topbarInner">
       <div class="brand" style="cursor:pointer" id="goHome">
@@ -951,7 +642,6 @@
       <div class="spacer"></div>
 
       <div id="topAccountPill" class="pill hide"></div>
-
       <button id="btnRegister" class="btn yellow">Registrar</button>
       <button id="btnEnter" class="btn primary">Entrar</button>
       <button id="btnLogout" class="btn ghost small hide">Sair</button>
@@ -965,6 +655,7 @@
           <div class="panelTitle">Países & Ligas</div>
           <div class="badge" id="leftHint">Selecione</div>
         </div>
+
         <div class="panelBody stack">
           <div class="search">
             <span style="opacity:.85">🔎</span>
@@ -983,6 +674,7 @@
             </div>
             <button class="btn small" id="btnRefresh">Atualizar</button>
           </div>
+
           <div class="list" id="featuredList"></div>
         </div>
       </div>
@@ -994,6 +686,7 @@
             <div class="badge" id="selectedLeagueBadge">Nenhuma liga</div>
           </div>
         </div>
+
         <div class="panelBody">
           <div id="matchesList" class="matchesSportsbook"></div>
 
@@ -1018,6 +711,7 @@
           <button class="btn small" id="btnClearHistory">Limpar</button>
         </div>
       </div>
+
       <div class="panelBody">
         <div class="smallText">Status: ABERTA / GANHA / PERDIDA. Liquidação simulada pelo admin.</div>
         <div class="sep"></div>
@@ -1033,9 +727,11 @@
           <button class="btn small" id="btnJoinByCode">Entrar por código</button>
         </div>
       </div>
+
       <div class="panelBody">
         <div class="smallText">
-          Aqui é para competições entre usuários. <strong>Só admin cria</strong>. Usuários podem entrar pelo código.
+          Aqui é para competições entre usuários. <strong>Só admin cria</strong>.
+          Usuários podem entrar pelo código.
         </div>
 
         <div class="sep"></div>
@@ -1045,11 +741,17 @@
             <div class="panelTitle">Admin • Criar competição</div>
             <div class="badge">Admin</div>
           </div>
+
           <div class="panelBody">
             <div class="row" style="gap:10px;flex-wrap:wrap">
-              <input id="newLeagueName" placeholder="Nome da liga (ex: CravaAí Masters)" style="flex:1;min-width:220px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text);font-weight:900;outline:none" />
+              <input
+                id="newLeagueName"
+                placeholder="Nome da liga (ex: CravaAí Masters)"
+                style="flex:1;min-width:220px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text);font-weight:900;outline:none"
+              />
               <button class="btn primary" id="btnCreateLeague">Criar</button>
             </div>
+
             <div class="smallText" style="margin-top:8px">
               Após criar, você recebe um <strong>código</strong> para os usuários entrarem.
             </div>
@@ -1065,6 +767,7 @@
               </div>
               <button class="btn small" id="btnRefreshAdmin">Recarregar</button>
             </div>
+
             <div class="sep"></div>
             <div class="list" id="adminSettleList"></div>
           </div>
@@ -1080,23 +783,25 @@
     <div class="screenInner">
       <div class="screenHead">
         <button class="btn small" id="btnCloseGame">← Voltar</button>
+
         <div style="display:flex;flex-direction:column;gap:2px">
           <div class="screenTitle" id="gameTitle">Jogo</div>
           <div class="smallText" id="gameSub">Liga • data</div>
         </div>
+
         <div class="spacer"></div>
 
         <div class="toggle" id="toggleBuilderGame" title="OFF: 1 seleção por jogo | ON: Bet Builder (várias seleções no mesmo jogo)">
           <span style="opacity:.9">Criar aposta</span>
           <div class="switch" id="builderSwitchGame"><div class="knob"></div></div>
         </div>
-
         <span class="badge" id="builderBadge">OFF</span>
       </div>
 
       <div id="gameHero" class="gameHero"></div>
       <div id="gameQuickOdds" class="gameQuickOdds"></div>
       <div class="tabs" id="gameTabs"></div>
+
       <div class="screenBody">
         <div id="marketsArea"></div>
       </div>
@@ -1112,6 +817,7 @@
           <span class="badge" id="slipCount">0</span>
         </div>
       </div>
+
       <div class="row" style="gap:8px">
         <button class="btn small" id="btnMini">Diminuir</button>
       </div>
@@ -1124,6 +830,7 @@
           <span style="opacity:.8">•</span>
           <span id="modeHint" class="muted">jogos diferentes + regra do mesmo jogo</span>
         </div>
+
         <div class="slipActions">
           <button class="btn small" id="btnEditSlip">Editar</button>
           <button class="btn small yellow" id="btnCombos">Combinações</button>
@@ -1149,10 +856,12 @@
           <span>Saldo</span>
           <span id="slipBalance">0 CP</span>
         </div>
+
         <div class="summaryBox">
           <span>Odds total</span>
           <span id="totalOdds">1.00</span>
         </div>
+
         <div class="summaryBox big">
           <span>Retorno (estimado)</span>
           <span id="estReturn">0 CP</span>
@@ -1194,10 +903,12 @@
               <label>E-mail</label>
               <input id="authEmail" placeholder="seuemail@exemplo.com" />
             </div>
+
             <div class="field">
               <label>Senha</label>
               <input id="authPass" type="password" placeholder="••••••••" />
             </div>
+
             <div class="row" style="justify-content:flex-end">
               <button class="btn primary" id="btnSubmitAuth">Entrar</button>
             </div>
@@ -1328,6 +1039,7 @@
         <h3>Planos</h3>
         <button class="btn small" id="btnClosePlans">✕</button>
       </div>
+
       <div class="modalBody">
         <div style="padding:14px">
           <div class="list">
@@ -1338,6 +1050,7 @@
               </div>
               <span class="badge">R$ 0</span>
             </div>
+
             <div class="itemRow">
               <div>
                 <strong>Pro</strong>
@@ -1346,6 +1059,7 @@
               <span class="badge">R$ 29,90</span>
               <button class="btn small primary" id="btnBuyPro">Assinar</button>
             </div>
+
             <div class="itemRow">
               <div>
                 <strong>Elite</strong>
@@ -1355,10 +1069,9 @@
               <button class="btn small yellow" id="btnBuyElite">Assinar</button>
             </div>
           </div>
+
           <div class="sep"></div>
-          <div class="smallText">
-            Checkout real: <strong>Stripe</strong> via <strong>create-checkout</strong>.
-          </div>
+          <div class="smallText">Checkout real: <strong>Stripe</strong> via <strong>create-checkout</strong>.</div>
         </div>
       </div>
     </div>
@@ -1372,90 +1085,28 @@
     };
 
     const SPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/123";
-const TEAM_ASSET_CACHE_KEY = "cravai_team_assets_v1";
+    const TEAM_ASSET_CACHE_KEY = "cravai_team_assets_v1";
+    const ODDS_ENDPOINT = "/.netlify/functions/odds";
+    const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
-function loadTeamAssetCache(){
-  try{
-    return JSON.parse(localStorage.getItem(TEAM_ASSET_CACHE_KEY) || "{}");
-  }catch{
-    return {};
-  }
-}
-
-function saveTeamAssetCache(cache){
-  localStorage.setItem(TEAM_ASSET_CACHE_KEY, JSON.stringify(cache));
-}
-
-const teamAssetCache = loadTeamAssetCache();
-
-async function fetchTeamAssets(teamName){
-
-  const name = String(teamName || "").trim();
-
-  if(!name) return null;
-
-  if(teamAssetCache[name]){
-    return teamAssetCache[name];
-  }
-
-  try{
-
-    const url = `${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(name)}`;
-
-    const res = await fetch(url);
-
-    const data = await res.json();
-
-    const team = Array.isArray(data?.teams) ? data.teams[0] : null;
-
-    const asset = team ? {
-  badge: team.strTeamBadge || null,
-  logo: team.strTeamLogo || null,
-  jersey: team.strTeamJersey || null,
-  teamName: team.strTeam || name
-} : {
-      badge:null,
-      logo:null,
-      jersey:null,
-      teamName:name
+    const REAL_LEAGUE_MAP = {
+      "br-seriea": "soccer_brazil_campeonato",
+      "eng-pl": "soccer_epl",
+      "esp-ll": "soccer_spain_la_liga",
+      "ita-sa": "soccer_italy_serie_a",
+      "ger-bl": "soccer_germany_bundesliga",
+      "fra-l1": "soccer_france_ligue_one"
     };
 
-    teamAssetCache[name] = asset;
-
-    saveTeamAssetCache(teamAssetCache);
-
-    return asset;
-
-  }catch(e){
-
-    console.log("Erro ao buscar escudo:",teamName,e);
-
-    return {
-      badge:null,
-      logo:null,
-      jersey:null,
-      teamName:name
+    const REAL_CFG = {
+      markets: "h2h",
+      regions: "eu",
+      oddsFormat: "decimal"
     };
 
-  }
-
-}
-   function getTeamInitials(name){
-  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-  if(parts.length === 0) return "TM";
-  if(parts.length === 1) return parts[0].slice(0, 3).toUpperCase();
-  return (parts[0][0] + parts[1][0]).toUpperCase();
-}
-
-function teamCrestHTML(teamName, asset){
-  if(asset?.badge){
-    return `<div class="teamCrest"><img src="${esc(asset.badge)}" alt="${esc(teamName)}" loading="lazy" /></div>`;
-  }
-
-  return `<div class="teamCrest"><div class="teamCrestFallback">${esc(getTeamInitials(teamName))}</div></div>`;
-}
-
-const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
+    const REAL_COOLDOWN_MS = 60 * 1000;
+    const TABS = ["Principais","Gols","Cartões","Escanteios","Chutes","Especiais","Escalações"];
+    const realCache = {};
 
     const $ = (s) => document.querySelector(s);
     const $$ = (s) => Array.from(document.querySelectorAll(s));
@@ -1466,38 +1117,99 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
       catch { return String(x); }
     };
 
-    const esc = (str) => String(str ?? "").replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      "\"": "&quot;",
-      "'": "&#39;"
-    }[m]));
+    const esc = (str) =>
+      String(str ?? "").replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        "\"":"&quot;",
+        "'":"&#39;"
+      }[m]));
 
-    const uid = () => crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    const uid = () =>
+      crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
     const nowIso = () => new Date().toISOString();
     const isAdminEmail = (email) => String(email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-    
-
     function toast(msg){
       const t = $("#toast");
+      if(!t) return;
       t.textContent = msg;
       t.style.display = "block";
       clearTimeout(toast._tm);
       toast._tm = setTimeout(() => { t.style.display = "none"; }, 2200);
     }
 
-    function loadDB(){
-      try{
-        const raw = localStorage.getItem(LS.DB);
-        if(raw) return JSON.parse(raw);
-      }catch{}
-      return seedDB();
+    function loadTeamAssetCache(){
+      try{ return JSON.parse(localStorage.getItem(TEAM_ASSET_CACHE_KEY) || "{}"); }
+      catch{ return {}; }
     }
 
-    function saveDB(db){
-      localStorage.setItem(LS.DB, JSON.stringify(db));
+    function saveTeamAssetCache(cache){
+      localStorage.setItem(TEAM_ASSET_CACHE_KEY, JSON.stringify(cache));
+    }
+
+    const teamAssetCache = loadTeamAssetCache();
+
+    function getTeamInitials(name){
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if(!parts.length) return "TM";
+      if(parts.length === 1) return parts[0].slice(0,3).toUpperCase();
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+
+    async function fetchTeamAssets(teamName){
+      const name = String(teamName || "").trim();
+      if(!name) return { badge:null, logo:null, jersey:null, teamName:"" };
+      if(teamAssetCache[name]) return teamAssetCache[name];
+
+      try{
+        const url = `${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(name)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const team = Array.isArray(data?.teams) ? data.teams[0] : null;
+
+        const asset = team
+          ? {
+              badge: team.strTeamBadge || null,
+              logo: team.strTeamLogo || null,
+              jersey: team.strTeamJersey || null,
+              teamName: team.strTeam || name
+            }
+          : {
+              badge:null,
+              logo:null,
+              jersey:null,
+              teamName:name
+            };
+
+        teamAssetCache[name] = asset;
+        saveTeamAssetCache(teamAssetCache);
+        return asset;
+      }catch(e){
+        console.log("Erro ao buscar escudo:", teamName, e);
+        return { badge:null, logo:null, jersey:null, teamName:name };
+      }
+    }
+
+    function teamCrestHTML(teamName, asset = null, sizeClass = ""){
+      const cls = `teamCrest ${sizeClass}`.trim();
+      const badge = asset?.badge || asset?.logo || null;
+
+      if(badge){
+        return `
+          <div class="${cls}">
+            <img src="${esc(badge)}" alt="${esc(teamName)}" loading="lazy" />
+          </div>
+        `;
+      }
+
+      return `
+        <div class="${cls}">
+          <div class="teamCrestFallback">${esc(getTeamInitials(teamName))}</div>
+        </div>
+      `;
     }
 
     function rndOdd(min, max){
@@ -1505,74 +1217,75 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
       return (Math.round(v * 100) / 100).toFixed(2);
     }
 
-
-
-    function buildMarketsDemo(matchId, home, away){
-      const mk = (tab, title, picks) => ({
+    function mkMarket(matchId, tab, title, picks){
+      return {
         id: uid(),
         matchId,
         tab,
         title,
         picks: picks.map((p) => ({ id: uid(), ...p }))
-      });
+      };
+    }
 
+    function buildMarketsDemo(matchId, home, away){
       const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
       const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
 
       return [
-        mk("Principais","Resultado (1X2)", [
-          { label: `${home} vence`, odd: rndOdd(1.60,2.80) },
-          { label: "Empate", odd: rndOdd(2.90,3.80) },
-          { label: `${away} vence`, odd: rndOdd(1.90,3.60) },
+        mkMarket(matchId, "Principais", "Resultado (1X2)", [
+          { label:`${home} vence`, odd:rndOdd(1.60,2.80) },
+          { label:"Empate", odd:rndOdd(2.90,3.80) },
+          { label:`${away} vence`, odd:rndOdd(1.90,3.60) }
         ]),
-        mk("Principais","Dupla chance", [
-          { label:`1X (${home} ou Empate)`, odd: rndOdd(1.20,1.60)},
-          { label:`12 (${home} ou ${away})`, odd: rndOdd(1.20,1.90)},
-          { label:`X2 (Empate ou ${away})`, odd: rndOdd(1.20,1.70)},
+        mkMarket(matchId, "Principais", "Dupla chance", [
+          { label:`1X (${home} ou Empate)`, odd:rndOdd(1.20,1.60) },
+          { label:`12 (${home} ou ${away})`, odd:rndOdd(1.20,1.90) },
+          { label:`X2 (Empate ou ${away})`, odd:rndOdd(1.20,1.70) }
         ]),
-        mk("Gols","Ambas marcam", [
-          { label:"Sim", odd: rndOdd(1.55,2.20)},
-          { label:"Não", odd: rndOdd(1.55,2.50)},
+        mkMarket(matchId, "Gols", "Ambas marcam", [
+          { label:"Sim", odd:rndOdd(1.55,2.20) },
+          { label:"Não", odd:rndOdd(1.55,2.50) }
         ]),
-        mk("Gols","Total de gols", [
+        mkMarket(matchId, "Gols", "Total de gols", [
           over("1.5", rndOdd(1.25,1.75)),
           under("1.5", rndOdd(2.00,3.20)),
           over("2.5", rndOdd(1.55,2.60)),
           under("2.5", rndOdd(1.45,2.20)),
           over("3.5", rndOdd(2.10,3.90)),
-          under("3.5", rndOdd(1.20,1.60)),
+          under("3.5", rndOdd(1.20,1.60))
         ]),
-        mk("Cartões","Total de cartões", [
+        mkMarket(matchId, "Cartões", "Total de cartões", [
           over("3.5", rndOdd(1.35,2.10)),
           under("3.5", rndOdd(1.65,2.70)),
           over("4.5", rndOdd(1.55,2.60)),
-          under("4.5", rndOdd(1.45,2.40)),
+          under("4.5", rndOdd(1.45,2.40))
         ]),
-        mk("Escanteios","Total de escanteios", [
+        mkMarket(matchId, "Escanteios", "Total de escanteios", [
           over("7.5", rndOdd(1.35,2.20)),
           under("7.5", rndOdd(1.55,2.60)),
           over("9.5", rndOdd(1.55,2.80)),
-          under("9.5", rndOdd(1.35,2.40)),
+          under("9.5", rndOdd(1.35,2.40))
         ]),
-        mk("Chutes","Chutes no gol (time)", [
-          { label:`${home} +2.5`, odd: rndOdd(1.40,2.30)},
-          { label:`${home} -2.5`, odd: rndOdd(1.55,2.80)},
-          { label:`${away} +2.5`, odd: rndOdd(1.40,2.30)},
-          { label:`${away} -2.5`, odd: rndOdd(1.55,2.80)},
+        mkMarket(matchId, "Chutes", "Chutes no gol (time)", [
+          { label:`${home} +2.5`, odd:rndOdd(1.40,2.30) },
+          { label:`${home} -2.5`, odd:rndOdd(1.55,2.80) },
+          { label:`${away} +2.5`, odd:rndOdd(1.40,2.30) },
+          { label:`${away} -2.5`, odd:rndOdd(1.55,2.80) }
         ]),
-        mk("Especiais","Quem marca (qualquer momento)", [
-          { label:`Atacante do ${home}`, odd: rndOdd(1.90,3.40)},
-          { label:`Atacante do ${away}`, odd: rndOdd(2.10,3.80)},
+        mkMarket(matchId, "Especiais", "Quem marca (qualquer momento)", [
+          { label:`Atacante do ${home}`, odd:rndOdd(1.90,3.40) },
+          { label:`Atacante do ${away}`, odd:rndOdd(2.10,3.80) }
         ]),
-        mk("Escalações","Escalações (demo)", [
-          { label:"Ver escalação provável", odd:"—", meta:{ info:true } },
-        ]),
+        mkMarket(matchId, "Escalações", "Escalações (demo)", [
+          { label:"Ver escalação provável", odd:"—", meta:{ info:true } }
+        ])
       ];
     }
 
     function mkMatch(leagueId, home, away, whenTxt, stadium){
       const id = uid();
       const markets = buildMarketsDemo(id, home, away);
+
       return {
         id,
         leagueId,
@@ -1583,9 +1296,9 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         featured: Math.random() > 0.45,
         markets,
         odds1x2: {
-          "1": rndOdd(1.60, 2.80),
-          "X": rndOdd(2.90, 3.70),
-          "2": rndOdd(2.10, 3.40)
+          "1": rndOdd(1.60,2.80),
+          "X": rndOdd(2.90,3.70),
+          "2": rndOdd(2.10,3.40)
         }
       };
     }
@@ -1595,12 +1308,33 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         bets: [],
         leagues: [],
         countries: [
-          { id:"br", name:"Brasil", flag:"🇧🇷", leagues:[ { id:"br-seriea", name:"Brasileirão Série A" }, { id:"br-serieb", name:"Série B" } ]},
-          { id:"eng", name:"Inglaterra", flag:"🏴", leagues:[{id:"eng-pl", name:"Premier League"}]},
-          { id:"esp", name:"Espanha", flag:"🇪🇸", leagues:[{id:"esp-ll", name:"LaLiga"}]},
-          { id:"ita", name:"Itália", flag:"🇮🇹", leagues:[{id:"ita-sa", name:"Serie A"}]},
-          { id:"ger", name:"Alemanha", flag:"🇩🇪", leagues:[{id:"ger-bl", name:"Bundesliga"}]},
-          { id:"fra", name:"França", flag:"🇫🇷", leagues:[{id:"fra-l1", name:"Ligue 1"}]},
+          {
+            id:"br", name:"Brasil", flag:"🇧🇷",
+            leagues:[
+              { id:"br-seriea", name:"Brasileirão Série A" },
+              { id:"br-serieb", name:"Série B" }
+            ]
+          },
+          {
+            id:"eng", name:"Inglaterra", flag:"🏴",
+            leagues:[{ id:"eng-pl", name:"Premier League" }]
+          },
+          {
+            id:"esp", name:"Espanha", flag:"🇪🇸",
+            leagues:[{ id:"esp-ll", name:"LaLiga" }]
+          },
+          {
+            id:"ita", name:"Itália", flag:"🇮🇹",
+            leagues:[{ id:"ita-sa", name:"Serie A" }]
+          },
+          {
+            id:"ger", name:"Alemanha", flag:"🇩🇪",
+            leagues:[{ id:"ger-bl", name:"Bundesliga" }]
+          },
+          {
+            id:"fra", name:"França", flag:"🇫🇷",
+            leagues:[{ id:"fra-l1", name:"Ligue 1" }]
+          }
         ],
         matches: []
       };
@@ -1613,11 +1347,23 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         mkMatch("esp-ll","Real Madrid","Barcelona","Hoje 16:00","Bernabéu"),
         mkMatch("ita-sa","Inter","Milan","Amanhã 16:45","San Siro"),
         mkMatch("ger-bl","Bayern","Dortmund","Amanhã 15:30","Allianz Arena"),
-        mkMatch("fra-l1","PSG","Marseille","Hoje 15:00","Parc des Princes"),
+        mkMatch("fra-l1","PSG","Marseille","Hoje 15:00","Parc des Princes")
       ];
 
-      saveDB(db);
+      localStorage.setItem(LS.DB, JSON.stringify(db));
       return db;
+    }
+
+    function loadDB(){
+      try{
+        const raw = localStorage.getItem(LS.DB);
+        if(raw) return JSON.parse(raw);
+      }catch{}
+      return seedDB();
+    }
+
+    function saveDB(db){
+      localStorage.setItem(LS.DB, JSON.stringify(db));
     }
 
     function getAuth(){
@@ -1653,28 +1399,14 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
       localStorage.setItem(LS.UI, JSON.stringify(ui));
     }
 
-    const ODDS_ENDPOINT = "/.netlify/functions/odds";
-    const REAL_LEAGUE_MAP = {
-      "br-seriea": "soccer_brazil_campeonato",
-      "eng-pl": "soccer_epl",
-      "esp-ll": "soccer_spain_la_liga",
-      "ita-sa": "soccer_italy_serie_a",
-      "ger-bl": "soccer_germany_bundesliga",
-      "fra-l1": "soccer_france_ligue_one",
-    };
-    const REAL_CFG = { markets:"h2h", regions:"eu", oddsFormat:"decimal" };
-    const REAL_COOLDOWN_MS = 60 * 1000;
-    const realCache = {};
-
     const state = {
       db: loadDB(),
       ui: loadUI(),
       slip: { selections: [], stake: 50 },
       game: { open:false, matchId:null },
-      session: { profile: null }
+      session: { profile:null }
     };
 
-    const TABS = ["Principais","Gols","Cartões","Escanteios","Chutes","Especiais","Escalações"];
     let authMode = "login";
     let pendingRegisterPayload = null;
 
@@ -1715,11 +1447,7 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
     async function fetchOddsBySportKey(sportKey){
       const url =
-        `${ODDS_ENDPOINT}` +
-        `?sportKey=${encodeURIComponent(sportKey)}` +
-        `&markets=${encodeURIComponent(REAL_CFG.markets)}` +
-        `&regions=${encodeURIComponent(REAL_CFG.regions)}` +
-        `&oddsFormat=${encodeURIComponent(REAL_CFG.oddsFormat)}`;
+        `${ODDS_ENDPOINT}?sportKey=${encodeURIComponent(sportKey)}&markets=${encodeURIComponent(REAL_CFG.markets)}&regions=${encodeURIComponent(REAL_CFG.regions)}&oddsFormat=${encodeURIComponent(REAL_CFG.oddsFormat)}`;
 
       const res = await fetch(url, { cache:"no-store" });
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1737,6 +1465,7 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         if(!mk || !Array.isArray(mk.outcomes)) continue;
 
         let o1 = null, ox = null, o2 = null;
+
         for(const o of mk.outcomes){
           const name = String(o.name || "").toLowerCase();
           const price = Number(o.price);
@@ -1748,9 +1477,10 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         }
 
         if(o1 && o2){
-          return { "1": o1, "X": ox || null, "2": o2 };
+          return { "1":o1, "X":ox || null, "2":o2 };
         }
       }
+
       return null;
     }
 
@@ -1786,11 +1516,12 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
       const now = Date.now();
       const prev = realCache[leagueId];
+
       if(!force && prev && (now - prev.ts) < REAL_COOLDOWN_MS){
         renderLeagues();
-        renderMatches();
-        renderFeatured();
-        if(state.game.open) renderGameScreen();
+        await renderMatches();
+        await renderFeatured();
+        if(state.game.open) await renderGameScreen();
         return;
       }
 
@@ -1805,6 +1536,7 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         }
 
         const realMatches = events.map((ev) => realEventToMatch(ev, leagueId)).slice(0, 40);
+
         state.db.matches = state.db.matches.filter((x) => x.leagueId !== leagueId);
         state.db.matches.unshift(...realMatches);
         saveDB(state.db);
@@ -1813,9 +1545,9 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
         toast(`Liga atualizada: ${realMatches.length} jogos reais ✅`);
         renderLeagues();
-        renderMatches();
-        renderFeatured();
-        if(state.game.open) renderGameScreen();
+        await renderMatches();
+        await renderFeatured();
+        if(state.game.open) await renderGameScreen();
       }catch(e){
         console.log("Erro odds reais:", e);
         toast("Falha ao puxar odds reais (ver console).");
@@ -1837,7 +1569,15 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
       }else{
         const name = (u.username && String(u.username).trim()) ? String(u.username).trim() : "Usuário";
         const planTxt = (u.plan || "free").toUpperCase();
-        pill.innerHTML = `<strong>${esc(name)}</strong> <span style="opacity:.65">•</span> <span>${fmtCP(u.cp)} CP</span> <span style="opacity:.65">•</span> <span>${esc(planTxt)}</span>`;
+
+        pill.innerHTML = `
+          <strong>${esc(name)}</strong>
+          <span style="opacity:.65">•</span>
+          <span>${fmtCP(u.cp)} CP</span>
+          <span style="opacity:.65">•</span>
+          <span>${esc(planTxt)}</span>
+        `;
+
         pill.classList.remove("hide");
         btnLogout.classList.remove("hide");
         btnEnter.classList.add("hide");
@@ -1889,9 +1629,8 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
           saveUI(state.ui);
           renderCountries();
           renderLeagues();
-          renderMatches();
-          renderFeatured();
-
+          await renderMatches();
+          await renderFeatured();
           if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
             await updateLeagueReal(state.ui.leagueId);
           }
@@ -1919,19 +1658,24 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         el.className = "leagueItem" + (active ? " active" : "");
         el.innerHTML = `
           <div>
-            <div class="leagueName">${esc(l.name)} ${isReal ? '<span class="badge" style="margin-left:6px">REAL</span>' : ''}</div>
+            <div class="leagueName">
+              ${esc(l.name)}
+              ${isReal ? '<span class="badge" style="margin-left:6px">REAL</span>' : ''}
+            </div>
             <div class="smallText">${c.flag} ${esc(c.name)} • ${gamesCount} jogos</div>
           </div>
           <span class="badge">${gamesCount}</span>
         `;
+
         el.onclick = async () => {
           state.ui.leagueId = l.id;
           saveUI(state.ui);
           renderLeagues();
-          renderMatches();
-          renderFeatured();
+          await renderMatches();
+          await renderFeatured();
           if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
         };
+
         list.appendChild(el);
       });
 
@@ -1942,11 +1686,16 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
     function getMatchesFiltered(){
       const q = (state.ui.search || "").trim().toLowerCase();
+
       if(q){
         return state.db.matches.filter((m) => {
           const league = findLeague(m.leagueId);
           const country = findCountryByLeague(m.leagueId);
-          const hay = [m.home, m.away, m.whenTxt, league?.name, country?.name].filter(Boolean).join(" ").toLowerCase();
+          const hay = [m.home, m.away, m.whenTxt, league?.name, country?.name]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
           return hay.includes(q);
         });
       }
@@ -1964,9 +1713,7 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
     function oddButtonHTML(m, key, lab){
       const odd = m.odds1x2[key];
-      const pickLabel =
-        key === "1" ? `${m.home} vence` :
-        key === "2" ? `${m.away} vence` : "Empate";
+      const pickLabel = key === "1" ? `${m.home} vence` : key === "2" ? `${m.away} vence` : "Empate";
       const pickKey = `1x2:${m.id}:${key}`;
       const selected = isSelectedKey(pickKey) ? " selected" : "";
 
@@ -1984,7 +1731,6 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
       const ms = getMatchesFiltered();
       const league = findLeague(state.ui.leagueId);
-
       $("#rightTitle").textContent = state.ui.search ? "Resultados da busca" : (league ? league.name : "Jogos");
 
       if(ms.length === 0){
@@ -1992,11 +1738,13 @@ const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
         return;
       }
 
-      for (const m of ms) {
-        const homeAsset = await fetchTeamAssets(m.home);
-const awayAsset = await fetchTeamAssets(m.away);
-        
-const league = findLeague(m.leagueId);
+      for(const m of ms){
+        const [homeAsset, awayAsset] = await Promise.all([
+          fetchTeamAssets(m.home),
+          fetchTeamAssets(m.away)
+        ]);
+
+        const league = findLeague(m.leagueId);
         const country = findCountryByLeague(m.leagueId);
 
         const card = document.createElement("div");
@@ -2019,6 +1767,7 @@ const league = findLeague(m.leagueId);
                 <div class="teamName">${esc(m.home)}</div>
                 <div class="teamTag">Casa</div>
               </div>
+
               <div class="teamLine">
                 ${teamCrestHTML(m.away, awayAsset)}
                 <div class="teamName">${esc(m.away)}</div>
@@ -2053,7 +1802,7 @@ const league = findLeague(m.leagueId);
       }
     }
 
-    function renderFeatured(){
+    async function renderFeatured(){
       const list = $("#featuredList");
       list.innerHTML = "";
 
@@ -2070,7 +1819,8 @@ const league = findLeague(m.leagueId);
         return;
       }
 
-      featured.forEach((m) => {
+      for(const m of featured){
+        const homeAsset = await fetchTeamAssets(m.home);
         const league = findLeague(m.leagueId);
         const country = findCountryByLeague(m.leagueId);
 
@@ -2078,7 +1828,7 @@ const league = findLeague(m.leagueId);
         el.className = "itemRow";
         el.innerHTML = `
           <div style="display:flex;gap:10px;align-items:flex-start;min-width:0">
-            ${teamCrestHTML(m.home)}
+            ${teamCrestHTML(m.home, homeAsset)}
             <div>
               <strong>${esc(m.home)} x ${esc(m.away)}</strong>
               <div class="smallText">${country?.flag || ""} ${esc(league?.name || "")} • ${esc(m.whenTxt)}</div>
@@ -2089,7 +1839,7 @@ const league = findLeague(m.leagueId);
 
         el.querySelector(`[data-open="${m.id}"]`).onclick = () => openGame(m.id);
         list.appendChild(el);
-      });
+      }
     }
 
     function openGame(matchId){
@@ -2105,11 +1855,16 @@ const league = findLeague(m.leagueId);
       $("#gameScreen").classList.remove("show");
     }
 
-    function renderGameHero(m, league, country){
+    async function renderGameHero(m, league, country){
+      const [homeAsset, awayAsset] = await Promise.all([
+        fetchTeamAssets(m.home),
+        fetchTeamAssets(m.away)
+      ]);
+
       $("#gameHero").innerHTML = `
         <div class="gameHeroInner">
           <div class="heroTeam">
-            ${teamCrestHTML(m.home, "xl")}
+            ${teamCrestHTML(m.home, homeAsset, "xl")}
             <div class="heroTeamMeta">
               <div class="heroTeamSub">Mandante</div>
               <div class="heroTeamName">${esc(m.home)}</div>
@@ -2128,7 +1883,7 @@ const league = findLeague(m.leagueId);
               <div class="heroTeamSub">Visitante</div>
               <div class="heroTeamName">${esc(m.away)}</div>
             </div>
-            ${teamCrestHTML(m.away, "xl")}
+            ${teamCrestHTML(m.away, awayAsset, "xl")}
           </div>
         </div>
       `;
@@ -2152,7 +1907,7 @@ const league = findLeague(m.leagueId);
       });
     }
 
-    function renderGameScreen(){
+    async function renderGameScreen(){
       if(!state.game.open || !state.game.matchId){
         $("#gameScreen").classList.remove("show");
         return;
@@ -2170,11 +1925,12 @@ const league = findLeague(m.leagueId);
       $("#gameTitle").textContent = `${m.home} x ${m.away}`;
       $("#gameSub").textContent = `${country?.flag || ""} ${league?.name || ""} • ${m.whenTxt} • ${m.stadium}`;
 
-      renderGameHero(m, league, country);
+      await renderGameHero(m, league, country);
       renderGameQuickOdds(m);
 
       const sw = $("#builderSwitchGame");
       sw.classList.toggle("on", !!state.ui.builderOn);
+
       $("#builderBadge").textContent = state.ui.builderOn ? "ON" : "OFF";
       $("#builderBadge").style.borderColor = state.ui.builderOn ? "rgba(23,201,100,.32)" : "rgba(255,255,255,.12)";
       $("#builderBadge").style.background = state.ui.builderOn ? "rgba(23,201,100,.12)" : "rgba(255,255,255,.05)";
@@ -2195,7 +1951,6 @@ const league = findLeague(m.leagueId);
 
       const area = $("#marketsArea");
       area.innerHTML = "";
-
       const markets = (m.markets || []).filter((x) => x.tab === state.ui.activeGameTab);
 
       if(markets.length === 0){
@@ -2321,6 +2076,7 @@ const league = findLeague(m.leagueId);
         const m = state.db.matches.find((x) => x.id === items[0].matchId);
         const league = findLeague(items[0].leagueId);
         const country = findCountryByLeague(items[0].leagueId);
+
         out.push({
           groupKey: gk,
           title: `${m?.home || ""} x ${m?.away || ""}`,
@@ -2341,7 +2097,6 @@ const league = findLeague(m.leagueId);
 
       $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Diminuir";
       $("#slipCount").textContent = String(state.slip.selections.length);
-
       $("#modeLabel").textContent = state.slip.selections.length > 1 ? "Múltipla" : "Simples";
       $("#modeHint").textContent = state.ui.builderOn
         ? "Bet Builder ON (mesmo jogo) + múltipla entre jogos"
@@ -2351,7 +2106,6 @@ const league = findLeague(m.leagueId);
       itemsWrap.innerHTML = "";
 
       const groups = groupSlip();
-
       for(const g of groups){
         const groupBox = document.createElement("div");
         groupBox.className = "slipItem";
@@ -2414,11 +2168,15 @@ const league = findLeague(m.leagueId);
       $("#estReturn").textContent = `${fmtCP(est)} CP`;
       $("#slipBalance").textContent = `${fmtCP(u?.cp || 0)} CP`;
 
-      $("#miniSlipTitle").textContent = state.slip.selections.length > 1 ? `Bilhete (${state.slip.selections.length})` : "Bilhete";
-      $("#miniSlipSub").textContent =
-        state.slip.selections.length === 0 ? "Sem seleções" :
-        state.slip.selections.length === 1 ? "1 seleção" :
-        `${state.slip.selections.length} seleções`;
+      $("#miniSlipTitle").textContent = state.slip.selections.length > 1
+        ? `Bilhete (${state.slip.selections.length})`
+        : "Bilhete";
+
+      $("#miniSlipSub").textContent = state.slip.selections.length === 0
+        ? "Sem seleções"
+        : state.slip.selections.length === 1
+          ? "1 seleção"
+          : `${state.slip.selections.length} seleções`;
 
       $("#miniSlipOdds").textContent = totalOdds.toFixed(2);
 
@@ -2438,26 +2196,12 @@ const league = findLeague(m.leagueId);
 
     function placeBet(){
       const u = getCurrentUser();
-
-      if(!u){
-        toast("Entre para apostar.");
-        return;
-      }
-      if(state.slip.selections.length === 0){
-        toast("Bilhete vazio.");
-        return;
-      }
+      if(!u){ toast("Entre para apostar."); return; }
+      if(state.slip.selections.length === 0){ toast("Bilhete vazio."); return; }
 
       const stake = Math.floor(Number(state.slip.stake || 0));
-      if(!Number.isFinite(stake) || stake <= 0){
-        toast("Stake inválida.");
-        return;
-      }
-
-      if(Number(u.cp || 0) < stake){
-        toast("CP insuficiente.");
-        return;
-      }
+      if(!Number.isFinite(stake) || stake <= 0){ toast("Stake inválida."); return; }
+      if(Number(u.cp || 0) < stake){ toast("CP insuficiente."); return; }
 
       u.cp = Number(u.cp || 0) - stake;
       persistProfilePatch(u.email, { cp: u.cp });
@@ -2491,16 +2235,10 @@ const league = findLeague(m.leagueId);
 
     function settleBet(betId, result){
       const admin = getCurrentUser();
-      if(!isAdminEmail(admin?.email)){
-        toast("Somente admin.");
-        return;
-      }
+      if(!isAdminEmail(admin?.email)){ toast("Somente admin."); return; }
 
       const bet = state.db.bets.find((b) => b.id === betId);
-      if(!bet || bet.status !== "ABERTA"){
-        toast("Não disponível.");
-        return;
-      }
+      if(!bet || bet.status !== "ABERTA"){ toast("Não disponível."); return; }
 
       if(result === "GANHA"){
         bet.status = "GANHA";
@@ -2517,7 +2255,7 @@ const league = findLeague(m.leagueId);
           .then((r) => r.json())
           .then((j) => {
             const newCp = Number(j.cp || 0) + Number(bet.payout || 0);
-            persistProfilePatch(bet.userEmail, { cp: newCp });
+            persistProfilePatch(bet.userEmail, { cp:newCp });
 
             if(state.session.profile && state.session.profile.email === bet.userEmail){
               state.session.profile.cp = newCp;
@@ -2559,7 +2297,9 @@ const league = findLeague(m.leagueId);
         const st = b.status;
         const stClass = st === "GANHA" ? "won" : st === "PERDIDA" ? "lost" : "open";
         const picks = b.selections.map((s) => `${s.pickLabel} (${s.odd})`).join(" • ");
-        const ret = b.status === "GANHA" ? `${fmtCP(b.payout)} CP` : (b.status === "PERDIDA" ? "0 CP" : `≈ ${fmtCP(b.estimatedReturn)} CP`);
+        const ret = b.status === "GANHA"
+          ? `${fmtCP(b.payout)} CP`
+          : (b.status === "PERDIDA" ? "0 CP" : `≈ ${fmtCP(b.estimatedReturn)} CP`);
 
         const row = document.createElement("div");
         row.className = "itemRow";
@@ -2581,25 +2321,21 @@ const league = findLeague(m.leagueId);
     function makeCode(){
       const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
       let c = "";
-      for(let i = 0; i < 6; i++) c += alphabet[Math.floor(Math.random() * alphabet.length)];
+      for(let i = 0; i < 6; i++){
+        c += alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
       return c;
     }
 
     function createLeague(){
       const u = getCurrentUser();
-
-      if(!isAdminEmail(u?.email)){
-        toast("Somente admin.");
-        return;
-      }
+      if(!isAdminEmail(u?.email)){ toast("Somente admin."); return; }
 
       const name = ($("#newLeagueName").value || "").trim();
-      if(name.length < 3){
-        toast("Nome muito curto.");
-        return;
-      }
+      if(name.length < 3){ toast("Nome muito curto."); return; }
 
       const code = makeCode();
+
       const L = {
         id: uid(),
         name,
@@ -2618,19 +2354,13 @@ const league = findLeague(m.leagueId);
 
     function joinByCode(){
       const u = getCurrentUser();
-      if(!u){
-        toast("Entre para entrar em ligas.");
-        return;
-      }
+      if(!u){ toast("Entre para entrar em ligas."); return; }
 
       const code = prompt("Digite o código da liga:");
       if(!code) return;
 
       const L = state.db.leagues.find((x) => x.code.toLowerCase() === code.trim().toLowerCase());
-      if(!L){
-        toast("Código inválido.");
-        return;
-      }
+      if(!L){ toast("Código inválido."); return; }
 
       if(!L.members.includes(u.email)) L.members.push(u.email);
       saveDB(state.db);
@@ -2676,7 +2406,6 @@ const league = findLeague(m.leagueId);
 
         row.querySelector(`[data-win="${b.id}"]`).onclick = () => settleBet(b.id, "GANHA");
         row.querySelector(`[data-lose="${b.id}"]`).onclick = () => settleBet(b.id, "PERDIDA");
-
         wrap.appendChild(row);
       }
     }
@@ -2740,14 +2469,11 @@ const league = findLeague(m.leagueId);
           : "Digite o código que enviamos por e-mail.";
 
       $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
-
       $("#loginBox").classList.toggle("hide", !isLogin);
       $("#registerBox").classList.toggle("hide", !isRegister);
       $("#verifyBox").classList.toggle("hide", !isVerify);
 
-      if(isRegister){
-        pendingRegisterPayload = null;
-      }
+      if(isRegister) pendingRegisterPayload = null;
     }
 
     function closeAuth(){
@@ -2770,7 +2496,7 @@ const league = findLeague(m.leagueId);
       }
 
       try{
-        const res = await fetch("/.netlify/functions/auth-login",{
+        const res = await fetch("/.netlify/functions/auth-login", {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({ email, pass })
@@ -2801,7 +2527,6 @@ const league = findLeague(m.leagueId);
         toast("Email/senha inválidos.");
         return;
       }
-
       if(username.length < 3){
         toast("Nome de usuário muito curto.");
         return;
@@ -2826,7 +2551,7 @@ const league = findLeague(m.leagueId);
       pendingRegisterPayload = payload;
 
       try{
-        const res = await fetch("/.netlify/functions/auth-register-start",{
+        const res = await fetch("/.netlify/functions/auth-register-start", {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
           body: JSON.stringify(payload)
@@ -2862,7 +2587,7 @@ const league = findLeague(m.leagueId);
       }
 
       try{
-        const res = await fetch("/.netlify/functions/auth-register-verify",{
+        const res = await fetch("/.netlify/functions/auth-register-verify", {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({ email, code })
@@ -2891,7 +2616,7 @@ const league = findLeague(m.leagueId);
       }
 
       try{
-        const res = await fetch("/.netlify/functions/auth-register-start",{
+        const res = await fetch("/.netlify/functions/auth-register-start", {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
           body: JSON.stringify(pendingRegisterPayload)
@@ -2942,9 +2667,8 @@ const league = findLeague(m.leagueId);
 
     async function registerSW(){
       if(!("serviceWorker" in navigator)) return;
-      try{
-        await navigator.serviceWorker.register("./sw.js");
-      }catch{}
+      try{ await navigator.serviceWorker.register("./sw.js"); }
+      catch{}
     }
 
     async function restoreSessionFromServer(){
@@ -2995,7 +2719,7 @@ const league = findLeague(m.leagueId);
           await updateLeagueReal(state.ui.leagueId, { force:true });
         }else{
           toast("Atualizado (demo).");
-          renderFeatured();
+          await renderFeatured();
         }
       };
 
@@ -3009,15 +2733,16 @@ const league = findLeague(m.leagueId);
       };
 
       $("#searchInput").value = state.ui.search || "";
-      $("#searchInput").oninput = (e) => {
+      $("#searchInput").oninput = async (e) => {
         state.ui.search = e.target.value;
         saveUI(state.ui);
-        renderMatches();
-        renderFeatured();
+        await renderMatches();
+        await renderFeatured();
       };
 
       $("#btnRegister").onclick = () => openAuth("register");
       $("#btnEnter").onclick = () => openAuth("login");
+
       $("#btnLogout").onclick = () => {
         setAuthEmail(null);
         state.session.profile = null;
@@ -3026,18 +2751,13 @@ const league = findLeague(m.leagueId);
       };
 
       $("#goHome").onclick = () => setNav("home");
-
       $("#btnCloseAuth").onclick = closeAuth;
-      $("#btnSwitchAuth").onclick = () => {
-        openAuth(authMode === "login" ? "register" : "login");
-      };
-
+      $("#btnSwitchAuth").onclick = () => { openAuth(authMode === "login" ? "register" : "login"); };
       $("#btnSubmitAuth").onclick = doLogin;
       $("#btnSendCode").onclick = sendRegisterCode;
       $("#btnVerifyCode").onclick = verifyRegisterCode;
       $("#btnBackRegister").onclick = () => openAuth("register");
       $("#btnResendCode").onclick = resendCode;
-
       $("#genderM").onclick = () => pickGender("Masculino");
       $("#genderF").onclick = () => pickGender("Feminino");
 
@@ -3092,10 +2812,8 @@ const league = findLeague(m.leagueId);
 
       $("#btnClearHistory").onclick = () => {
         const u = getCurrentUser();
-        if(!u){
-          toast("Entre.");
-          return;
-        }
+        if(!u){ toast("Entre."); return; }
+
         if(confirm("Limpar seu histórico?")){
           state.db.bets = state.db.bets.filter((b) => b.userEmail !== u.email);
           saveDB(state.db);
@@ -3108,7 +2826,6 @@ const league = findLeague(m.leagueId);
       $("#btnJoinByCode").onclick = joinByCode;
       $("#btnCreateLeague").onclick = createLeague;
       $("#btnRefreshAdmin").onclick = () => renderLeaguesView();
-
       $("#btnClosePlans").onclick = closePlans;
       $("#btnBuyPro").onclick = () => startCheckout("pro");
       $("#btnBuyElite").onclick = () => startCheckout("elite");
@@ -3116,7 +2833,6 @@ const league = findLeague(m.leagueId);
       document.addEventListener("pointerdown", (e) => {
         const slip = $("#betslip");
         if(!slip || slip.classList.contains("hide")) return;
-
         if($("#authModal")?.classList.contains("show")) return;
         if($("#plansModal")?.classList.contains("show")) return;
         if($("#gameScreen")?.classList.contains("show")) return;
@@ -3131,8 +2847,6 @@ const league = findLeague(m.leagueId);
     }
 
     async function init(){
-      localStorage.removeItem(TEAM_ASSET_CACHE_KEY);
-
       hookUI();
       ensureDefaults();
       renderAll();
