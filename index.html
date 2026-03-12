@@ -31,12 +31,11 @@
       --radius2:14px;
       --radius3:12px;
       --fieldBg:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      --oddBg:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-      --oddBgHover:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      --oddBg:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.018));
+      --oddBgHover:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       --sportGlow:
         radial-gradient(1200px 500px at 50% -10%, rgba(22,201,95,.10), transparent 60%),
         radial-gradient(700px 260px at 50% 0%, rgba(242,201,76,.06), transparent 65%);
-      --topGrad:linear-gradient(90deg, #167843 0%, #1a8d4f 35%, #1f9d57 100%);
       --bannerGrad:linear-gradient(135deg, rgba(21,117,65,.96), rgba(17,84,50,.96));
     }
 
@@ -152,7 +151,7 @@
 
     .layout{
       display:grid;
-      grid-template-columns:300px minmax(0,1fr);
+      grid-template-columns:280px minmax(0,1fr);
       gap:14px;
       align-items:start;
     }
@@ -193,7 +192,6 @@
     .panelTitle{font-weight:900;font-size:14px;letter-spacing:.2px}
     .muted{color:var(--muted)}
     .panelBody{padding:12px}
-
     .stack{display:flex;flex-direction:column;gap:10px}
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
@@ -253,7 +251,7 @@
     }
 
     .sportNavBtn{
-      padding:12px 12px;
+      padding:11px 12px;
       border-radius:12px;
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
@@ -282,10 +280,10 @@
     .leagueList{display:flex;flex-direction:column;gap:8px}
 
     .leagueItem{
-      padding:11px 12px;
-      border-radius:14px;
+      padding:10px 11px;
+      border-radius:12px;
       border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.018));
       cursor:pointer;
       display:flex;
       align-items:center;
@@ -309,7 +307,7 @@
 
     .leagueItem:hover{
       transform:translateY(-1px);
-      background:rgba(255,255,255,.06);
+      background:rgba(255,255,255,.05);
     }
 
     .leagueItem.active{
@@ -321,51 +319,7 @@
       background:linear-gradient(180deg, var(--green), rgba(242,201,76,.9));
     }
 
-    .leagueName{font-weight:950}
-
-    .countryBlock{
-      border-top:1px solid var(--line);
-      padding-top:10px;
-      margin-top:8px;
-    }
-
-    .countryTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:8px;
-      font-size:13px;
-      font-weight:1000;
-      color:#dce8df;
-    }
-
-    .countryLeagues{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:6px;
-    }
-
-    .countryLeagueMini{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:9px 10px;
-      border-radius:11px;
-      border:1px solid rgba(255,255,255,.06);
-      background:rgba(255,255,255,.025);
-      cursor:pointer;
-      transition:.15s ease;
-      font-weight:850;
-      font-size:13px;
-    }
-
-    .countryLeagueMini:hover{background:rgba(255,255,255,.05)}
-    .countryLeagueMini.active{
-      border-color:rgba(22,201,95,.26);
-      background:rgba(22,201,95,.10);
-    }
+    .leagueName{font-weight:950;font-size:13px}
 
     .mainContent{
       display:flex;
@@ -385,68 +339,6 @@
         #0d1812;
     }
 
-    .heroTopNav{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      padding:12px 14px;
-      background:var(--topGrad);
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-
-    .heroTopNav .heroTab{
-      padding:9px 12px;
-      border-radius:999px;
-      font-weight:1000;
-      font-size:13px;
-      background:transparent;
-      border:1px solid transparent;
-      color:#f1fff7;
-      cursor:pointer;
-      transition:.15s ease;
-      user-select:none;
-    }
-
-    .heroTopNav .heroTab:hover{
-      background:rgba(255,255,255,.08);
-    }
-
-    .heroTopNav .heroTab.active{
-      background:rgba(0,0,0,.18);
-      border-color:rgba(255,255,255,.14);
-      box-shadow:inset 0 -2px 0 var(--green3);
-    }
-
-    .subSportsNav{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      background:rgba(255,255,255,.025);
-    }
-
-    .subChip{
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-      font-size:13px;
-      font-weight:950;
-      transition:.15s ease;
-      user-select:none;
-    }
-
-    .subChip:hover{background:rgba(255,255,255,.07)}
-    .subChip.active{
-      border-color:rgba(242,201,76,.30);
-      background:rgba(242,201,76,.12);
-      color:#fff5ca;
-    }
-
     .heroBanner{
       position:relative;
       padding:18px 16px;
@@ -458,7 +350,7 @@
         radial-gradient(600px 220px at 80% 20%, rgba(15,220,140,.16), transparent 60%),
         radial-gradient(400px 180px at 15% 30%, rgba(242,201,76,.08), transparent 60%),
         var(--bannerGrad);
-      min-height:132px;
+      min-height:120px;
     }
 
     .heroBanner:before{
@@ -487,7 +379,7 @@
     }
 
     .heroBannerTitle{
-      font-size:28px;
+      font-size:26px;
       line-height:1.02;
       margin:0 0 8px 0;
       font-weight:1000;
@@ -496,7 +388,7 @@
 
     .heroBannerText{
       color:#d7e7dc;
-      font-size:14px;
+      font-size:13px;
       font-weight:700;
       max-width:700px;
       line-height:1.45;
@@ -520,354 +412,7 @@
       .heroBannerActions{
         justify-content:flex-start;
       }
-      .heroBannerTitle{font-size:23px}
-    }
-
-    .sectionCard{
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-    }
-
-    .sectionCardHead{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      background:rgba(255,255,255,.025);
-    }
-
-    .sectionCardTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:1000;
-      font-size:15px;
-    }
-
-    .sectionCardSub{
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      margin-top:2px;
-    }
-
-    .featuredLeagues{
-      display:grid;
-      grid-template-columns:repeat(4, minmax(0,1fr));
-      gap:10px;
-      padding:12px;
-    }
-
-    @media (max-width:1120px){
-      .featuredLeagues{grid-template-columns:repeat(2, minmax(0,1fr))}
-    }
-
-    @media (max-width:640px){
-      .featuredLeagues{grid-template-columns:1fr}
-    }
-
-    .featuredLeagueCard{
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      cursor:pointer;
-      transition:.15s ease;
-      min-width:0;
-    }
-
-    .featuredLeagueCard:hover{
-      transform:translateY(-1px);
-      background:rgba(255,255,255,.06);
-    }
-
-    .featuredLeagueCard.active{
-      border-color:rgba(22,201,95,.30);
-      background:linear-gradient(180deg, rgba(22,201,95,.13), rgba(22,201,95,.06));
-    }
-
-    .featuredLeagueCard .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-
-    .featuredLeagueCard .name{
-      font-size:14px;
-      font-weight:1000;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .featuredLeagueCard .meta{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:900;
-    }
-
-    .matchesWrap{
-      overflow:hidden;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-    }
-
-    .matchesHead{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      background:rgba(255,255,255,.025);
-    }
-
-    .matchesHeadTitle{
-      font-size:16px;
-      font-weight:1000;
-    }
-
-    .matchesToolbar{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .dateGroup{
-      border-top:1px solid var(--line);
-    }
-
-    .dateGroup:first-child{border-top:0}
-
-    .dateHeader{
-      display:grid;
-      grid-template-columns:120px 1fr 360px 92px;
-      gap:10px;
-      align-items:center;
-      padding:10px 14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
-      border-bottom:1px solid var(--line);
-      font-size:12px;
-      font-weight:1000;
-      color:#dce8df;
-      text-transform:uppercase;
-      letter-spacing:.4px;
-    }
-
-    .dateHeader .cols{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:0;
-      text-align:center;
-    }
-
-    @media (max-width:980px){
-      .dateHeader{
-        grid-template-columns:1fr;
-        gap:8px;
-      }
-      .dateHeader .cols{display:none}
-    }
-
-    .matchRow{
-      display:grid;
-      grid-template-columns:120px minmax(0,1fr) 360px 92px;
-      gap:10px;
-      align-items:stretch;
-      padding:0 14px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      background:rgba(255,255,255,.015);
-      transition:.15s ease;
-    }
-
-    .matchRow:hover{background:rgba(255,255,255,.03)}
-
-    @media (max-width:980px){
-      .matchRow{
-        grid-template-columns:1fr;
-        padding:12px 14px;
-      }
-    }
-
-    .matchTimeCol{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:4px;
-      padding:12px 0;
-      min-width:0;
-    }
-
-    .matchTime{
-      font-size:18px;
-      font-weight:1000;
-      line-height:1;
-    }
-
-    .matchLeagueMini{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:900;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .matchTeamsCol{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:8px;
-      padding:12px 0;
-      min-width:0;
-    }
-
-    .teamLine{
-      display:grid;
-      grid-template-columns:28px 1fr auto;
-      align-items:center;
-      gap:10px;
-      min-height:28px;
-      min-width:0;
-    }
-
-    .teamName{
-      font-weight:950;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .teamTag{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:900;
-    }
-
-    .teamCrest{
-      width:28px;
-      height:28px;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      position:relative;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-      flex:none;
-    }
-
-    .teamCrest img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      display:block;
-      background:#fff;
-    }
-
-    .teamCrestFallback{
-      width:100%;
-      height:100%;
-      display:grid;
-      place-items:center;
-      font-size:10px;
-      font-weight:1000;
-      color:#f4fff7;
-      background:linear-gradient(135deg, rgba(22,201,95,.22), rgba(242,201,76,.18));
-    }
-
-    .teamCrest.lg{width:52px;height:52px;border-radius:16px}
-    .teamCrest.xl{width:66px;height:66px;border-radius:18px}
-
-    .oddsCol{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      align-self:center;
-      border-left:1px solid rgba(255,255,255,.05);
-      border-right:1px solid rgba(255,255,255,.05);
-    }
-
-    @media (max-width:980px){
-      .oddsCol{
-        border:0;
-        margin-top:4px;
-      }
-    }
-
-    .oddBtn{
-      min-height:72px;
-      padding:8px 8px;
-      border:0;
-      border-right:1px solid rgba(255,255,255,.06);
-      background:var(--oddBg);
-      cursor:pointer;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:4px;
-      text-align:center;
-      transition:.15s ease;
-      user-select:none;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .oddBtn:last-child{border-right:0}
-    .oddBtn:before{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      top:0;
-      height:2px;
-      background:transparent;
-      transition:.15s ease;
-    }
-
-    .oddBtn:hover{background:var(--oddBgHover)}
-    .oddBtn .lab{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-
-    .oddBtn .val{
-      font-size:18px;
-      font-weight:1000;
-      line-height:1;
-      color:#ffd45a;
-    }
-
-    .oddBtn.selected{
-      background:linear-gradient(180deg, rgba(22,201,95,.16), rgba(22,201,95,.09));
-      box-shadow:inset 0 0 0 1px rgba(22,201,95,.18);
-    }
-
-    .oddBtn.selected:before{background:var(--green)}
-
-    .matchOpenCol{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-    }
-
-    @media (max-width:980px){
-      .matchOpenCol{justify-content:stretch}
-      .matchOpenCol .btn{width:100%}
+      .heroBannerTitle{font-size:22px}
     }
 
     .competitionsView{
@@ -979,6 +524,271 @@
       background:rgba(22,201,95,.11);
     }
 
+    .matchesWrap{
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+
+    .matchesHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+    }
+
+    .matchesHeadTitle{
+      font-size:15px;
+      font-weight:1000;
+    }
+
+    .matchesToolbar{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .dateGroup{
+      border-top:1px solid var(--line);
+    }
+
+    .dateGroup:first-child{border-top:0}
+
+    .dateHeader{
+      display:grid;
+      grid-template-columns:90px 1fr 270px 74px;
+      gap:8px;
+      align-items:center;
+      padding:8px 14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+      border-bottom:1px solid var(--line);
+      font-size:11px;
+      font-weight:1000;
+      color:#dce8df;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    .dateHeader .cols{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:0;
+      text-align:center;
+    }
+
+    @media (max-width:980px){
+      .dateHeader{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+      .dateHeader .cols{display:none}
+    }
+
+    .matchRow{
+      display:grid;
+      grid-template-columns:90px minmax(0,1fr) 270px 74px;
+      gap:8px;
+      align-items:stretch;
+      padding:0 14px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.015);
+      transition:.15s ease;
+    }
+
+    .matchRow:hover{background:rgba(255,255,255,.03)}
+
+    @media (max-width:980px){
+      .matchRow{
+        grid-template-columns:1fr;
+        padding:10px 14px;
+      }
+    }
+
+    .matchTimeCol{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:3px;
+      padding:10px 0;
+      min-width:0;
+    }
+
+    .matchTime{
+      font-size:14px;
+      font-weight:1000;
+      line-height:1;
+    }
+
+    .matchLeagueMini{
+      font-size:10px;
+      color:var(--muted);
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .matchTeamsCol{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:6px;
+      padding:10px 0;
+      min-width:0;
+    }
+
+    .teamLine{
+      display:grid;
+      grid-template-columns:22px 1fr auto;
+      align-items:center;
+      gap:8px;
+      min-height:22px;
+      min-width:0;
+    }
+
+    .teamName{
+      font-weight:950;
+      font-size:13px;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .teamTag{
+      font-size:10px;
+      color:var(--muted);
+      font-weight:900;
+    }
+
+    .teamCrest{
+      width:22px;
+      height:22px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      position:relative;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      flex:none;
+    }
+
+    .teamCrest img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      background:#fff;
+    }
+
+    .teamCrestFallback{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      font-size:9px;
+      font-weight:1000;
+      color:#f4fff7;
+      background:linear-gradient(135deg, rgba(22,201,95,.22), rgba(242,201,76,.18));
+    }
+
+    .teamCrest.lg{width:52px;height:52px;border-radius:16px}
+    .teamCrest.xl{width:66px;height:66px;border-radius:18px}
+
+    .oddsCol{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      align-self:center;
+      border-left:1px solid rgba(255,255,255,.05);
+      border-right:1px solid rgba(255,255,255,.05);
+    }
+
+    @media (max-width:980px){
+      .oddsCol{
+        border:0;
+        margin-top:4px;
+      }
+    }
+
+    .oddBtn{
+      min-height:46px;
+      padding:5px 4px;
+      border:0;
+      border-right:1px solid rgba(255,255,255,.06);
+      background:var(--oddBg);
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2px;
+      text-align:center;
+      transition:.15s ease;
+      user-select:none;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .oddBtn:last-child{border-right:0}
+    .oddBtn:before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:2px;
+      background:transparent;
+      transition:.15s ease;
+    }
+
+    .oddBtn:hover{background:var(--oddBgHover)}
+
+    .oddBtn .lab{
+      font-size:9px;
+      color:var(--muted);
+      font-weight:1000;
+      letter-spacing:.2px;
+      line-height:1;
+    }
+
+    .oddBtn .val{
+      font-size:13px;
+      font-weight:1000;
+      line-height:1;
+      color:#ffd45a;
+    }
+
+    .oddBtn.selected{
+      background:linear-gradient(180deg, rgba(22,201,95,.16), rgba(22,201,95,.09));
+      box-shadow:inset 0 0 0 1px rgba(22,201,95,.18);
+    }
+
+    .oddBtn.selected:before{background:var(--green)}
+
+    .matchOpenCol{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .matchOpenCol .btn.small{
+      padding:6px 8px;
+      font-size:11px;
+      min-height:30px;
+    }
+
+    @media (max-width:980px){
+      .matchOpenCol{justify-content:stretch}
+      .matchOpenCol .btn{width:100%}
+    }
+
     .screen{
       position:fixed;
       inset:0;
@@ -1010,7 +820,6 @@
     }
 
     .screenTitle{font-weight:1000}
-
     .gameHero{
       position:relative;
       padding:18px 16px 14px;
@@ -1121,7 +930,7 @@
     .gameQuickOdds{
       display:grid;
       grid-template-columns:repeat(3, minmax(0, 1fr));
-      gap:10px;
+      gap:8px;
       padding:12px 14px;
       border-bottom:1px solid var(--line);
       background:rgba(255,255,255,.025);
@@ -1153,7 +962,6 @@
     }
 
     .tab:hover{background:rgba(255,255,255,.07)}
-
     .tab.active{
       border-color:rgba(242,201,76,.32);
       background:rgba(242,201,76,.12);
@@ -1299,7 +1107,6 @@
     }
 
     .navBtn:hover{background:rgba(255,255,255,.07)}
-
     .navBtn.active{
       border-color:rgba(22,201,95,.32);
       background:rgba(22,201,95,.12);
@@ -1349,12 +1156,7 @@
     }
 
     .betslipTitle{font-weight:1000}
-
-    .betslipHeadLeft{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .betslipHeadLeft{display:flex;align-items:center;gap:10px}
 
     .ticketMark{
       width:34px;
@@ -1762,8 +1564,8 @@
       <aside class="sidebar">
         <div class="panel">
           <div class="panelHead">
-            <div class="panelTitle">Navegação</div>
-            <div class="badge">Futebol</div>
+            <div class="panelTitle">Futebol</div>
+            <div class="badge">Menu</div>
           </div>
 
           <div class="panelBody stack">
@@ -1773,15 +1575,16 @@
             </div>
 
             <div>
-              <div class="sideSectionTitle">Esporte</div>
-              <div class="sportNav">
-                <div class="sportNavBtn active" id="btnNavFootball">
-                  <span>⚽ Futebol</span>
-                  <small>Principal</small>
-                </div>
-                <div class="sportNavBtn" id="btnNavCompetitions">
-                  <span>🏆 Competições</span>
-                  <small>Países e ligas</small>
+              <div class="leagueList">
+                <div class="sportNav">
+                  <div class="sportNavBtn active" id="btnNavFootball">
+                    <span>⚽ Futebol</span>
+                    <small>Jogos</small>
+                  </div>
+                  <div class="sportNavBtn" id="btnNavCompetitions">
+                    <span>🏆 Competições</span>
+                    <small>Abrir aba</small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1791,13 +1594,6 @@
             <div>
               <div class="sideSectionTitle">Principais ligas</div>
               <div class="leagueList" id="featuredLeagueList"></div>
-            </div>
-
-            <div class="sep"></div>
-
-            <div>
-              <div class="sideSectionTitle">Países & ligas</div>
-              <div id="countryLeagueBlocks"></div>
             </div>
           </div>
         </div>
@@ -1817,20 +1613,6 @@
 
       <main class="mainContent">
         <section class="heroSports">
-          <div class="heroTopNav">
-            <div class="heroTab active" data-hero-top="esportes">Todos os Esportes</div>
-            <div class="heroTab" data-hero-top="aovivo">Ao-Vivo</div>
-            <div class="heroTab" data-hero-top="cassino">Cassino</div>
-          </div>
-
-          <div class="subSportsNav">
-            <div class="subChip active" data-home-tab="highlights">Em Destaque</div>
-            <div class="subChip" data-home-tab="competitions">Competições</div>
-            <div class="subChip" data-home-tab="longterm">Longo Prazo</div>
-            <div class="subChip" data-home-tab="offers">Ofertas</div>
-            <div class="subChip" data-home-tab="markets">Mercados</div>
-          </div>
-
           <div class="heroBanner">
             <div class="heroBannerContent">
               <div class="heroBannerKicker">🎁 Oferta para novos usuários</div>
@@ -1847,23 +1629,11 @@
           </div>
         </section>
 
-        <section class="sectionCard" id="homeHighlightsSection">
-          <div class="sectionCardHead">
-            <div>
-              <div class="sectionCardTitle">🔥 Principais ligas</div>
-              <div class="sectionCardSub">Brasileirão como página inicial + ligas mais fortes em destaque</div>
-            </div>
-            <div class="badge" id="selectedLeagueBadge">Brasileirão Série A</div>
-          </div>
-
-          <div class="featuredLeagues" id="featuredLeaguesGrid"></div>
-        </section>
-
         <section class="competitionsView hide" id="competitionsSection">
           <div class="competitionsHead">
             <div>
-              <div class="sectionCardTitle">🏆 Competições</div>
-              <div class="sectionCardSub">Américas, Europa, países e ligas por região</div>
+              <div class="panelTitle">Competições</div>
+              <div class="smallText">Américas, Europa, países e ligas por região</div>
             </div>
             <div class="badge" id="competitionsBadge">Futebol</div>
           </div>
@@ -1891,11 +1661,11 @@
           <div class="matchesHead">
             <div>
               <div class="matchesHeadTitle" id="rightTitle">Brasileirão Série A</div>
-              <div class="smallText">Separação por dia e linha de odds no estilo sportsbook</div>
+              <div class="smallText">Separação por dia com odds compactas no estilo 365</div>
             </div>
 
             <div class="matchesToolbar">
-              <div class="badge" id="leftHint">Brasil</div>
+              <div class="badge" id="selectedLeagueBadge">Brasileirão Série A</div>
               <button class="btn small yellow" id="btnSeed">Reset demo</button>
             </div>
           </div>
@@ -2289,9 +2059,9 @@
 
   <script>
     const LS = {
-      DB: "cravai_db_v2",
+      DB: "cravai_db_v3",
       AUTH: "cravai_auth_v2",
-      UI: "cravai_ui_v2"
+      UI: "cravai_ui_v3"
     };
 
     const SPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/123";
@@ -2342,7 +2112,6 @@
 
     const REAL_COOLDOWN_MS = 60 * 1000;
     const TABS = ["Principais","Gols","Cartões","Escanteios","Chutes","Especiais","Escalações"];
-
     const realCache = {};
 
     const $ = (s) => document.querySelector(s);
@@ -2796,13 +2565,6 @@
       const br = state.db.countries.find((c) => c.id === "br");
       if(!state.ui.countryId) state.ui.countryId = br?.id || state.db.countries[0]?.id || null;
       if(!state.ui.leagueId) state.ui.leagueId = "br-seriea";
-
-      const country = state.db.countries.find((c) => c.id === state.ui.countryId) || br || state.db.countries[0];
-      if(country){
-        const leagueOk = state.db.countries.some((c) => c.leagues.some((l) => l.id === state.ui.leagueId));
-        if(!leagueOk) state.ui.leagueId = country.leagues[0]?.id || "br-seriea";
-      }
-
       saveUI(state.ui);
     }
 
@@ -2826,13 +2588,11 @@
         }
       }
 
-      const brFirst = all.sort((a, b) => {
+      return all.sort((a, b) => {
         if(a.id === "br-seriea") return -1;
         if(b.id === "br-seriea") return 1;
         return 0;
       });
-
-      return brFirst;
     }
 
     function getCompetitionRegions(){
@@ -2954,7 +2714,6 @@
 
       if(!force && prev && (now - prev.ts) < REAL_COOLDOWN_MS){
         renderFeaturedLeagueList();
-        renderFeaturedLeaguesGrid();
         await renderMatches();
         await renderFeatured();
         if(state.game.open) await renderGameScreen();
@@ -2983,7 +2742,6 @@
         toast(`Liga atualizada: ${realMatches.length} jogos reais ✅`);
 
         renderFeaturedLeagueList();
-        renderFeaturedLeaguesGrid();
         await renderMatches();
         await renderFeatured();
 
@@ -3034,33 +2792,15 @@
       renderAllViews();
     }
 
-    function setHomeTab(tab){
-      state.ui.homeTab = tab;
-      if(tab === "competitions"){
-        state.ui.leftMode = "competitions";
-      }else{
-        state.ui.leftMode = "football";
-      }
-      saveUI(state.ui);
-      renderHomeTabs();
-      renderLeftMode();
-      renderAllViews();
-    }
-
     function renderNav(){
       $$(".navBtn").forEach((b) => b.classList.toggle("active", b.dataset.nav === state.ui.nav));
-    }
-
-    function renderHomeTabs(){
-      $$(".subChip").forEach((b) => b.classList.toggle("active", b.dataset.homeTab === state.ui.homeTab));
-      $("#homeHighlightsSection").classList.toggle("hide", state.ui.homeTab === "competitions");
-      $("#competitionsSection").classList.toggle("hide", state.ui.homeTab !== "competitions");
-      $("#matchesSection").classList.toggle("hide", state.ui.homeTab === "competitions");
     }
 
     function renderLeftMode(){
       $("#btnNavFootball").classList.toggle("active", state.ui.leftMode !== "competitions");
       $("#btnNavCompetitions").classList.toggle("active", state.ui.leftMode === "competitions");
+      $("#competitionsSection").classList.toggle("hide", state.ui.leftMode !== "competitions");
+      $("#matchesSection").classList.toggle("hide", state.ui.leftMode === "competitions");
     }
 
     function openPlans(){
@@ -3083,7 +2823,7 @@
         renderNav();
       }
 
-      renderHomeTabs();
+      renderLeftMode();
     }
 
     function renderFeaturedLeagueList(){
@@ -3103,107 +2843,24 @@
           </div>
           <span class="badge">${state.db.matches.filter((m) => m.leagueId === l.id).length}</span>
         `;
+
         el.onclick = async () => {
           state.ui.countryId = l.countryId;
           state.ui.leagueId = l.id;
-          state.ui.homeTab = "highlights";
           state.ui.leftMode = "football";
           saveUI(state.ui);
-          renderLeftMode();
           renderFeaturedLeagueList();
-          renderCountryLeagueBlocks();
-          renderFeaturedLeaguesGrid();
+          renderCompetitions();
           await renderMatches();
           await renderFeatured();
           if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
         };
+
         wrap.appendChild(el);
       });
 
       const current = findLeague(state.ui.leagueId);
       $("#selectedLeagueBadge").textContent = current?.name || "Nenhuma liga";
-    }
-
-    function renderFeaturedLeaguesGrid(){
-      const wrap = $("#featuredLeaguesGrid");
-      if(!wrap) return;
-
-      wrap.innerHTML = "";
-      const featured = getFeaturedLeagues();
-
-      featured.forEach((l) => {
-        const total = state.db.matches.filter((m) => m.leagueId === l.id).length;
-        const card = document.createElement("div");
-        card.className = "featuredLeagueCard" + (l.id === state.ui.leagueId ? " active" : "");
-        card.innerHTML = `
-          <div class="top">
-            <div class="name">${esc(l.name)}</div>
-            <span class="badge">${total}</span>
-          </div>
-          <div class="meta">${esc(l.flag || "")} ${esc(l.countryName || "")}</div>
-        `;
-        card.onclick = async () => {
-          state.ui.countryId = l.countryId;
-          state.ui.leagueId = l.id;
-          saveUI(state.ui);
-          renderFeaturedLeagueList();
-          renderCountryLeagueBlocks();
-          renderFeaturedLeaguesGrid();
-          await renderMatches();
-          await renderFeatured();
-          if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
-        };
-        wrap.appendChild(card);
-      });
-    }
-
-    function renderCountryLeagueBlocks(){
-      const wrap = $("#countryLeagueBlocks");
-      if(!wrap) return;
-
-      wrap.innerHTML = "";
-
-      state.db.countries.forEach((c) => {
-        const block = document.createElement("div");
-        block.className = "countryBlock";
-        block.innerHTML = `
-          <div class="countryTitle">
-            <span>${esc(c.flag)} ${esc(c.name)}</span>
-            <span class="badge">${c.leagues.length}</span>
-          </div>
-          <div class="countryLeagues"></div>
-        `;
-
-        const inner = block.querySelector(".countryLeagues");
-
-        c.leagues.forEach((l) => {
-          const total = state.db.matches.filter((m) => m.leagueId === l.id).length;
-          const item = document.createElement("div");
-          item.className = "countryLeagueMini" + (state.ui.leagueId === l.id ? " active" : "");
-          item.innerHTML = `
-            <span>${esc(l.name)}</span>
-            <span class="smallText">${total}</span>
-          `;
-          item.onclick = async () => {
-            state.ui.countryId = c.id;
-            state.ui.leagueId = l.id;
-            state.ui.homeTab = "highlights";
-            saveUI(state.ui);
-            renderFeaturedLeagueList();
-            renderCountryLeagueBlocks();
-            renderFeaturedLeaguesGrid();
-            await renderMatches();
-            await renderFeatured();
-            if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
-          };
-          inner.appendChild(item);
-        });
-
-        wrap.appendChild(block);
-      });
-
-      const country = state.db.countries.find((x) => x.id === state.ui.countryId);
-      $("#leftHint").textContent = country ? country.name : "Selecione";
     }
 
     function renderCompetitions(){
@@ -3230,21 +2887,20 @@
               <span>${esc(l.name)}</span>
               <span class="badge">${count}</span>
             `;
+
             btn.onclick = async () => {
               state.ui.countryId = c.id;
               state.ui.leagueId = l.id;
-              state.ui.homeTab = "highlights";
               state.ui.leftMode = "football";
               saveUI(state.ui);
               renderLeftMode();
-              renderHomeTabs();
               renderFeaturedLeagueList();
-              renderCountryLeagueBlocks();
-              renderFeaturedLeaguesGrid();
+              renderCompetitions();
               await renderMatches();
               await renderFeatured();
               if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
             };
+
             grid.appendChild(btn);
           });
 
@@ -3449,6 +3105,7 @@
           </div>
           <button class="btn small" data-open="${m.id}">Abrir</button>
         `;
+
         el.querySelector(`[data-open="${m.id}"]`).onclick = () => openGame(m.id);
         list.appendChild(el);
       }
@@ -4379,10 +4036,7 @@
       renderTopbar();
       renderNav();
       renderAllViews();
-      renderLeftMode();
       renderFeaturedLeagueList();
-      renderCountryLeagueBlocks();
-      renderFeaturedLeaguesGrid();
       renderCompetitions();
       renderMatches();
       renderFeatured();
@@ -4397,24 +4051,16 @@
         b.onclick = () => setNav(b.dataset.nav);
       });
 
-      $$(".subChip").forEach((b) => {
-        b.onclick = () => setHomeTab(b.dataset.homeTab);
-      });
-
       $("#btnNavFootball").onclick = () => {
         state.ui.leftMode = "football";
-        state.ui.homeTab = "highlights";
         saveUI(state.ui);
         renderLeftMode();
-        renderHomeTabs();
       };
 
       $("#btnNavCompetitions").onclick = () => {
         state.ui.leftMode = "competitions";
-        state.ui.homeTab = "competitions";
         saveUI(state.ui);
         renderLeftMode();
-        renderHomeTabs();
       };
 
       $("#btnRefresh").onclick = async () => {
@@ -4447,7 +4093,6 @@
 
       $("#btnRegister").onclick = () => openAuth("register");
       $("#btnEnter").onclick = () => openAuth("login");
-
       $("#btnBannerRegister").onclick = () => openAuth("register");
       $("#btnBannerPlans").onclick = openPlans;
 
