@@ -2407,204 +2407,248 @@
       };
     }
 
-    function buildMarketsDemo(matchId, home, away){
-      const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
-      const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
+    function buildMarketsBase(matchId, home, away){
+  const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
+  const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
 
-      return [
-        mkMarket(matchId, "Principais", "Resultado (1X2)", [
-          { label:`${home} vence`, odd:rndOdd(1.60,2.80) },
-          { label:"Empate", odd:rndOdd(2.90,3.80) },
-          { label:`${away} vence`, odd:rndOdd(1.90,3.60) }
-        ]),
-        mkMarket(matchId, "Principais", "Dupla chance", [
-          { label:`1X (${home} ou Empate)`, odd:rndOdd(1.20,1.60) },
-          { label:`12 (${home} ou ${away})`, odd:rndOdd(1.20,1.90) },
-          { label:`X2 (Empate ou ${away})`, odd:rndOdd(1.20,1.70) }
-        ]),
-        mkMarket(matchId, "Gols", "Ambas marcam", [
-          { label:"Sim", odd:rndOdd(1.55,2.20) },
-          { label:"Não", odd:rndOdd(1.55,2.50) }
-        ]),
-        mkMarket(matchId, "Gols", "Total de gols", [
-          over("1.5", rndOdd(1.25,1.75)),
-          under("1.5", rndOdd(2.00,3.20)),
-          over("2.5", rndOdd(1.55,2.60)),
-          under("2.5", rndOdd(1.45,2.20)),
-          over("3.5", rndOdd(2.10,3.90)),
-          under("3.5", rndOdd(1.20,1.60))
-        ]),
-        mkMarket(matchId, "Cartões", "Total de cartões", [
-          over("3.5", rndOdd(1.35,2.10)),
-          under("3.5", rndOdd(1.65,2.70)),
-          over("4.5", rndOdd(1.55,2.60)),
-          under("4.5", rndOdd(1.45,2.40))
-        ]),
-        mkMarket(matchId, "Escanteios", "Total de escanteios", [
-          over("7.5", rndOdd(1.35,2.20)),
-          under("7.5", rndOdd(1.55,2.60)),
-          over("9.5", rndOdd(1.55,2.80)),
-          under("9.5", rndOdd(1.35,2.40))
-        ]),
-        mkMarket(matchId, "Chutes", "Chutes no gol (time)", [
-          { label:`${home} +2.5`, odd:rndOdd(1.40,2.30) },
-          { label:`${home} -2.5`, odd:rndOdd(1.55,2.80) },
-          { label:`${away} +2.5`, odd:rndOdd(1.40,2.30) },
-          { label:`${away} -2.5`, odd:rndOdd(1.55,2.80) }
-        ]),
-        mkMarket(matchId, "Especiais", "Quem marca (qualquer momento)", [
-          { label:`Atacante do ${home}`, odd:rndOdd(1.90,3.40) },
-          { label:`Atacante do ${away}`, odd:rndOdd(2.10,3.80) }
-        ]),
-        mkMarket(matchId, "Escalações", "Escalações", [
-          { label:"Ver escalação provável", odd:"—", meta:{ info:true } }
-        ])
-      ];
+  return [
+    mkMarket(matchId, "Principais", "Resultado (1X2)", [
+      { label:`${home} vence`, odd:rndOdd(1.60,2.80) },
+      { label:"Empate", odd:rndOdd(2.90,3.80) },
+      { label:`${away} vence`, odd:rndOdd(1.90,3.60) }
+    ]),
+    mkMarket(matchId, "Principais", "Dupla chance", [
+      { label:`1X (${home} ou Empate)`, odd:rndOdd(1.20,1.60) },
+      { label:`12 (${home} ou ${away})`, odd:rndOdd(1.20,1.90) },
+      { label:`X2 (Empate ou ${away})`, odd:rndOdd(1.20,1.70) }
+    ]),
+    mkMarket(matchId, "Gols", "Ambas marcam", [
+      { label:"Sim", odd:rndOdd(1.55,2.20) },
+      { label:"Não", odd:rndOdd(1.55,2.50) }
+    ]),
+    mkMarket(matchId, "Gols", "Total de gols", [
+      over("1.5", rndOdd(1.25,1.75)),
+      under("1.5", rndOdd(2.00,3.20)),
+      over("2.5", rndOdd(1.55,2.60)),
+      under("2.5", rndOdd(1.45,2.20)),
+      over("3.5", rndOdd(2.10,3.90)),
+      under("3.5", rndOdd(1.20,1.60))
+    ]),
+    mkMarket(matchId, "Cartões", "Total de cartões", [
+      over("3.5", rndOdd(1.35,2.10)),
+      under("3.5", rndOdd(1.65,2.70)),
+      over("4.5", rndOdd(1.55,2.60)),
+      under("4.5", rndOdd(1.45,2.40))
+    ]),
+    mkMarket(matchId, "Escanteios", "Total de escanteios", [
+      over("7.5", rndOdd(1.35,2.20)),
+      under("7.5", rndOdd(1.55,2.60)),
+      over("9.5", rndOdd(1.55,2.80)),
+      under("9.5", rndOdd(1.35,2.40))
+    ]),
+    mkMarket(matchId, "Chutes", "Chutes no gol (time)", [
+      { label:`${home} +2.5`, odd:rndOdd(1.40,2.30) },
+      { label:`${home} -2.5`, odd:rndOdd(1.55,2.80) },
+      { label:`${away} +2.5`, odd:rndOdd(1.40,2.30) },
+      { label:`${away} -2.5`, odd:rndOdd(1.55,2.80) }
+    ]),
+    mkMarket(matchId, "Especiais", "Quem marca (qualquer momento)", [
+      { label:`Atacante do ${home}`, odd:rndOdd(1.90,3.40) },
+      { label:`Atacante do ${away}`, odd:rndOdd(2.10,3.80) }
+    ]),
+    mkMarket(matchId, "Escalações", "Escalações", [
+      { label:"Ver escalação provável", odd:"—", meta:{ info:true } }
+    ])
+  ];
+}
+
+    function createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate = null){
+  const id = uid();
+  const markets = buildMarketsBase(id, home, away);
+
+  return {
+    id,
+    leagueId,
+    home,
+    away,
+    whenTxt,
+    stadium,
+    isoDate: isoDate || nowIso(),
+    featured: Math.random() > 0.45,
+    markets,
+    odds1x2: {
+      "1": rndOdd(1.60,2.80),
+      "X": rndOdd(2.90,3.70),
+      "2": rndOdd(2.10,3.40)
     }
+  };
+}
 
-    function mkMatch(leagueId, home, away, whenTxt, stadium, isoDate = null){
-      const id = uid();
-      const markets = buildMarketsDemo(id, home, away);
+const FIXTURE_MATCHES_BY_LEAGUE = {
+  "br-seriea": [
+    ["Palmeiras","Corinthians","2026-03-20T21:30:00-03:00","Allianz Parque"],
+    ["Flamengo","Cruzeiro","2026-03-21T21:30:00-03:00","Maracanã"],
+    ["Atlético Mineiro","Internacional","2026-03-21T19:00:00-03:00","Arena MRV"],
+    ["Bahia","Vitória","2026-03-21T20:00:00-03:00","Arena Fonte Nova"]
+  ],
+  "br-serieb": [
+    ["Sport","Ceará","2026-03-22T18:00:00-03:00","Ilha do Retiro"],
+    ["Avaí","Coritiba","2026-03-22T20:30:00-03:00","Ressacada"]
+  ],
+  "eng-pl": [
+    ["Arsenal","Liverpool","2026-03-22T17:00:00-03:00","Emirates"],
+    ["Chelsea","Tottenham","2026-03-22T13:30:00-03:00","Stamford Bridge"]
+  ],
+  "esp-ll": [
+    ["Real Madrid","Barcelona","2026-03-23T16:00:00-03:00","Bernabéu"],
+    ["Atlético de Madrid","Sevilla","2026-03-23T14:30:00-03:00","Metropolitano"]
+  ],
+  "ita-sa": [
+    ["Inter","Milan","2026-03-23T16:45:00-03:00","San Siro"],
+    ["Juventus","Napoli","2026-03-23T15:45:00-03:00","Allianz Stadium"]
+  ],
+  "ger-bl": [
+    ["Bayern","Dortmund","2026-03-23T15:30:00-03:00","Allianz Arena"],
+    ["Leverkusen","Leipzig","2026-03-23T13:30:00-03:00","BayArena"]
+  ],
+  "fra-l1": [
+    ["PSG","Marseille","2026-03-22T15:00:00-03:00","Parc des Princes"],
+    ["Monaco","Lille","2026-03-22T17:05:00-03:00","Stade Louis II"]
+  ],
+  "uefa-ucl": [
+    ["Manchester City","Real Madrid","2026-03-24T17:00:00-03:00","Etihad Stadium"],
+    ["Bayern","PSG","2026-03-24T17:00:00-03:00","Allianz Arena"]
+  ]
+};
 
-      return {
-        id,
-        leagueId,
-        home,
-        away,
-        whenTxt,
-        stadium,
-        isoDate: isoDate || nowIso(),
-        featured: Math.random() > 0.45,
-        markets,
-        odds1x2: {
-          "1": rndOdd(1.60,2.80),
-          "X": rndOdd(2.90,3.70),
-          "2": rndOdd(2.10,3.40)
-        }
-      };
-    }
+function buildFixtureMatchesForLeague(leagueId){
+  const base = FIXTURE_MATCHES_BY_LEAGUE[leagueId] || [];
+  return base.map(([home, away, isoDate, stadium]) => {
+    const whenTxt = fmtWhenFromISO(isoDate);
+    return createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate);
+  });
+}
 
     function seedDB(){
-      const db = {
-        bets: [],
-        leagues: [],
-        countries: [
-          {
-            id:"br",
-            name:"Brasil",
-            flag:"🇧🇷",
-            region:"americas",
-            leagues:[
-              { id:"br-seriea", name:"Brasileirão Série A", featured:true },
-              { id:"br-serieb", name:"Série B", featured:true },
-              { id:"br-cdb", name:"Copa do Brasil", featured:true },
-              { id:"br-seriec", name:"Série C" }
-            ]
-          },
-          {
-            id:"arg",
-            name:"Argentina",
-            flag:"🇦🇷",
-            region:"americas",
-            leagues:[
-              { id:"arg-lpf", name:"Liga Profesional" },
-              { id:"arg-cup", name:"Copa da Argentina" }
-            ]
-          },
-          {
-            id:"lib",
-            name:"Américas",
-            flag:"🌎",
-            region:"americas",
-            leagues:[
-              { id:"conmebol-lib", name:"Copa Libertadores" },
-              { id:"conmebol-sula", name:"Copa Sul-Americana" }
-            ]
-          },
-          {
-            id:"eng",
-            name:"Inglaterra",
-            flag:"🏴",
-            region:"europe",
-            leagues:[
-              { id:"eng-pl", name:"Premier League", featured:true }
-            ]
-          },
-          {
-            id:"esp",
-            name:"Espanha",
-            flag:"🇪🇸",
-            region:"europe",
-            leagues:[
-              { id:"esp-ll", name:"LaLiga", featured:true }
-            ]
-          },
-          {
-            id:"ita",
-            name:"Itália",
-            flag:"🇮🇹",
-            region:"europe",
-            leagues:[
-              { id:"ita-sa", name:"Serie A", featured:true }
-            ]
-          },
-          {
-            id:"ger",
-            name:"Alemanha",
-            flag:"🇩🇪",
-            region:"europe",
-            leagues:[
-              { id:"ger-bl", name:"Bundesliga", featured:true }
-            ]
-          },
-          {
-            id:"fra",
-            name:"França",
-            flag:"🇫🇷",
-            region:"europe",
-            leagues:[
-              { id:"fra-l1", name:"Ligue 1", featured:true }
-            ]
-          },
-          {
-            id:"uefa",
-            name:"Europa",
-            flag:"🌍",
-            region:"europe",
-            leagues:[
-              { id:"uefa-ucl", name:"UEFA Champions League", featured:true },
-              { id:"uefa-uel", name:"UEFA Europa League" }
-            ]
-          }
-        ],
-        matches: []
-      };
+  const db = {
+    bets: [],
+    leagues: [],
+    countries: [
+      {
+        id:"br",
+        name:"Brasil",
+        flag:"🇧🇷",
+        region:"americas",
+        leagues:[
+          { id:"br-seriea", name:"Brasileirão Série A", featured:true },
+          { id:"br-serieb", name:"Série B", featured:true },
+          { id:"br-cdb", name:"Copa do Brasil", featured:true },
+          { id:"br-seriec", name:"Série C" }
+        ]
+      },
+      {
+        id:"arg",
+        name:"Argentina",
+        flag:"🇦🇷",
+        region:"americas",
+        leagues:[
+          { id:"arg-lpf", name:"Liga Profesional" },
+          { id:"arg-cup", name:"Copa da Argentina" }
+        ]
+      },
+      {
+        id:"lib",
+        name:"Américas",
+        flag:"🌎",
+        region:"americas",
+        leagues:[
+          { id:"conmebol-lib", name:"Copa Libertadores" },
+          { id:"conmebol-sula", name:"Copa Sul-Americana" }
+        ]
+      },
+      {
+        id:"eng",
+        name:"Inglaterra",
+        flag:"🏴",
+        region:"europe",
+        leagues:[
+          { id:"eng-pl", name:"Premier League", featured:true }
+        ]
+      },
+      {
+        id:"esp",
+        name:"Espanha",
+        flag:"🇪🇸",
+        region:"europe",
+        leagues:[
+          { id:"esp-ll", name:"LaLiga", featured:true }
+        ]
+      },
+      {
+        id:"ita",
+        name:"Itália",
+        flag:"🇮🇹",
+        region:"europe",
+        leagues:[
+          { id:"ita-sa", name:"Serie A", featured:true }
+        ]
+      },
+      {
+        id:"ger",
+        name:"Alemanha",
+        flag:"🇩🇪",
+        region:"europe",
+        leagues:[
+          { id:"ger-bl", name:"Bundesliga", featured:true }
+        ]
+      },
+      {
+        id:"fra",
+        name:"França",
+        flag:"🇫🇷",
+        region:"europe",
+        leagues:[
+          { id:"fra-l1", name:"Ligue 1", featured:true }
+        ]
+      },
+      {
+        id:"uefa",
+        name:"Europa",
+        flag:"🌍",
+        region:"europe",
+        leagues:[
+          { id:"uefa-ucl", name:"UEFA Champions League", featured:true },
+          { id:"uefa-uel", name:"UEFA Europa League" }
+        ]
+      }
+    ],
+    matches: []
+  };
 
-      db.matches = [
-        mkMatch("br-seriea","Palmeiras","Corinthians","Ter 10 Mar • 21:30","Allianz Parque","2026-03-10T21:30:00-03:00"),
-        mkMatch("br-seriea","Flamengo","Cruzeiro","Qua 11 Mar • 21:30","Maracanã","2026-03-11T21:30:00-03:00"),
-        mkMatch("br-seriea","Atlético Mineiro","Internacional","Qua 11 Mar • 19:00","Arena MRV","2026-03-11T19:00:00-03:00"),
-        mkMatch("br-seriea","Bahia","Vitória","Qua 11 Mar • 20:00","Arena Fonte Nova","2026-03-11T20:00:00-03:00"),
-        mkMatch("br-serieb","Sport","Ceará","Qua 11 Mar • 18:00","Ilha do Retiro","2026-03-11T18:00:00-03:00"),
-        mkMatch("eng-pl","Arsenal","Liverpool","Qua 11 Mar • 17:00","Emirates","2026-03-11T17:00:00-03:00"),
-        mkMatch("esp-ll","Real Madrid","Barcelona","Qui 12 Mar • 16:00","Bernabéu","2026-03-12T16:00:00-03:00"),
-        mkMatch("ita-sa","Inter","Milan","Qui 12 Mar • 16:45","San Siro","2026-03-12T16:45:00-03:00"),
-        mkMatch("ger-bl","Bayern","Dortmund","Qui 12 Mar • 15:30","Allianz Arena","2026-03-12T15:30:00-03:00"),
-        mkMatch("fra-l1","PSG","Marseille","Qua 11 Mar • 15:00","Parc des Princes","2026-03-11T15:00:00-03:00"),
-        mkMatch("uefa-ucl","Botafogo","Barcelona SC","Ter 10 Mar • 21:30","Nilton Santos","2026-03-10T21:30:00-03:00")
-      ];
-
-      localStorage.setItem(LS.DB, JSON.stringify(db));
-      return db;
-    }
+  localStorage.setItem(LS.DB, JSON.stringify(db));
+  return db;
+}
 
     function loadDB(){
-      try{
-        const raw = localStorage.getItem(LS.DB);
-        if(raw) return JSON.parse(raw);
-      }catch{}
-      return seedDB();
+  try{
+    const raw = localStorage.getItem(LS.DB);
+    if(raw){
+      const parsed = JSON.parse(raw);
+
+      if(!parsed.countries || !Array.isArray(parsed.countries)){
+        return seedDB();
+      }
+
+      if(!Array.isArray(parsed.matches)) parsed.matches = [];
+      if(!Array.isArray(parsed.bets)) parsed.bets = [];
+      if(!Array.isArray(parsed.leagues)) parsed.leagues = [];
+
+      return parsed;
     }
+  }catch{}
+
+  return seedDB();
+}
 
     function saveDB(db){
       localStorage.setItem(LS.DB, JSON.stringify(db));
@@ -2670,11 +2714,13 @@
     }
 
     function ensureDefaults(){
-      const br = state.db.countries.find((c) => c.id === "br");
-      if(!state.ui.countryId) state.ui.countryId = br?.id || state.db.countries[0]?.id || null;
-      if(!state.ui.leagueId) state.ui.leagueId = "br-seriea";
-      saveUI(state.ui);
-    }
+  const br = state.db.countries.find((c) => c.id === "br");
+  if(!state.ui.countryId) state.ui.countryId = br?.id || state.db.countries[0]?.id || null;
+  if(!state.ui.leagueId) state.ui.leagueId = "br-seriea";
+
+  ensureLeagueMatchesLoaded(state.ui.leagueId);
+  saveUI(state.ui);
+}
 
     function findLeague(leagueId){
       for(const c of state.db.countries){
@@ -2687,6 +2733,19 @@
     function findCountryByLeague(leagueId){
       return state.db.countries.find((c) => c.leagues.some((l) => l.id === leagueId)) || null;
     }
+
+    function ensureLeagueMatchesLoaded(leagueId){
+  if(!leagueId) return;
+
+  const alreadyLoaded = state.db.matches.some((m) => m.leagueId === leagueId);
+  if(alreadyLoaded) return;
+
+  const fixtures = buildFixtureMatchesForLeague(leagueId);
+  if(!fixtures.length) return;
+
+  state.db.matches.push(...fixtures);
+  saveDB(state.db);
+}
 
     function getFeaturedLeagues(){
       const all = [];
@@ -2957,6 +3016,7 @@
           state.ui.leagueId = l.id;
           state.ui.leftMode = "football";
           saveUI(state.ui);
+          ensureLeagueMatchesLoaded(state.ui.leagueId);
           renderFeaturedLeagueList();
           renderMobileLeagueRail();
           renderCompetitions();
@@ -4384,18 +4444,19 @@
     }
 
     async function init(){
-      hookUI();
-      ensureDefaults();
-      renderAll();
-      await registerSW();
-      await restoreSessionFromServer();
+  hookUI();
+  ensureDefaults();
+  ensureLeagueMatchesLoaded(state.ui.leagueId);
+  renderAll();
+  await registerSW();
+  await restoreSessionFromServer();
 
-      if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
-        await updateLeagueReal(state.ui.leagueId, { force:true });
-      }
+  if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
+    await updateLeagueReal(state.ui.leagueId, { force:true });
+  }
 
-      renderAll();
-    }
+  renderAll();
+}
 
     init();
   </script>
