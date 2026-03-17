@@ -2869,6 +2869,12 @@ function buildFixtureMatchesForLeague(leagueId){
       return m;
     }
 
+    function replaceLeagueMatches(leagueId, matches){
+  state.db.matches = state.db.matches.filter((m) => m.leagueId !== leagueId);
+  state.db.matches.push(...matches);
+  saveDB(state.db);
+}
+
     async function updateLeagueReal(leagueId, { force = false } = {}){
       const sportKey = REAL_LEAGUE_MAP[leagueId];
       if(!sportKey){
@@ -2893,15 +2899,17 @@ function buildFixtureMatchesForLeague(leagueId){
         const events = await fetchOddsBySportKey(sportKey);
 
         if(!events.length){
-          realCache[leagueId] = { ts: now, count: 0 };
-          return;
-        }
+  ensureLeagueMatchesLoaded(leagueId);
+  realCache[leagueId] = { ts: now, count: 0 };
+  return;
+}
 
-        const realMatches = events.map((ev) => realEventToMatch(ev, leagueId)).slice(0, 40);
+        const realMatches = events
+  .map((ev) => realEventToMatch(ev, leagueId))
+  .filter(Boolean)
+  .slice(0, 40);
 
-        state.db.matches = state.db.matches.filter((x) => x.leagueId !== leagueId);
-        state.db.matches.unshift(...realMatches);
-        saveDB(state.db);
+replaceLeagueMatches(leagueId, realMatches);
 
         realCache[leagueId] = { ts: now, count: realMatches.length };
 
