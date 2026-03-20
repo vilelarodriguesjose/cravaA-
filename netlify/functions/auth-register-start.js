@@ -86,21 +86,42 @@ export async function handler(event){
     if(upErr) return json(500, { error: upErr.message });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
+
+    const { error: mailError } = await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to: email,
       subject: "CravaAí • Seu código de confirmação",
       html: `
-        <div style="font-family:Arial,sans-serif;line-height:1.4">
+        <div style="font-family:Arial,sans-serif;line-height:1.5">
           <h2>Confirme seu e-mail</h2>
           <p>Seu código é:</p>
-          <div style="font-size:30px;font-weight:900;letter-spacing:4px">${code}</div>
-          <p style="color:#666">Esse código expira em 15 minutos.</p>
+          
+          <div style="
+            font-size:32px;
+            font-weight:900;
+            letter-spacing:6px;
+            background:#0E8A3B;
+            color:#fff;
+            display:inline-block;
+            padding:10px 20px;
+            border-radius:8px;
+          ">
+            ${code}
+          </div>
+
+          <p style="margin-top:20px;color:#666">
+            Esse código expira em 15 minutos.
+          </p>
         </div>
       `
     });
 
+    if (mailError) {
+      return json(500, { error: "Erro ao enviar email" });
+    }
+
     return json(200, { ok:true });
+
   }catch(e){
     return json(500, { error: String(e?.message || e) });
   }

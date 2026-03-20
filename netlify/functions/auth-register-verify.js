@@ -36,12 +36,18 @@ export async function handler(event){
     if(!row) return json(404, { error:"Sem código pendente para esse e-mail" });
 
     const exp = new Date(row.expires_at).getTime();
-    if(Date.now() > exp) return json(400, { error:"Código expirado. Reenvie." });
-    if(String(row.code) !== code) return json(401, { error:"Código inválido" });
+    if(Date.now() > exp) {
+      return json(400, { error:"Código expirado. Reenvie." });
+    }
+
+    if(String(row.code) !== code) {
+      return json(401, { error:"Código inválido" });
+    }
 
     const payload = row.payload || {};
-    const username = payload.username || "Usuário";
+    const username = payload.username || "Usuario";
 
+    // 👉 cria/atualiza perfil
     const { error: e2 } = await supa
       .from("profiles")
       .upsert({
@@ -49,11 +55,14 @@ export async function handler(event){
         username,
         fullname: payload.fullname || "",
         plan: payload.plan || "free",
-        cp: Number(payload.cp || 500)
+        cp: Number(payload.cp || 500),
+        email_verified: true,
+        created_at: new Date().toISOString()
       }, { onConflict: "email" });
 
     if(e2) return json(500, { error: e2.message });
 
+    // 👉 salva senha
     const { error: e3 } = await supa
       .from("auth_local")
       .upsert({
@@ -63,9 +72,14 @@ export async function handler(event){
 
     if(e3) return json(500, { error: e3.message });
 
-    await supa.from("email_verifications").delete().eq("email", email);
+    // 👉 remove código usado
+    await supa
+      .from("email_verifications")
+      .delete()
+      .eq("email", email);
 
     return json(200, { ok:true, verified:true });
+
   }catch(e){
     return json(500, { error: String(e?.message || e) });
   }
