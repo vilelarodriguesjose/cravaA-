@@ -36,7 +36,11 @@
       --sportGlow:
         radial-gradient(1200px 500px at 50% -10%, rgba(22,201,95,.10), transparent 60%),
         radial-gradient(700px 260px at 50% 0%, rgba(242,201,76,.06), transparent 65%);
-      --bannerGrad:linear-gradient(135deg, rgba(21,117,65,.96), rgba(17,84,50,.96));
+      --bannerGrad:
+        linear-gradient(135deg, rgba(19,109,63,.98), rgba(14,76,45,.98));
+      --bannerGlow:
+        radial-gradient(700px 260px at 82% 20%, rgba(15,220,140,.18), transparent 60%),
+        radial-gradient(420px 180px at 18% 26%, rgba(242,201,76,.10), transparent 60%);
     }
 
     *{box-sizing:border-box}
@@ -51,7 +55,7 @@
         var(--bg);
       color:var(--text);
       min-height:100vh;
-      padding-bottom:92px;
+      padding-bottom:calc(98px + env(safe-area-inset-bottom, 0px));
     }
 
     .wrap{max-width:1280px;margin:0 auto;padding:14px}
@@ -352,16 +356,16 @@
 
     .heroBanner{
       position:relative;
-      padding:18px 16px;
+      padding:20px 16px;
       display:grid;
       grid-template-columns:minmax(0,1fr) auto;
       gap:16px;
       align-items:center;
       background:
-        radial-gradient(600px 220px at 80% 20%, rgba(15,220,140,.16), transparent 60%),
-        radial-gradient(400px 180px at 15% 30%, rgba(242,201,76,.08), transparent 60%),
+        var(--bannerGlow),
         var(--bannerGrad);
-      min-height:120px;
+      min-height:140px;
+      overflow:hidden;
     }
 
     .heroBanner:before{
@@ -372,6 +376,18 @@
         linear-gradient(transparent 0 82%, rgba(255,255,255,.05) 82% 83%, transparent 83%),
         repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.025) 8% 8.4%, transparent 8.4% 16.8%);
       opacity:.55;
+      pointer-events:none;
+    }
+
+    .heroBanner:after{
+      content:"";
+      position:absolute;
+      right:-80px;
+      top:-80px;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.08), transparent 65%);
       pointer-events:none;
     }
 
@@ -387,21 +403,23 @@
       font-size:11px;
       font-weight:1000;
       margin-bottom:10px;
+      box-shadow:0 4px 16px rgba(0,0,0,.14);
     }
 
     .heroBannerTitle{
-      font-size:26px;
+      font-size:28px;
       line-height:1.02;
       margin:0 0 8px 0;
       font-weight:1000;
       letter-spacing:-.02em;
+      max-width:760px;
     }
 
     .heroBannerText{
       color:#d7e7dc;
       font-size:13px;
       font-weight:700;
-      max-width:700px;
+      max-width:720px;
       line-height:1.45;
     }
 
@@ -413,6 +431,92 @@
       gap:10px;
       flex-wrap:wrap;
       justify-content:flex-end;
+    }
+
+    .heroBannerActions .btn{
+      min-height:42px;
+      box-shadow:0 8px 24px rgba(0,0,0,.18);
+    }
+
+    .mobileCompetitionsCard{
+      display:none;
+      margin:12px 12px 0;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(135deg, rgba(18,136,69,.98), rgba(12,86,45,.98));
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      cursor:pointer;
+      user-select:none;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .mobileCompetitionsCard:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(180px 90px at 100% 0%, rgba(255,255,255,.10), transparent 70%);
+      pointer-events:none;
+    }
+
+    .mobileCompetitionsCard:active{
+      transform:scale(.99);
+    }
+
+    .mobileCompetitionsLeft{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      position:relative;
+      z-index:1;
+    }
+
+    .mobileCompetitionsIcon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-size:20px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.16);
+      flex:none;
+    }
+
+    .mobileCompetitionsText{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+
+    .mobileCompetitionsTitle{
+      font-size:15px;
+      font-weight:1000;
+      line-height:1.1;
+    }
+
+    .mobileCompetitionsSub{
+      font-size:12px;
+      color:rgba(236,247,241,.84);
+      font-weight:800;
+      line-height:1.25;
+    }
+
+    .mobileCompetitionsArrow{
+      position:relative;
+      z-index:1;
+      font-size:22px;
+      font-weight:1000;
+      opacity:.78;
+      flex:none;
     }
 
     .mobileLeagueRail{
@@ -463,7 +567,7 @@
       .heroBannerActions{
         justify-content:flex-start;
       }
-      .heroBannerTitle{font-size:22px}
+      .heroBannerTitle{font-size:23px}
     }
 
     .competitionsView{
@@ -1131,22 +1235,23 @@
       right:0;
       bottom:0;
       z-index:60;
-      background:rgba(7,19,11,.84);
+      background:rgba(7,19,11,.88);
       border-top:1px solid var(--line);
       backdrop-filter:blur(12px);
+      padding-bottom:env(safe-area-inset-bottom, 0px);
     }
 
     .bottomNavInner{
       max-width:1280px;
       margin:0 auto;
-      padding:10px 14px;
+      padding:10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
       display:grid;
       grid-template-columns:repeat(4,1fr);
       gap:10px;
     }
 
     .navBtn{
-      padding:10px;
+      padding:10px 8px;
       border-radius:16px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.04);
@@ -1155,6 +1260,8 @@
       font-weight:950;
       user-select:none;
       transition:.15s ease;
+      min-width:0;
+      line-height:1.05;
     }
 
     .navBtn:hover{background:rgba(255,255,255,.07)}
@@ -1168,13 +1275,15 @@
       font-size:12px;
       color:var(--muted);
       font-weight:900;
-      margin-top:2px;
+      margin-top:3px;
+      white-space:normal;
+      line-height:1.05;
     }
 
     .betslip{
       position:fixed;
       right:14px;
-      bottom:98px;
+      bottom:calc(98px + env(safe-area-inset-bottom, 0px));
       width:388px;
       max-width:calc(100vw - 28px);
       z-index:70;
@@ -1562,7 +1671,7 @@
     .toast{
       position:fixed;
       left:50%;
-      bottom:110px;
+      bottom:calc(110px + env(safe-area-inset-bottom, 0px));
       transform:translateX(-50%);
       z-index:120;
       padding:10px 12px;
@@ -1630,14 +1739,15 @@
 
       .heroBanner{
         min-height:auto;
-        padding:14px 12px;
+        padding:15px 12px;
       }
 
       .heroBannerKicker{margin-bottom:8px}
-      .heroBannerTitle{font-size:20px}
+      .heroBannerTitle{font-size:21px}
       .heroBannerText{font-size:12px;line-height:1.4}
       .heroBannerActions{display:none}
 
+      .mobileCompetitionsCard{display:flex}
       .mobileLeagueRail{display:flex}
 
       .matchesHead{padding:10px 12px}
@@ -1660,6 +1770,22 @@
 
       .oddBtn .lab{font-size:7px}
       .oddBtn .val{font-size:11px}
+
+      .bottomNavInner{
+        gap:6px;
+        padding:8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .navBtn{
+        padding:9px 4px;
+        border-radius:14px;
+        font-size:12px;
+      }
+
+      .navBtn span{
+        font-size:10px;
+        margin-top:3px;
+      }
     }
 
     @media (max-width:640px){
@@ -1677,6 +1803,31 @@
 
       .authShell{
         padding:14px 14px 34px;
+      }
+
+      .heroBannerTitle{
+        font-size:20px;
+      }
+
+      .mobileCompetitionsCard{
+        margin:10px 10px 0;
+        padding:13px;
+      }
+
+      .mobileCompetitionsTitle{
+        font-size:14px;
+      }
+
+      .mobileCompetitionsSub{
+        font-size:11px;
+      }
+
+      .navBtn{
+        font-size:11px;
+      }
+
+      .navBtn span{
+        font-size:9px;
       }
     }
   </style>
@@ -1759,17 +1910,28 @@
         <section class="heroSports">
           <div class="heroBanner">
             <div class="heroBannerContent">
-              <div class="heroBannerKicker">🎁 Boas-vindas CravaAí</div>
-              <h1 class="heroBannerTitle">Entre e participe das competições do CravaAí</h1>
+              <div class="heroBannerKicker">🔥 CravaAí • futebol em destaque</div>
+              <h1 class="heroBannerTitle">Escolha os melhores palpites e entre nas competições do CravaAí</h1>
               <div class="heroBannerText">
-                Acompanhe as principais ligas, escolha seus palpites e monte seu bilhete em uma experiência mais limpa e direta.
+                Acompanhe as principais ligas, monte seu bilhete com odds compactas e participe de competições em uma experiência mais limpa, rápida e no estilo sportsbook.
               </div>
             </div>
 
             <div class="heroBannerActions">
-              <button class="btn yellow" id="btnBannerRegister">Registrar-se</button>
+              <button class="btn yellow" id="btnBannerRegister">Criar conta</button>
               <button class="btn ghost" id="btnBannerPlans">Ver planos</button>
             </div>
+          </div>
+
+          <div class="mobileCompetitionsCard" id="mobileCompetitionsCard">
+            <div class="mobileCompetitionsLeft">
+              <div class="mobileCompetitionsIcon">🏆</div>
+              <div class="mobileCompetitionsText">
+                <div class="mobileCompetitionsTitle">Competições</div>
+                <div class="mobileCompetitionsSub">Explore ligas e campeonatos por região</div>
+              </div>
+            </div>
+            <div class="mobileCompetitionsArrow">›</div>
           </div>
 
           <div class="mobileLeagueRail" id="mobileLeagueRail"></div>
@@ -4295,6 +4457,70 @@
       }
     }
 
+    function updateHeroBannerByLeague(){
+      const league = findLeague(state.ui.leagueId);
+      const title = $(".heroBannerTitle");
+      const text = $(".heroBannerText");
+      const kicker = $(".heroBannerKicker");
+
+      if(!title || !text || !kicker) return;
+
+      if(state.ui.leftMode === "competitions"){
+        kicker.textContent = "🏆 CravaAí • competições";
+        title.textContent = "Explore campeonatos e encontre sua próxima competição";
+        text.textContent = "Navegue por Américas e Europa, escolha uma liga e volte para os jogos em uma experiência rápida e organizada.";
+        return;
+      }
+
+      const map = {
+        "br-seriea": {
+          kicker: "🔥 CravaAí • Brasileirão",
+          title: "Palpites do Brasileirão com bilhete rápido e ligas em destaque",
+          text: "Veja os principais jogos do Brasil, selecione odds compactas e monte seu bilhete com uma experiência mais limpa no estilo sportsbook."
+        },
+        "eng-pl": {
+          kicker: "🔥 CravaAí • Premier League",
+          title: "Acompanhe os grandes jogos da Premier League no CravaAí",
+          text: "Escolha os confrontos mais fortes da Inglaterra, entre nas competições e monte apostas com visual compacto e direto."
+        },
+        "esp-ll": {
+          kicker: "🔥 CravaAí • LaLiga",
+          title: "Os principais confrontos da LaLiga em uma tela mais limpa",
+          text: "Selecione mercados, acompanhe clássicos da Espanha e crie seu bilhete com navegação rápida."
+        },
+        "ita-sa": {
+          kicker: "🔥 CravaAí • Serie A",
+          title: "Clássicos da Itália com odds compactas e navegação rápida",
+          text: "Veja os jogos mais fortes da Serie A e monte suas seleções com uma experiência mais organizada."
+        },
+        "ger-bl": {
+          kicker: "🔥 CravaAí • Bundesliga",
+          title: "Bundesliga em destaque com visual compacto e direto",
+          text: "Acesse os principais jogos da Alemanha, escolha suas odds e entre nas competições do CravaAí."
+        },
+        "fra-l1": {
+          kicker: "🔥 CravaAí • Ligue 1",
+          title: "Ligue 1 com bilhete rápido e mercados organizados",
+          text: "Navegue pelos jogos da França e acompanhe as ligas em um layout mais limpo e prático."
+        },
+        "uefa-ucl": {
+          kicker: "⭐ CravaAí • Champions",
+          title: "Grandes noites europeias com destaque total no CravaAí",
+          text: "Veja os confrontos mais fortes da Champions, entre nas competições e selecione mercados com mais rapidez."
+        }
+      };
+
+      const content = map[state.ui.leagueId] || {
+        kicker: "🔥 CravaAí • futebol em destaque",
+        title: "Escolha os melhores palpites e entre nas competições do CravaAí",
+        text: "Acompanhe as principais ligas, monte seu bilhete com odds compactas e participe de competições em uma experiência mais limpa, rápida e no estilo sportsbook."
+      };
+
+      kicker.textContent = content.kicker;
+      title.textContent = content.title;
+      text.textContent = content.text;
+    }
+
     function renderAll(){
       renderTopbar();
       renderNav();
@@ -4308,6 +4534,7 @@
       renderHistory();
       renderLeaguesView();
       renderGameScreen();
+      updateHeroBannerByLeague();
     }
 
     function hookUI(){
@@ -4319,12 +4546,22 @@
         state.ui.leftMode = "football";
         saveUI(state.ui);
         renderLeftMode();
+        updateHeroBannerByLeague();
       };
 
       $("#btnNavCompetitions").onclick = () => {
         state.ui.leftMode = "competitions";
         saveUI(state.ui);
         renderLeftMode();
+        updateHeroBannerByLeague();
+      };
+
+      $("#mobileCompetitionsCard").onclick = () => {
+        setNav("home");
+        state.ui.leftMode = "competitions";
+        saveUI(state.ui);
+        renderLeftMode();
+        updateHeroBannerByLeague();
       };
 
       $("#btnRefresh").onclick = async () => {
@@ -4362,6 +4599,7 @@
         state.ui.leftMode = "football";
         saveUI(state.ui);
         renderLeftMode();
+        updateHeroBannerByLeague();
       };
 
       $("#btnCloseAuth").onclick = closeAuth;
