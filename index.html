@@ -1399,6 +1399,8 @@
       background:rgba(11,26,16,.96);
       box-shadow:var(--shadow);
       overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
 
     .modalHead{
@@ -1407,6 +1409,7 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
+      flex:none;
     }
 
     .modalHead h3{
@@ -1417,11 +1420,13 @@
 
     .modalBody{
       padding:0;
-      max-height:calc(92vh - 58px);
+      flex:1;
       overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      min-height:0;
     }
 
-    .authShell{padding:14px}
+    .authShell{padding:14px 14px 28px}
     .authSub{padding:0 14px 14px;color:var(--muted);font-size:13px;font-weight:700}
 
     .field{
@@ -1535,9 +1540,23 @@
 
     .registerStack{display:flex;flex-direction:column;gap:14px}
 
+    .authSubmitRow{
+      margin-top:4px;
+      width:100%;
+    }
+
+    .authSubmitBtn{
+      min-height:48px;
+    }
+
     @media (max-width:640px){
       .authGrid2{grid-template-columns:100px minmax(0,1fr)}
       .birthGrid{grid-template-columns:1fr 1fr 1.2fr}
+
+      .authSubmitBtn{
+        width:100%;
+        border-radius:14px;
+      }
     }
 
     .toast{
@@ -1603,9 +1622,10 @@
       }
 
       .topActions .btn{
-        min-height:40px;
-        padding:10px 12px;
+        min-height:36px;
+        padding:8px 11px;
         border-radius:999px;
+        font-size:13px;
       }
 
       .heroBanner{
@@ -1634,12 +1654,30 @@
       .teamName{font-size:12px}
 
       .oddBtn{
-        min-height:42px;
-        padding:4px 3px;
+        min-height:38px;
+        padding:3px 2px;
       }
 
-      .oddBtn .lab{font-size:8px}
-      .oddBtn .val{font-size:12px}
+      .oddBtn .lab{font-size:7px}
+      .oddBtn .val{font-size:11px}
+    }
+
+    @media (max-width:640px){
+      .modal.show{
+        align-items:flex-end;
+        justify-content:center;
+        padding:10px;
+      }
+
+      .modalCard{
+        width:100%;
+        max-height:92vh;
+        border-radius:18px 18px 0 0;
+      }
+
+      .authShell{
+        padding:14px 14px 34px;
+      }
     }
   </style>
 </head>
@@ -1658,7 +1696,6 @@
 
       <div class="topActions">
         <div id="topAccountPill" class="pill hide"></div>
-        <button id="btnTopCompetitions" class="btn ghost">Competições</button>
         <button id="btnRegister" class="btn yellow">Registrar</button>
         <button id="btnEnter" class="btn primary">Entrar</button>
         <button id="btnLogout" class="btn ghost small hide">Sair</button>
@@ -1783,7 +1820,7 @@
       </main>
     </div>
 
-        <div id="viewHistory" class="panel hide">
+    <div id="viewHistory" class="panel hide">
       <div class="panelHead">
         <div class="panelTitle">Histórico de apostas</div>
         <div class="row">
@@ -2074,8 +2111,8 @@
               Depois da confirmação, você volta para a tela de login e entra manualmente.
             </div>
 
-            <div class="row" style="justify-content:flex-end">
-              <button class="btn primary" id="btnSendCode">Enviar código</button>
+            <div class="row authSubmitRow" style="justify-content:flex-end">
+              <button class="btn primary authSubmitBtn" id="btnSendCode">Enviar código</button>
             </div>
           </div>
 
@@ -2166,7 +2203,8 @@
   </div>
 
   <script>
-    const LS = {
+
+        const LS = {
       DB: "cravai_db_v3",
       AUTH: "cravai_auth_v2",
       UI: "cravai_ui_v3"
@@ -2408,247 +2446,247 @@
     }
 
     function buildMarketsBase(matchId, home, away){
-  const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
-  const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
+      const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
+      const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
 
-  return [
-    mkMarket(matchId, "Principais", "Resultado (1X2)", [
-      { label:`${home} vence`, odd:rndOdd(1.60,2.80) },
-      { label:"Empate", odd:rndOdd(2.90,3.80) },
-      { label:`${away} vence`, odd:rndOdd(1.90,3.60) }
-    ]),
-    mkMarket(matchId, "Principais", "Dupla chance", [
-      { label:`1X (${home} ou Empate)`, odd:rndOdd(1.20,1.60) },
-      { label:`12 (${home} ou ${away})`, odd:rndOdd(1.20,1.90) },
-      { label:`X2 (Empate ou ${away})`, odd:rndOdd(1.20,1.70) }
-    ]),
-    mkMarket(matchId, "Gols", "Ambas marcam", [
-      { label:"Sim", odd:rndOdd(1.55,2.20) },
-      { label:"Não", odd:rndOdd(1.55,2.50) }
-    ]),
-    mkMarket(matchId, "Gols", "Total de gols", [
-      over("1.5", rndOdd(1.25,1.75)),
-      under("1.5", rndOdd(2.00,3.20)),
-      over("2.5", rndOdd(1.55,2.60)),
-      under("2.5", rndOdd(1.45,2.20)),
-      over("3.5", rndOdd(2.10,3.90)),
-      under("3.5", rndOdd(1.20,1.60))
-    ]),
-    mkMarket(matchId, "Cartões", "Total de cartões", [
-      over("3.5", rndOdd(1.35,2.10)),
-      under("3.5", rndOdd(1.65,2.70)),
-      over("4.5", rndOdd(1.55,2.60)),
-      under("4.5", rndOdd(1.45,2.40))
-    ]),
-    mkMarket(matchId, "Escanteios", "Total de escanteios", [
-      over("7.5", rndOdd(1.35,2.20)),
-      under("7.5", rndOdd(1.55,2.60)),
-      over("9.5", rndOdd(1.55,2.80)),
-      under("9.5", rndOdd(1.35,2.40))
-    ]),
-    mkMarket(matchId, "Chutes", "Chutes no gol (time)", [
-      { label:`${home} +2.5`, odd:rndOdd(1.40,2.30) },
-      { label:`${home} -2.5`, odd:rndOdd(1.55,2.80) },
-      { label:`${away} +2.5`, odd:rndOdd(1.40,2.30) },
-      { label:`${away} -2.5`, odd:rndOdd(1.55,2.80) }
-    ]),
-    mkMarket(matchId, "Especiais", "Quem marca (qualquer momento)", [
-      { label:`Atacante do ${home}`, odd:rndOdd(1.90,3.40) },
-      { label:`Atacante do ${away}`, odd:rndOdd(2.10,3.80) }
-    ]),
-    mkMarket(matchId, "Escalações", "Escalações", [
-      { label:"Ver escalação provável", odd:"—", meta:{ info:true } }
-    ])
-  ];
-}
+      return [
+        mkMarket(matchId, "Principais", "Resultado (1X2)", [
+          { label:`${home} vence`, odd:rndOdd(1.60,2.80) },
+          { label:"Empate", odd:rndOdd(2.90,3.80) },
+          { label:`${away} vence`, odd:rndOdd(1.90,3.60) }
+        ]),
+        mkMarket(matchId, "Principais", "Dupla chance", [
+          { label:`1X (${home} ou Empate)`, odd:rndOdd(1.20,1.60) },
+          { label:`12 (${home} ou ${away})`, odd:rndOdd(1.20,1.90) },
+          { label:`X2 (Empate ou ${away})`, odd:rndOdd(1.20,1.70) }
+        ]),
+        mkMarket(matchId, "Gols", "Ambas marcam", [
+          { label:"Sim", odd:rndOdd(1.55,2.20) },
+          { label:"Não", odd:rndOdd(1.55,2.50) }
+        ]),
+        mkMarket(matchId, "Gols", "Total de gols", [
+          over("1.5", rndOdd(1.25,1.75)),
+          under("1.5", rndOdd(2.00,3.20)),
+          over("2.5", rndOdd(1.55,2.60)),
+          under("2.5", rndOdd(1.45,2.20)),
+          over("3.5", rndOdd(2.10,3.90)),
+          under("3.5", rndOdd(1.20,1.60))
+        ]),
+        mkMarket(matchId, "Cartões", "Total de cartões", [
+          over("3.5", rndOdd(1.35,2.10)),
+          under("3.5", rndOdd(1.65,2.70)),
+          over("4.5", rndOdd(1.55,2.60)),
+          under("4.5", rndOdd(1.45,2.40))
+        ]),
+        mkMarket(matchId, "Escanteios", "Total de escanteios", [
+          over("7.5", rndOdd(1.35,2.20)),
+          under("7.5", rndOdd(1.55,2.60)),
+          over("9.5", rndOdd(1.55,2.80)),
+          under("9.5", rndOdd(1.35,2.40))
+        ]),
+        mkMarket(matchId, "Chutes", "Chutes no gol (time)", [
+          { label:`${home} +2.5`, odd:rndOdd(1.40,2.30) },
+          { label:`${home} -2.5`, odd:rndOdd(1.55,2.80) },
+          { label:`${away} +2.5`, odd:rndOdd(1.40,2.30) },
+          { label:`${away} -2.5`, odd:rndOdd(1.55,2.80) }
+        ]),
+        mkMarket(matchId, "Especiais", "Quem marca (qualquer momento)", [
+          { label:`Atacante do ${home}`, odd:rndOdd(1.90,3.40) },
+          { label:`Atacante do ${away}`, odd:rndOdd(2.10,3.80) }
+        ]),
+        mkMarket(matchId, "Escalações", "Escalações", [
+          { label:"Ver escalação provável", odd:"—", meta:{ info:true } }
+        ])
+      ];
+    }
 
     function createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate = null){
-  const id = uid();
-  const markets = buildMarketsBase(id, home, away);
+      const id = uid();
+      const markets = buildMarketsBase(id, home, away);
 
-  return {
-    id,
-    leagueId,
-    home,
-    away,
-    whenTxt,
-    stadium,
-    isoDate: isoDate || nowIso(),
-    featured: Math.random() > 0.45,
-    markets,
-    odds1x2: {
-      "1": rndOdd(1.60,2.80),
-      "X": rndOdd(2.90,3.70),
-      "2": rndOdd(2.10,3.40)
+      return {
+        id,
+        leagueId,
+        home,
+        away,
+        whenTxt,
+        stadium,
+        isoDate: isoDate || nowIso(),
+        featured: Math.random() > 0.45,
+        markets,
+        odds1x2: {
+          "1": rndOdd(1.60,2.80),
+          "X": rndOdd(2.90,3.70),
+          "2": rndOdd(2.10,3.40)
+        }
+      };
     }
-  };
-}
 
-const FIXTURE_MATCHES_BY_LEAGUE = {
-  "br-seriea": [
-    ["Palmeiras","Corinthians","2026-03-20T21:30:00-03:00","Allianz Parque"],
-    ["Flamengo","Cruzeiro","2026-03-21T21:30:00-03:00","Maracanã"],
-    ["Atlético Mineiro","Internacional","2026-03-21T19:00:00-03:00","Arena MRV"],
-    ["Bahia","Vitória","2026-03-21T20:00:00-03:00","Arena Fonte Nova"]
-  ],
-  "br-serieb": [
-    ["Sport","Ceará","2026-03-22T18:00:00-03:00","Ilha do Retiro"],
-    ["Avaí","Coritiba","2026-03-22T20:30:00-03:00","Ressacada"]
-  ],
-  "eng-pl": [
-    ["Arsenal","Liverpool","2026-03-22T17:00:00-03:00","Emirates"],
-    ["Chelsea","Tottenham","2026-03-22T13:30:00-03:00","Stamford Bridge"]
-  ],
-  "esp-ll": [
-    ["Real Madrid","Barcelona","2026-03-23T16:00:00-03:00","Bernabéu"],
-    ["Atlético de Madrid","Sevilla","2026-03-23T14:30:00-03:00","Metropolitano"]
-  ],
-  "ita-sa": [
-    ["Inter","Milan","2026-03-23T16:45:00-03:00","San Siro"],
-    ["Juventus","Napoli","2026-03-23T15:45:00-03:00","Allianz Stadium"]
-  ],
-  "ger-bl": [
-    ["Bayern","Dortmund","2026-03-23T15:30:00-03:00","Allianz Arena"],
-    ["Leverkusen","Leipzig","2026-03-23T13:30:00-03:00","BayArena"]
-  ],
-  "fra-l1": [
-    ["PSG","Marseille","2026-03-22T15:00:00-03:00","Parc des Princes"],
-    ["Monaco","Lille","2026-03-22T17:05:00-03:00","Stade Louis II"]
-  ],
-  "uefa-ucl": [
-    ["Manchester City","Real Madrid","2026-03-24T17:00:00-03:00","Etihad Stadium"],
-    ["Bayern","PSG","2026-03-24T17:00:00-03:00","Allianz Arena"]
-  ]
-};
+    const FIXTURE_MATCHES_BY_LEAGUE = {
+      "br-seriea": [
+        ["Palmeiras","Corinthians","2026-03-20T21:30:00-03:00","Allianz Parque"],
+        ["Flamengo","Cruzeiro","2026-03-21T21:30:00-03:00","Maracanã"],
+        ["Atlético Mineiro","Internacional","2026-03-21T19:00:00-03:00","Arena MRV"],
+        ["Bahia","Vitória","2026-03-21T20:00:00-03:00","Arena Fonte Nova"]
+      ],
+      "br-serieb": [
+        ["Sport","Ceará","2026-03-22T18:00:00-03:00","Ilha do Retiro"],
+        ["Avaí","Coritiba","2026-03-22T20:30:00-03:00","Ressacada"]
+      ],
+      "eng-pl": [
+        ["Arsenal","Liverpool","2026-03-22T17:00:00-03:00","Emirates"],
+        ["Chelsea","Tottenham","2026-03-22T13:30:00-03:00","Stamford Bridge"]
+      ],
+      "esp-ll": [
+        ["Real Madrid","Barcelona","2026-03-23T16:00:00-03:00","Bernabéu"],
+        ["Atlético de Madrid","Sevilla","2026-03-23T14:30:00-03:00","Metropolitano"]
+      ],
+      "ita-sa": [
+        ["Inter","Milan","2026-03-23T16:45:00-03:00","San Siro"],
+        ["Juventus","Napoli","2026-03-23T15:45:00-03:00","Allianz Stadium"]
+      ],
+      "ger-bl": [
+        ["Bayern","Dortmund","2026-03-23T15:30:00-03:00","Allianz Arena"],
+        ["Leverkusen","Leipzig","2026-03-23T13:30:00-03:00","BayArena"]
+      ],
+      "fra-l1": [
+        ["PSG","Marseille","2026-03-22T15:00:00-03:00","Parc des Princes"],
+        ["Monaco","Lille","2026-03-22T17:05:00-03:00","Stade Louis II"]
+      ],
+      "uefa-ucl": [
+        ["Manchester City","Real Madrid","2026-03-24T17:00:00-03:00","Etihad Stadium"],
+        ["Bayern","PSG","2026-03-24T17:00:00-03:00","Allianz Arena"]
+      ]
+    };
 
-function buildFixtureMatchesForLeague(leagueId){
-  const base = FIXTURE_MATCHES_BY_LEAGUE[leagueId] || [];
-  return base.map(([home, away, isoDate, stadium]) => {
-    const whenTxt = fmtWhenFromISO(isoDate);
-    return createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate);
-  });
-}
+    function buildFixtureMatchesForLeague(leagueId){
+      const base = FIXTURE_MATCHES_BY_LEAGUE[leagueId] || [];
+      return base.map(([home, away, isoDate, stadium]) => {
+        const whenTxt = fmtWhenFromISO(isoDate);
+        return createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate);
+      });
+    }
 
     function seedDB(){
-  const db = {
-    bets: [],
-    leagues: [],
-    countries: [
-      {
-        id:"br",
-        name:"Brasil",
-        flag:"🇧🇷",
-        region:"americas",
-        leagues:[
-          { id:"br-seriea", name:"Brasileirão Série A", featured:true },
-          { id:"br-serieb", name:"Série B", featured:true },
-          { id:"br-cdb", name:"Copa do Brasil", featured:true },
-          { id:"br-seriec", name:"Série C" }
-        ]
-      },
-      {
-        id:"arg",
-        name:"Argentina",
-        flag:"🇦🇷",
-        region:"americas",
-        leagues:[
-          { id:"arg-lpf", name:"Liga Profesional" },
-          { id:"arg-cup", name:"Copa da Argentina" }
-        ]
-      },
-      {
-        id:"lib",
-        name:"Américas",
-        flag:"🌎",
-        region:"americas",
-        leagues:[
-          { id:"conmebol-lib", name:"Copa Libertadores" },
-          { id:"conmebol-sula", name:"Copa Sul-Americana" }
-        ]
-      },
-      {
-        id:"eng",
-        name:"Inglaterra",
-        flag:"🏴",
-        region:"europe",
-        leagues:[
-          { id:"eng-pl", name:"Premier League", featured:true }
-        ]
-      },
-      {
-        id:"esp",
-        name:"Espanha",
-        flag:"🇪🇸",
-        region:"europe",
-        leagues:[
-          { id:"esp-ll", name:"LaLiga", featured:true }
-        ]
-      },
-      {
-        id:"ita",
-        name:"Itália",
-        flag:"🇮🇹",
-        region:"europe",
-        leagues:[
-          { id:"ita-sa", name:"Serie A", featured:true }
-        ]
-      },
-      {
-        id:"ger",
-        name:"Alemanha",
-        flag:"🇩🇪",
-        region:"europe",
-        leagues:[
-          { id:"ger-bl", name:"Bundesliga", featured:true }
-        ]
-      },
-      {
-        id:"fra",
-        name:"França",
-        flag:"🇫🇷",
-        region:"europe",
-        leagues:[
-          { id:"fra-l1", name:"Ligue 1", featured:true }
-        ]
-      },
-      {
-        id:"uefa",
-        name:"Europa",
-        flag:"🌍",
-        region:"europe",
-        leagues:[
-          { id:"uefa-ucl", name:"UEFA Champions League", featured:true },
-          { id:"uefa-uel", name:"UEFA Europa League" }
-        ]
-      }
-    ],
-    matches: []
-  };
+      const db = {
+        bets: [],
+        leagues: [],
+        countries: [
+          {
+            id:"br",
+            name:"Brasil",
+            flag:"🇧🇷",
+            region:"americas",
+            leagues:[
+              { id:"br-seriea", name:"Brasileirão Série A", featured:true },
+              { id:"br-serieb", name:"Série B", featured:true },
+              { id:"br-cdb", name:"Copa do Brasil", featured:true },
+              { id:"br-seriec", name:"Série C" }
+            ]
+          },
+          {
+            id:"arg",
+            name:"Argentina",
+            flag:"🇦🇷",
+            region:"americas",
+            leagues:[
+              { id:"arg-lpf", name:"Liga Profesional" },
+              { id:"arg-cup", name:"Copa da Argentina" }
+            ]
+          },
+          {
+            id:"lib",
+            name:"Américas",
+            flag:"🌎",
+            region:"americas",
+            leagues:[
+              { id:"conmebol-lib", name:"Copa Libertadores" },
+              { id:"conmebol-sula", name:"Copa Sul-Americana" }
+            ]
+          },
+          {
+            id:"eng",
+            name:"Inglaterra",
+            flag:"🏴",
+            region:"europe",
+            leagues:[
+              { id:"eng-pl", name:"Premier League", featured:true }
+            ]
+          },
+          {
+            id:"esp",
+            name:"Espanha",
+            flag:"🇪🇸",
+            region:"europe",
+            leagues:[
+              { id:"esp-ll", name:"LaLiga", featured:true }
+            ]
+          },
+          {
+            id:"ita",
+            name:"Itália",
+            flag:"🇮🇹",
+            region:"europe",
+            leagues:[
+              { id:"ita-sa", name:"Serie A", featured:true }
+            ]
+          },
+          {
+            id:"ger",
+            name:"Alemanha",
+            flag:"🇩🇪",
+            region:"europe",
+            leagues:[
+              { id:"ger-bl", name:"Bundesliga", featured:true }
+            ]
+          },
+          {
+            id:"fra",
+            name:"França",
+            flag:"🇫🇷",
+            region:"europe",
+            leagues:[
+              { id:"fra-l1", name:"Ligue 1", featured:true }
+            ]
+          },
+          {
+            id:"uefa",
+            name:"Europa",
+            flag:"🌍",
+            region:"europe",
+            leagues:[
+              { id:"uefa-ucl", name:"UEFA Champions League", featured:true },
+              { id:"uefa-uel", name:"UEFA Europa League" }
+            ]
+          }
+        ],
+        matches: []
+      };
 
-  localStorage.setItem(LS.DB, JSON.stringify(db));
-  return db;
-}
+      localStorage.setItem(LS.DB, JSON.stringify(db));
+      return db;
+    }
 
     function loadDB(){
-  try{
-    const raw = localStorage.getItem(LS.DB);
-    if(raw){
-      const parsed = JSON.parse(raw);
+      try{
+        const raw = localStorage.getItem(LS.DB);
+        if(raw){
+          const parsed = JSON.parse(raw);
 
-      if(!parsed.countries || !Array.isArray(parsed.countries)){
-        return seedDB();
-      }
+          if(!parsed.countries || !Array.isArray(parsed.countries)){
+            return seedDB();
+          }
 
-      if(!Array.isArray(parsed.matches)) parsed.matches = [];
-      if(!Array.isArray(parsed.bets)) parsed.bets = [];
-      if(!Array.isArray(parsed.leagues)) parsed.leagues = [];
+          if(!Array.isArray(parsed.matches)) parsed.matches = [];
+          if(!Array.isArray(parsed.bets)) parsed.bets = [];
+          if(!Array.isArray(parsed.leagues)) parsed.leagues = [];
 
-      return parsed;
+          return parsed;
+        }
+      }catch{}
+
+      return seedDB();
     }
-  }catch{}
-
-  return seedDB();
-}
 
     function saveDB(db){
       localStorage.setItem(LS.DB, JSON.stringify(db));
@@ -2714,13 +2752,13 @@ function buildFixtureMatchesForLeague(leagueId){
     }
 
     function ensureDefaults(){
-  const br = state.db.countries.find((c) => c.id === "br");
-  if(!state.ui.countryId) state.ui.countryId = br?.id || state.db.countries[0]?.id || null;
-  if(!state.ui.leagueId) state.ui.leagueId = "br-seriea";
+      const br = state.db.countries.find((c) => c.id === "br");
+      if(!state.ui.countryId) state.ui.countryId = br?.id || state.db.countries[0]?.id || null;
+      if(!state.ui.leagueId) state.ui.leagueId = "br-seriea";
 
-  ensureLeagueMatchesLoaded(state.ui.leagueId);
-  saveUI(state.ui);
-}
+      ensureLeagueMatchesLoaded(state.ui.leagueId);
+      saveUI(state.ui);
+    }
 
     function findLeague(leagueId){
       for(const c of state.db.countries){
@@ -2735,17 +2773,17 @@ function buildFixtureMatchesForLeague(leagueId){
     }
 
     function ensureLeagueMatchesLoaded(leagueId){
-  if(!leagueId) return;
+      if(!leagueId) return;
 
-  const alreadyLoaded = state.db.matches.some((m) => m.leagueId === leagueId);
-  if(alreadyLoaded) return;
+      const alreadyLoaded = state.db.matches.some((m) => m.leagueId === leagueId);
+      if(alreadyLoaded) return;
 
-  const fixtures = buildFixtureMatchesForLeague(leagueId);
-  if(!fixtures.length) return;
+      const fixtures = buildFixtureMatchesForLeague(leagueId);
+      if(!fixtures.length) return;
 
-  state.db.matches.push(...fixtures);
-  saveDB(state.db);
-}
+      state.db.matches.push(...fixtures);
+      saveDB(state.db);
+    }
 
     function getFeaturedLeagues(){
       const all = [];
@@ -2846,6 +2884,10 @@ function buildFixtureMatchesForLeague(leagueId){
       return null;
     }
 
+    function mkMatch(leagueId, home, away, whenTxt, stadium, isoDate = null){
+      return createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate);
+    }
+
     function realEventToMatch(ev, leagueId){
       const home = ev.home_team;
       const away = ev.away_team;
@@ -2870,10 +2912,10 @@ function buildFixtureMatchesForLeague(leagueId){
     }
 
     function replaceLeagueMatches(leagueId, matches){
-  state.db.matches = state.db.matches.filter((m) => m.leagueId !== leagueId);
-  state.db.matches.push(...matches);
-  saveDB(state.db);
-}
+      state.db.matches = state.db.matches.filter((m) => m.leagueId !== leagueId);
+      state.db.matches.push(...matches);
+      saveDB(state.db);
+    }
 
     async function updateLeagueReal(leagueId, { force = false } = {}){
       const sportKey = REAL_LEAGUE_MAP[leagueId];
@@ -2899,17 +2941,17 @@ function buildFixtureMatchesForLeague(leagueId){
         const events = await fetchOddsBySportKey(sportKey);
 
         if(!events.length){
-  ensureLeagueMatchesLoaded(leagueId);
-  realCache[leagueId] = { ts: now, count: 0 };
-  return;
-}
+          ensureLeagueMatchesLoaded(leagueId);
+          realCache[leagueId] = { ts: now, count: 0 };
+          return;
+        }
 
         const realMatches = events
-  .map((ev) => realEventToMatch(ev, leagueId))
-  .filter(Boolean)
-  .slice(0, 40);
+          .map((ev) => realEventToMatch(ev, leagueId))
+          .filter(Boolean)
+          .slice(0, 40);
 
-replaceLeagueMatches(leagueId, realMatches);
+        replaceLeagueMatches(leagueId, realMatches);
 
         realCache[leagueId] = { ts: now, count: realMatches.length };
 
@@ -2978,12 +3020,18 @@ replaceLeagueMatches(leagueId, realMatches);
       $("#matchesSection").classList.toggle("hide", state.ui.leftMode === "competitions");
     }
 
+    function lockBodyScroll(lock){
+      document.body.style.overflow = lock ? "hidden" : "";
+    }
+
     function openPlans(){
       $("#plansModal").classList.add("show");
+      lockBodyScroll(true);
     }
 
     function closePlans(){
       $("#plansModal").classList.remove("show");
+      if(!$("#authModal").classList.contains("show")) lockBodyScroll(false);
     }
 
     function renderAllViews(){
@@ -3322,7 +3370,7 @@ replaceLeagueMatches(leagueId, realMatches);
       }
     }
 
-        function openGame(matchId){
+    function openGame(matchId){
       state.game.open = true;
       state.game.matchId = matchId;
       renderGameScreen();
@@ -3732,7 +3780,7 @@ replaceLeagueMatches(leagueId, realMatches);
       renderAll();
     }
 
-    function settleBet(betId, result){
+        function settleBet(betId, result){
       const admin = getCurrentUser();
       if(!isAdminEmail(admin?.email)){
         toast("Somente admin.");
@@ -3974,6 +4022,7 @@ replaceLeagueMatches(leagueId, realMatches);
     function openAuth(mode){
       authMode = mode;
       $("#authModal").classList.add("show");
+      lockBodyScroll(true);
 
       const isLogin = mode === "login";
       const isRegister = mode === "register";
@@ -3997,6 +4046,7 @@ replaceLeagueMatches(leagueId, realMatches);
 
     function closeAuth(){
       $("#authModal").classList.remove("show");
+      if(!$("#plansModal").classList.contains("show")) lockBodyScroll(false);
     }
 
     function pickGender(g){
@@ -4277,13 +4327,6 @@ replaceLeagueMatches(leagueId, realMatches);
         renderLeftMode();
       };
 
-      $("#btnTopCompetitions").onclick = () => {
-        setNav("home");
-        state.ui.leftMode = "competitions";
-        saveUI(state.ui);
-        renderLeftMode();
-      };
-
       $("#btnRefresh").onclick = async () => {
         if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
           await updateLeagueReal(state.ui.leagueId, { force:true });
@@ -4452,19 +4495,19 @@ replaceLeagueMatches(leagueId, realMatches);
     }
 
     async function init(){
-  hookUI();
-  ensureDefaults();
-  ensureLeagueMatchesLoaded(state.ui.leagueId);
-  renderAll();
-  await registerSW();
-  await restoreSessionFromServer();
+      hookUI();
+      ensureDefaults();
+      ensureLeagueMatchesLoaded(state.ui.leagueId);
+      renderAll();
+      await registerSW();
+      await restoreSessionFromServer();
 
-  if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
-    await updateLeagueReal(state.ui.leagueId, { force:true });
-  }
+      if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
+        await updateLeagueReal(state.ui.leagueId, { force:true });
+      }
 
-  renderAll();
-}
+      renderAll();
+    }
 
     init();
   </script>
