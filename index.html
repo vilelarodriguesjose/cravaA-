@@ -355,18 +355,18 @@
     }
 
     .heroBanner{
-      position:relative;
-      padding:20px 16px;
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      gap:16px;
-      align-items:center;
-      background:
-        var(--bannerGlow),
-        var(--bannerGrad);
-      min-height:140px;
-      overflow:hidden;
-    }
+  position:relative;
+  padding:20px 16px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:16px;
+  align-items:center;
+  min-height:140px;
+  overflow:hidden;
+  background:
+    linear-gradient(rgba(7,19,11,.55), rgba(7,19,11,.72)),
+    url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?q=80&w=1600') center/cover no-repeat;
+}
 
     .heroBanner:before{
       content:"";
@@ -1919,7 +1919,6 @@
 
             <div class="heroBannerActions">
               <button class="btn yellow" id="btnBannerRegister">Criar conta</button>
-              <button class="btn ghost" id="btnBannerPlans">Ver planos</button>
             </div>
           </div>
 
@@ -3447,13 +3446,11 @@
 
             <div class="matchTeamsCol">
               <div class="teamLine">
-                ${teamCrestHTML(m.home, homeAsset)}
                 <div class="teamName">${esc(m.home)}</div>
                 <div class="teamTag">Casa</div>
               </div>
 
               <div class="teamLine">
-                ${teamCrestHTML(m.away, awayAsset)}
                 <div class="teamName">${esc(m.away)}</div>
                 <div class="teamTag">Fora</div>
               </div>
@@ -3535,6 +3532,7 @@
     function openGame(matchId){
       state.game.open = true;
       state.game.matchId = matchId;
+      lockBodyScroll(true);
       renderGameScreen();
       $("#gameScreen").classList.add("show");
     }
@@ -3543,6 +3541,7 @@
       state.game.open = false;
       state.game.matchId = null;
       $("#gameScreen").classList.remove("show");
+      lockBodyScroll(false);
     }
 
     async function renderGameHero(m, league, country){
@@ -3554,7 +3553,6 @@
       $("#gameHero").innerHTML = `
         <div class="gameHeroInner">
           <div class="heroTeam">
-            ${teamCrestHTML(m.home, homeAsset, "xl")}
             <div class="heroTeamMeta">
               <div class="heroTeamSub">Mandante</div>
               <div class="heroTeamName">${esc(m.home)}</div>
@@ -3573,7 +3571,6 @@
               <div class="heroTeamSub">Visitante</div>
               <div class="heroTeamName">${esc(m.away)}</div>
             </div>
-            ${teamCrestHTML(m.away, awayAsset, "xl")}
           </div>
         </div>
       `;
@@ -4208,6 +4205,7 @@
 
     function closeAuth(){
       $("#authModal").classList.remove("show");
+      lockBodyScroll(false);
       if(!$("#plansModal").classList.contains("show")) lockBodyScroll(false);
     }
 
