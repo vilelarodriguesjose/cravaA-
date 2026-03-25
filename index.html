@@ -355,18 +355,18 @@
     }
 
     .heroBanner{
-  position:relative;
-  padding:20px 16px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:16px;
-  align-items:center;
-  min-height:140px;
-  overflow:hidden;
-  background:
-    linear-gradient(rgba(7,19,11,.55), rgba(7,19,11,.72)),
-    url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?q=80&w=1600') center/cover no-repeat;
-}
+      position:relative;
+      padding:20px 16px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:16px;
+      align-items:center;
+      min-height:140px;
+      overflow:hidden;
+      background:
+        linear-gradient(rgba(7,19,11,.55), rgba(7,19,11,.72)),
+        url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?q=80&w=1600') center/cover no-repeat;
+    }
 
     .heroBanner:before{
       content:"";
@@ -465,9 +465,7 @@
       pointer-events:none;
     }
 
-    .mobileCompetitionsCard:active{
-      transform:scale(.99);
-    }
+    .mobileCompetitionsCard:active{transform:scale(.99)}
 
     .mobileCompetitionsLeft{
       display:flex;
@@ -564,9 +562,7 @@
         grid-template-columns:1fr;
         align-items:flex-start;
       }
-      .heroBannerActions{
-        justify-content:flex-start;
-      }
+      .heroBannerActions{justify-content:flex-start}
       .heroBannerTitle{font-size:23px}
     }
 
@@ -709,10 +705,7 @@
       flex-wrap:wrap;
     }
 
-    .dateGroup{
-      border-top:1px solid var(--line);
-    }
-
+    .dateGroup{border-top:1px solid var(--line)}
     .dateGroup:first-child{border-top:0}
 
     .dateHeader{
@@ -892,6 +885,7 @@
     }
 
     .oddBtn:last-child{border-right:0}
+
     .oddBtn:before{
       content:"";
       position:absolute;
@@ -975,6 +969,7 @@
     }
 
     .screenTitle{font-weight:1000}
+
     .gameHero{
       position:relative;
       padding:18px 16px 14px;
@@ -1654,14 +1649,11 @@
       width:100%;
     }
 
-    .authSubmitBtn{
-      min-height:48px;
-    }
+    .authSubmitBtn{min-height:48px}
 
     @media (max-width:640px){
       .authGrid2{grid-template-columns:100px minmax(0,1fr)}
       .birthGrid{grid-template-columns:1fr 1fr 1.2fr}
-
       .authSubmitBtn{
         width:100%;
         border-radius:14px;
@@ -1814,21 +1806,11 @@
         padding:13px;
       }
 
-      .mobileCompetitionsTitle{
-        font-size:14px;
-      }
+      .mobileCompetitionsTitle{font-size:14px}
+      .mobileCompetitionsSub{font-size:11px}
 
-      .mobileCompetitionsSub{
-        font-size:11px;
-      }
-
-      .navBtn{
-        font-size:11px;
-      }
-
-      .navBtn span{
-        font-size:9px;
-      }
+      .navBtn{font-size:11px}
+      .navBtn span{font-size:9px}
     }
   </style>
 </head>
@@ -2055,7 +2037,7 @@
     </div>
   </div>
 
-  <div id="gameScreen" class="screen">
+    <div id="gameScreen" class="screen">
     <div class="screenInner">
       <div class="screenHead">
         <button class="btn small" id="btnCloseGame">← Voltar</button>
@@ -2387,38 +2369,31 @@
       "Liverpool": ["Liverpool", "Liverpool FC"],
       "Real Madrid": ["Real Madrid", "Real Madrid CF"],
       "Barcelona": ["Barcelona", "FC Barcelona"],
-      "Inter": ["Inter", "Inter Milan", "Internazionale"],
-      "Milan": ["Milan", "AC Milan"],
-      "Bayern": ["Bayern", "Bayern Munich", "FC Bayern Munich"],
-      "Dortmund": ["Dortmund", "Borussia Dortmund"],
-      "PSG": ["PSG", "Paris Saint-Germain", "Paris SG"],
-      "Marseille": ["Marseille", "Olympique de Marseille"],
-      "Atlético Mineiro": ["Atlético Mineiro", "Atletico Mineiro", "Clube Atlético Mineiro"],
-      "Internacional": ["Internacional", "SC Internacional", "Sport Club Internacional"],
-      "Bahia": ["Bahia", "Esporte Clube Bahia"],
-      "Vitória": ["Vitória", "Vitoria", "Esporte Clube Vitória"],
-      "Cruzeiro": ["Cruzeiro", "Cruzeiro Esporte Clube"],
-      "Santos": ["Santos", "Santos FC"],
-      "Botafogo": ["Botafogo", "Botafogo FR"]
+      "Inter": ["Inter", "Internazionale", "Inter Milan", "FC Internazionale Milano"],
+      "Milan": ["Milan", "AC Milan", "Associazione Calcio Milan"],
+      "PSG": ["PSG", "Paris Saint-Germain", "Paris Saint Germain", "Paris SG"],
+      "Bayern": ["Bayern", "Bayern Munich", "FC Bayern München", "FC Bayern Munich"]
+    };
+
+    const THE_SPORTSDB_LEAGUES = {
+      "br-seriea": 4351,
+      "eng-pl": 4328,
+      "esp-ll": 4335,
+      "ita-sa": 4332,
+      "ger-bl": 4331,
+      "fra-l1": 4334
     };
 
     const REAL_LEAGUE_MAP = {
-      "br-seriea": "soccer_brazil_campeonato",
       "eng-pl": "soccer_epl",
       "esp-ll": "soccer_spain_la_liga",
       "ita-sa": "soccer_italy_serie_a",
       "ger-bl": "soccer_germany_bundesliga",
-      "fra-l1": "soccer_france_ligue_one"
+      "fra-l1": "soccer_france_ligue_one",
+      "br-seriea": "soccer_brazil_campeonato"
     };
 
-    const REAL_CFG = {
-      markets: "h2h",
-      regions: "eu",
-      oddsFormat: "decimal"
-    };
-
-    const REAL_COOLDOWN_MS = 60 * 1000;
-    const TABS = ["Principais","Gols","Cartões","Escanteios","Chutes","Especiais","Escalações"];
+    const REAL_COOLDOWN_MS = 5 * 60 * 1000;
     const realCache = {};
 
     const $ = (s) => document.querySelector(s);
@@ -2438,582 +2413,431 @@
       "'": "&#39;"
     }[m]));
 
-    const uid = () =>
-      (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`);
-
+    const uid = () => crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
     const nowIso = () => new Date().toISOString();
+    const isAdminEmail = (email) => String(email || "").trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-    const isAdminEmail = (email) =>
-      String(email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-    function toast(msg){
-      const t = $("#toast");
-      if(!t) return;
-      t.textContent = msg;
-      t.style.display = "block";
-      clearTimeout(toast._tm);
-      toast._tm = setTimeout(() => {
-        t.style.display = "none";
-      }, 2200);
-    }
-
-    function normalizeTeamCacheKey(name){
-      return String(name || "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim()
-        .toLowerCase();
-    }
-
-    function loadTeamAssetCache(){
+    function loadJSON(key, fallback){
       try{
-        return JSON.parse(localStorage.getItem(TEAM_ASSET_CACHE_KEY) || "{}");
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
       }catch{
-        return {};
+        return fallback;
       }
     }
 
-    function saveTeamAssetCache(cache){
-      localStorage.setItem(TEAM_ASSET_CACHE_KEY, JSON.stringify(cache));
+    function saveJSON(key, val){
+      localStorage.setItem(key, JSON.stringify(val));
     }
 
-    const teamAssetCache = loadTeamAssetCache();
+    function saveDB(db){ saveJSON(LS.DB, db); }
+    function saveUI(ui){ saveJSON(LS.UI, ui); }
 
-    function getTeamInitials(name){
-      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-      if(!parts.length) return "TM";
-      if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
-      return (parts[0][0] + parts[1][0]).toUpperCase();
+    function getAuth(){
+      return loadJSON(LS.AUTH, { email:null });
     }
 
-    function getTeamSearchNames(teamName){
-      const direct = TEAM_NAME_ALIASES[teamName] || [];
-      const generic = [teamName];
-      const unique = [];
-      for(const n of [...direct, ...generic]){
-        const v = String(n || "").trim();
-        if(!v) continue;
-        if(!unique.includes(v)) unique.push(v);
-      }
-      return unique;
+    function setAuthEmail(email){
+      saveJSON(LS.AUTH, { email });
     }
 
-    async function searchTeamOnSportsDB(searchName){
-      const url = `${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(searchName)}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      const teams = Array.isArray(data?.teams) ? data.teams : [];
-      if(!teams.length) return null;
+    function rand(a, b){ return Math.random() * (b - a) + a; }
+    function rndOdd(a, b){ return rand(a, b).toFixed(2); }
 
-      const wanted = normalizeTeamCacheKey(searchName);
-
-      const scored = teams.map((team) => {
-        const names = [
-          team?.strTeam,
-          team?.strTeamShort,
-          team?.strAlternate,
-          team?.strLeague
-        ]
-          .filter(Boolean)
-          .map(normalizeTeamCacheKey);
-
-        let score = 0;
-        if(names.includes(wanted)) score += 100;
-        if(names.some((n) => n.includes(wanted) || wanted.includes(n))) score += 40;
-        if(team?.strSport === "Soccer") score += 15;
-        return { team, score };
-      }).sort((a, b) => b.score - a.score);
-
-      return scored[0]?.team || null;
+    function formatOdd(value){
+      const n = Number(value);
+      return Number.isFinite(n) ? n.toFixed(2) : "—";
     }
 
-    async function fetchTeamAssets(teamName){
-      const rawName = String(teamName || "").trim();
-      if(!rawName) return { badge:null, logo:null, jersey:null, teamName:"" };
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
-      const cacheKey = normalizeTeamCacheKey(rawName);
-      if(teamAssetCache[cacheKey]) return teamAssetCache[cacheKey];
-
-      const searchNames = getTeamSearchNames(rawName);
-
-      for(const searchName of searchNames){
-        try{
-          const team = await searchTeamOnSportsDB(searchName);
-          if(team){
-            const asset = {
-              badge: team.strBadge || team.strTeamBadge || null,
-              logo: team.strLogo || team.strTeamLogo || null,
-              jersey: team.strTeamJersey || null,
-              teamName: team.strTeam || rawName
-            };
-
-            if(asset.badge || asset.logo){
-              teamAssetCache[cacheKey] = asset;
-              saveTeamAssetCache(teamAssetCache);
-              return asset;
-            }
-          }
-        }catch(e){
-          console.log("Erro ao buscar escudo:", searchName, e);
-        }
-      }
-
-      const fallback = { badge:null, logo:null, jersey:null, teamName:rawName };
-      teamAssetCache[cacheKey] = fallback;
-      saveTeamAssetCache(teamAssetCache);
-      return fallback;
+    function dateKeyFromISO(iso){
+      const d = new Date(iso);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
     }
 
-    function teamCrestHTML(teamName, asset = null, sizeClass = ""){
-      const cls = `teamCrest ${sizeClass}`.trim();
-      const badge = asset?.badge || asset?.logo || null;
-
-      if(badge){
-        const fallback = `<div class="teamCrestFallback">${esc(getTeamInitials(teamName))}</div>`;
-        return `
-          <div class="${cls}">
-            <img
-              src="${esc(badge)}"
-              alt="${esc(teamName)}"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-              onerror="this.closest('.teamCrest').innerHTML='${fallback}'"
-            />
-          </div>
-        `;
-      }
-
-      return `
-        <div class="${cls}">
-          <div class="teamCrestFallback">${esc(getTeamInitials(teamName))}</div>
-        </div>
-      `;
+    function fmtDateLabelFromKey(key){
+      const d = new Date(`${key}T12:00:00`);
+      return d.toLocaleDateString("pt-BR", { weekday:"long", day:"2-digit", month:"2-digit" });
     }
 
-    function rndOdd(min, max){
-      const v = min + Math.random() * (max - min);
-      return (Math.round(v * 100) / 100).toFixed(2);
+    function fmtWhenFromISO(iso){
+      const d = new Date(iso);
+      const dd = d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
+      const hh = d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+      return `${dd} • ${hh}`;
     }
 
-    function mkMarket(matchId, tab, title, picks){
+    function guessCountryByLeagueId(leagueId){
+      const m = {
+        "br-seriea":"br",
+        "br-serieb":"br",
+        "copa-lib":"sa",
+        "eng-pl":"gb-eng",
+        "eng-ch":"gb-eng",
+        "esp-ll":"es",
+        "ita-sa":"it",
+        "ger-bl":"de",
+        "fra-l1":"fr",
+        "por-lp":"pt"
+      };
+      return m[leagueId] || "br";
+    }
+
+    function defaultDB(){
       return {
-        id: uid(),
-        matchId,
-        tab,
-        title,
-        picks: picks.map((p) => ({ id: uid(), ...p }))
+        countries: [
+          { id:"br", name:"Brasil", flag:"🇧🇷", region:"americas" },
+          { id:"ar", name:"Argentina", flag:"🇦🇷", region:"americas" },
+          { id:"uy", name:"Uruguai", flag:"🇺🇾", region:"americas" },
+          { id:"co", name:"Colômbia", flag:"🇨🇴", region:"americas" },
+          { id:"gb-eng", name:"Inglaterra", flag:"🏴", region:"europe" },
+          { id:"es", name:"Espanha", flag:"🇪🇸", region:"europe" },
+          { id:"it", name:"Itália", flag:"🇮🇹", region:"europe" },
+          { id:"de", name:"Alemanha", flag:"🇩🇪", region:"europe" },
+          { id:"fr", name:"França", flag:"🇫🇷", region:"europe" },
+          { id:"pt", name:"Portugal", flag:"🇵🇹", region:"europe" }
+        ],
+        leaguesCatalog: [
+          { id:"br-seriea", countryId:"br", name:"Brasileirão Série A", featured:true },
+          { id:"br-serieb", countryId:"br", name:"Brasileirão Série B", featured:false },
+          { id:"copa-lib", countryId:"ar", name:"Copa Libertadores", featured:true },
+          { id:"eng-pl", countryId:"gb-eng", name:"Premier League", featured:true },
+          { id:"eng-ch", countryId:"gb-eng", name:"Championship", featured:false },
+          { id:"esp-ll", countryId:"es", name:"LaLiga", featured:true },
+          { id:"ita-sa", countryId:"it", name:"Serie A", featured:true },
+          { id:"ger-bl", countryId:"de", name:"Bundesliga", featured:true },
+          { id:"fra-l1", countryId:"fr", name:"Ligue 1", featured:true },
+          { id:"por-lp", countryId:"pt", name:"Liga Portugal", featured:false }
+        ],
+        matches: [],
+        userLeagues: [],
+        picksHistory: [],
+        users: [],
+        registerDrafts: []
       };
     }
 
-    function buildMarketsBase(matchId, home, away){
-      const over = (g, odd) => ({ label:`Mais de ${g}`, odd });
-      const under = (g, odd) => ({ label:`Menos de ${g}`, odd });
+    function defaultUI(){
+      return {
+        nav: "home",
+        leftMode: "football",
+        countryId: "br",
+        leagueId: "br-seriea",
+        search: "",
+        slipMini: false
+      };
+    }
 
-      return [
-        mkMarket(matchId, "Principais", "Resultado (1X2)", [
-          { label:`${home} vence`, odd:rndOdd(1.60,2.80) },
-          { label:"Empate", odd:rndOdd(2.90,3.80) },
-          { label:`${away} vence`, odd:rndOdd(1.90,3.60) }
-        ]),
-        mkMarket(matchId, "Principais", "Dupla chance", [
-          { label:`1X (${home} ou Empate)`, odd:rndOdd(1.20,1.60) },
-          { label:`12 (${home} ou ${away})`, odd:rndOdd(1.20,1.90) },
-          { label:`X2 (Empate ou ${away})`, odd:rndOdd(1.20,1.70) }
-        ]),
-        mkMarket(matchId, "Gols", "Ambas marcam", [
-          { label:"Sim", odd:rndOdd(1.55,2.20) },
-          { label:"Não", odd:rndOdd(1.55,2.50) }
-        ]),
-        mkMarket(matchId, "Gols", "Total de gols", [
-          over("1.5", rndOdd(1.25,1.75)),
-          under("1.5", rndOdd(2.00,3.20)),
-          over("2.5", rndOdd(1.55,2.60)),
-          under("2.5", rndOdd(1.45,2.20)),
-          over("3.5", rndOdd(2.10,3.90)),
-          under("3.5", rndOdd(1.20,1.60))
-        ]),
-        mkMarket(matchId, "Cartões", "Total de cartões", [
-          over("3.5", rndOdd(1.35,2.10)),
-          under("3.5", rndOdd(1.65,2.70)),
-          over("4.5", rndOdd(1.55,2.60)),
-          under("4.5", rndOdd(1.45,2.40))
-        ]),
-        mkMarket(matchId, "Escanteios", "Total de escanteios", [
-          over("7.5", rndOdd(1.35,2.20)),
-          under("7.5", rndOdd(1.55,2.60)),
-          over("9.5", rndOdd(1.55,2.80)),
-          under("9.5", rndOdd(1.35,2.40))
-        ]),
-        mkMarket(matchId, "Chutes", "Chutes no gol (time)", [
-          { label:`${home} +2.5`, odd:rndOdd(1.40,2.30) },
-          { label:`${home} -2.5`, odd:rndOdd(1.55,2.80) },
-          { label:`${away} +2.5`, odd:rndOdd(1.40,2.30) },
-          { label:`${away} -2.5`, odd:rndOdd(1.55,2.80) }
-        ]),
-        mkMarket(matchId, "Especiais", "Quem marca (qualquer momento)", [
-          { label:`Atacante do ${home}`, odd:rndOdd(1.90,3.40) },
-          { label:`Atacante do ${away}`, odd:rndOdd(2.10,3.80) }
-        ]),
-        mkMarket(matchId, "Escalações", "Escalações", [
-          { label:"Ver escalação provável", odd:"—", meta:{ info:true } }
-        ])
-      ];
+    const state = {
+      db: loadJSON(LS.DB, defaultDB()),
+      ui: loadJSON(LS.UI, defaultUI()),
+      session: {
+        profile: null,
+        slip: [],
+        game: {
+          open: false,
+          matchId: null,
+          tab: "principais",
+          builder: false
+        }
+      },
+      assets: loadJSON(TEAM_ASSET_CACHE_KEY, {}),
+      toastTimer: null
+    };
+
+    function persistAssets(){
+      saveJSON(TEAM_ASSET_CACHE_KEY, state.assets);
+    }
+
+    function ensureDefaults(){
+      const freshDB = defaultDB();
+      state.db.countries = Array.isArray(state.db.countries) ? state.db.countries : freshDB.countries;
+      state.db.leaguesCatalog = Array.isArray(state.db.leaguesCatalog) ? state.db.leaguesCatalog : freshDB.leaguesCatalog;
+      state.db.matches = Array.isArray(state.db.matches) ? state.db.matches : [];
+      state.db.userLeagues = Array.isArray(state.db.userLeagues) ? state.db.userLeagues : [];
+      state.db.picksHistory = Array.isArray(state.db.picksHistory) ? state.db.picksHistory : [];
+      state.db.users = Array.isArray(state.db.users) ? state.db.users : [];
+      state.db.registerDrafts = Array.isArray(state.db.registerDrafts) ? state.db.registerDrafts : [];
+      saveDB(state.db);
+
+      state.ui = Object.assign(defaultUI(), state.ui || {});
+      saveUI(state.ui);
+    }
+
+    function getCurrentUser(){
+      const auth = getAuth();
+      if(!auth?.email) return null;
+      return state.db.users.find((u) => String(u.email).toLowerCase() === String(auth.email).toLowerCase()) || state.session.profile;
+    }
+
+    function setCurrentUserPatch(patch){
+      const auth = getAuth();
+      if(!auth?.email) return;
+
+      const idx = state.db.users.findIndex((u) => String(u.email).toLowerCase() === String(auth.email).toLowerCase());
+      if(idx >= 0){
+        state.db.users[idx] = { ...state.db.users[idx], ...patch };
+        saveDB(state.db);
+      }
+
+      if(state.session.profile){
+        state.session.profile = { ...state.session.profile, ...patch };
+      }
+    }
+
+    function findCountry(id){
+      return state.db.countries.find((c) => c.id === id) || null;
+    }
+
+    function findLeague(id){
+      return state.db.leaguesCatalog.find((l) => l.id === id) || null;
+    }
+
+    function findCountryByLeague(leagueId){
+      const lg = findLeague(leagueId);
+      return lg ? findCountry(lg.countryId) : null;
+    }
+
+    function getFeaturedLeagues(){
+      return state.db.leaguesCatalog
+        .filter((l) => l.featured)
+        .sort((a, b) => {
+          if(a.id === "br-seriea") return -1;
+          if(b.id === "br-seriea") return 1;
+          return a.name.localeCompare(b.name, "pt-BR");
+        })
+        .map((l) => ({
+          ...l,
+          countryName: findCountry(l.countryId)?.name || "",
+          flag: findCountry(l.countryId)?.flag || ""
+        }));
+    }
+
+    function getCompetitionRegions(){
+      const countries = state.db.countries.map((c) => ({
+        ...c,
+        leagues: state.db.leaguesCatalog
+          .filter((l) => l.countryId === c.id)
+          .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"))
+      }));
+
+      const americas = countries.filter((c) => c.region === "americas");
+      const europe = countries.filter((c) => c.region === "europe");
+      return { americas, europe };
+    }
+
+    function randomChoice(arr){
+      return arr[Math.floor(Math.random() * arr.length)];
     }
 
     function createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate = null){
-      const id = uid();
-      const markets = buildMarketsBase(id, home, away);
-
+      const baseISO = isoDate || new Date(Date.now() + rand(2, 120) * 3600 * 1000).toISOString();
       return {
-        id,
+        id: uid(),
         leagueId,
         home,
         away,
         whenTxt,
         stadium,
-        isoDate: isoDate || nowIso(),
-        featured: Math.random() > 0.45,
-        markets,
+        isoDate: baseISO,
+        featured: Math.random() > .35,
         odds1x2: {
-          "1": rndOdd(1.60,2.80),
-          "X": rndOdd(2.90,3.70),
-          "2": rndOdd(2.10,3.40)
+          "1": rndOdd(1.45, 2.80),
+          "X": rndOdd(2.80, 3.90),
+          "2": rndOdd(1.60, 3.40)
         }
       };
     }
 
-    const FIXTURE_MATCHES_BY_LEAGUE = {
-      "br-seriea": [
-        ["Palmeiras","Corinthians","2026-03-20T21:30:00-03:00","Allianz Parque"],
-        ["Flamengo","Cruzeiro","2026-03-21T21:30:00-03:00","Maracanã"],
-        ["Atlético Mineiro","Internacional","2026-03-21T19:00:00-03:00","Arena MRV"],
-        ["Bahia","Vitória","2026-03-21T20:00:00-03:00","Arena Fonte Nova"]
-      ],
-      "br-serieb": [
-        ["Sport","Ceará","2026-03-22T18:00:00-03:00","Ilha do Retiro"],
-        ["Avaí","Coritiba","2026-03-22T20:30:00-03:00","Ressacada"]
-      ],
-      "eng-pl": [
-        ["Arsenal","Liverpool","2026-03-22T17:00:00-03:00","Emirates"],
-        ["Chelsea","Tottenham","2026-03-22T13:30:00-03:00","Stamford Bridge"]
-      ],
-      "esp-ll": [
-        ["Real Madrid","Barcelona","2026-03-23T16:00:00-03:00","Bernabéu"],
-        ["Atlético de Madrid","Sevilla","2026-03-23T14:30:00-03:00","Metropolitano"]
-      ],
-      "ita-sa": [
-        ["Inter","Milan","2026-03-23T16:45:00-03:00","San Siro"],
-        ["Juventus","Napoli","2026-03-23T15:45:00-03:00","Allianz Stadium"]
-      ],
-      "ger-bl": [
-        ["Bayern","Dortmund","2026-03-23T15:30:00-03:00","Allianz Arena"],
-        ["Leverkusen","Leipzig","2026-03-23T13:30:00-03:00","BayArena"]
-      ],
-      "fra-l1": [
-        ["PSG","Marseille","2026-03-22T15:00:00-03:00","Parc des Princes"],
-        ["Monaco","Lille","2026-03-22T17:05:00-03:00","Stade Louis II"]
-      ],
-      "uefa-ucl": [
-        ["Manchester City","Real Madrid","2026-03-24T17:00:00-03:00","Etihad Stadium"],
-        ["Bayern","PSG","2026-03-24T17:00:00-03:00","Allianz Arena"]
-      ]
-    };
-
-    function buildFixtureMatchesForLeague(leagueId){
-      const base = FIXTURE_MATCHES_BY_LEAGUE[leagueId] || [];
-      return base.map(([home, away, isoDate, stadium]) => {
-        const whenTxt = fmtWhenFromISO(isoDate);
-        return createLocalMatch(leagueId, home, away, whenTxt, stadium, isoDate);
-      });
-    }
-
-    function seedDB(){
-      const db = {
-        bets: [],
-        leagues: [],
-        countries: [
-          {
-            id:"br",
-            name:"Brasil",
-            flag:"🇧🇷",
-            region:"americas",
-            leagues:[
-              { id:"br-seriea", name:"Brasileirão Série A", featured:true },
-              { id:"br-serieb", name:"Série B", featured:true },
-              { id:"br-cdb", name:"Copa do Brasil", featured:true },
-              { id:"br-seriec", name:"Série C" }
-            ]
-          },
-          {
-            id:"arg",
-            name:"Argentina",
-            flag:"🇦🇷",
-            region:"americas",
-            leagues:[
-              { id:"arg-lpf", name:"Liga Profesional" },
-              { id:"arg-cup", name:"Copa da Argentina" }
-            ]
-          },
-          {
-            id:"lib",
-            name:"Américas",
-            flag:"🌎",
-            region:"americas",
-            leagues:[
-              { id:"conmebol-lib", name:"Copa Libertadores" },
-              { id:"conmebol-sula", name:"Copa Sul-Americana" }
-            ]
-          },
-          {
-            id:"eng",
-            name:"Inglaterra",
-            flag:"🏴",
-            region:"europe",
-            leagues:[
-              { id:"eng-pl", name:"Premier League", featured:true }
-            ]
-          },
-          {
-            id:"esp",
-            name:"Espanha",
-            flag:"🇪🇸",
-            region:"europe",
-            leagues:[
-              { id:"esp-ll", name:"LaLiga", featured:true }
-            ]
-          },
-          {
-            id:"ita",
-            name:"Itália",
-            flag:"🇮🇹",
-            region:"europe",
-            leagues:[
-              { id:"ita-sa", name:"Serie A", featured:true }
-            ]
-          },
-          {
-            id:"ger",
-            name:"Alemanha",
-            flag:"🇩🇪",
-            region:"europe",
-            leagues:[
-              { id:"ger-bl", name:"Bundesliga", featured:true }
-            ]
-          },
-          {
-            id:"fra",
-            name:"França",
-            flag:"🇫🇷",
-            region:"europe",
-            leagues:[
-              { id:"fra-l1", name:"Ligue 1", featured:true }
-            ]
-          },
-          {
-            id:"uefa",
-            name:"Europa",
-            flag:"🌍",
-            region:"europe",
-            leagues:[
-              { id:"uefa-ucl", name:"UEFA Champions League", featured:true },
-              { id:"uefa-uel", name:"UEFA Europa League" }
-            ]
-          }
+    function seedLeagueMatches(leagueId){
+      const map = {
+        "br-seriea": [
+          ["Palmeiras", "Flamengo"],
+          ["Corinthians", "São Paulo"],
+          ["Grêmio", "Internacional"],
+          ["Atlético-MG", "Cruzeiro"],
+          ["Vasco", "Botafogo"],
+          ["Bahia", "Fortaleza"]
         ],
-        matches: []
+        "br-serieb": [
+          ["Sport", "Ceará"],
+          ["América-MG", "Goiás"],
+          ["Avaí", "Coritiba"],
+          ["Ponte Preta", "Guarani"]
+        ],
+        "copa-lib": [
+          ["River Plate", "Boca Juniors"],
+          ["Peñarol", "Nacional"],
+          ["Colo-Colo", "LDU Quito"],
+          ["Olimpia", "Cerro Porteño"]
+        ],
+        "eng-pl": [
+          ["Arsenal", "Liverpool"],
+          ["Chelsea", "Tottenham"],
+          ["Manchester City", "Manchester United"],
+          ["Newcastle", "Aston Villa"]
+        ],
+        "eng-ch": [
+          ["Leeds", "Sunderland"],
+          ["Norwich", "Watford"],
+          ["Burnley", "Middlesbrough"]
+        ],
+        "esp-ll": [
+          ["Real Madrid", "Barcelona"],
+          ["Atlético de Madrid", "Sevilla"],
+          ["Valencia", "Villarreal"]
+        ],
+        "ita-sa": [
+          ["Inter", "Milan"],
+          ["Juventus", "Napoli"],
+          ["Roma", "Lazio"]
+        ],
+        "ger-bl": [
+          ["Bayern", "Dortmund"],
+          ["Leverkusen", "RB Leipzig"],
+          ["Stuttgart", "Frankfurt"]
+        ],
+        "fra-l1": [
+          ["PSG", "Marseille"],
+          ["Lyon", "Monaco"],
+          ["Lille", "Nice"]
+        ],
+        "por-lp": [
+          ["Benfica", "Porto"],
+          ["Sporting", "Braga"],
+          ["Vitória SC", "Boavista"]
+        ]
       };
 
-      localStorage.setItem(LS.DB, JSON.stringify(db));
-      return db;
+      const teams = map[leagueId] || [["Time A", "Time B"], ["Time C", "Time D"]];
+      const out = [];
+
+      teams.forEach((pair, i) => {
+        const d = new Date();
+        d.setHours(15 + (i % 4) * 2, i % 2 ? 30 : 0, 0, 0);
+        d.setDate(d.getDate() + Math.floor(i / 2));
+        out.push(createLocalMatch(
+          leagueId,
+          pair[0],
+          pair[1],
+          fmtWhenFromISO(d.toISOString()),
+          randomChoice(["Arena Central", "Estádio Nacional", "Arena Verde", "Campo Prime"]),
+          d.toISOString()
+        ));
+      });
+
+      return out;
     }
 
-    function loadDB(){
-      try{
-        const raw = localStorage.getItem(LS.DB);
-        if(raw){
-          const parsed = JSON.parse(raw);
+    function ensureLeagueMatchesLoaded(leagueId){
+      const has = state.db.matches.some((m) => m.leagueId === leagueId);
+      if(has) return;
 
-          if(!parsed.countries || !Array.isArray(parsed.countries)){
-            return seedDB();
-          }
-
-          if(!Array.isArray(parsed.matches)) parsed.matches = [];
-          if(!Array.isArray(parsed.bets)) parsed.bets = [];
-          if(!Array.isArray(parsed.leagues)) parsed.leagues = [];
-
-          return parsed;
-        }
-      }catch{}
-
-      return seedDB();
+      const newOnes = seedLeagueMatches(leagueId);
+      state.db.matches.push(...newOnes);
+      saveDB(state.db);
     }
 
-    function saveDB(db){
-      localStorage.setItem(LS.DB, JSON.stringify(db));
+    function toast(msg){
+      const el = $("#toast");
+      if(!el) return;
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(state.toastTimer);
+      state.toastTimer = setTimeout(() => {
+        el.style.display = "none";
+      }, 2400);
     }
 
-    function getAuth(){
-      try{
-        const raw = localStorage.getItem(LS.AUTH);
-        return raw ? JSON.parse(raw) : { email:null };
-      }catch{
-        return { email:null };
-      }
+    function teamInitials(name){
+      return String(name || "")
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((p) => p[0]?.toUpperCase() || "")
+        .join("");
     }
 
-    function setAuthEmail(email){
-      localStorage.setItem(LS.AUTH, JSON.stringify({ email: email || null }));
+    function resolveTeamAlias(name){
+      const base = String(name || "").trim();
+      if(!base) return [];
+      const direct = TEAM_NAME_ALIASES[base] || [];
+      const reverse = Object.entries(TEAM_NAME_ALIASES)
+        .filter(([, vals]) => vals.includes(base))
+        .flatMap(([k, vals]) => [k, ...vals]);
+      return Array.from(new Set([base, ...direct, ...reverse]));
     }
 
-    function loadUI(){
-      try{
-        const raw = localStorage.getItem(LS.UI);
-        if(raw) return JSON.parse(raw);
-      }catch{}
-
-      return {
-        nav:"home",
-        countryId:"br",
-        leagueId:"br-seriea",
-        builderOn:false,
-        betslipMini:false,
-        activeGameTab:"Principais",
-        search:"",
-        homeTab:"highlights",
-        leftMode:"football"
-      };
-    }
-
-    function saveUI(ui){
-      localStorage.setItem(LS.UI, JSON.stringify(ui));
-    }
-
-    const state = {
-      db: loadDB(),
-      ui: loadUI(),
-      slip: {
-        selections: [],
-        stake: 50
-      },
-      game: {
-        open:false,
-        matchId:null
-      },
-      session: {
-        profile:null
-      }
-    };
-
-    let authMode = "login";
-    let pendingRegisterPayload = null;
-
-    function getCurrentUser(){
-      return state.session?.profile || null;
-    }
-
-    function ensureDefaults(){
-      const br = state.db.countries.find((c) => c.id === "br");
-      if(!state.ui.countryId) state.ui.countryId = br?.id || state.db.countries[0]?.id || null;
-      if(!state.ui.leagueId) state.ui.leagueId = "br-seriea";
-
-      ensureLeagueMatchesLoaded(state.ui.leagueId);
-      saveUI(state.ui);
-    }
-
-    function findLeague(leagueId){
-      for(const c of state.db.countries){
-        const l = c.leagues.find((x) => x.id === leagueId);
-        if(l) return l;
+    function getTeamAsset(name){
+      const aliases = resolveTeamAlias(name);
+      for(const a of aliases){
+        if(state.assets[a]?.badge) return state.assets[a];
       }
       return null;
     }
 
-    function findCountryByLeague(leagueId){
-      return state.db.countries.find((c) => c.leagues.some((l) => l.id === leagueId)) || null;
-    }
-
-    function ensureLeagueMatchesLoaded(leagueId){
-      if(!leagueId) return;
-
-      const alreadyLoaded = state.db.matches.some((m) => m.leagueId === leagueId);
-      if(alreadyLoaded) return;
-
-      const fixtures = buildFixtureMatchesForLeague(leagueId);
-      if(!fixtures.length) return;
-
-      state.db.matches.push(...fixtures);
-      saveDB(state.db);
-    }
-
-    function getFeaturedLeagues(){
-      const all = [];
-      for(const c of state.db.countries){
-        for(const l of c.leagues){
-          if(l.featured) all.push({ ...l, countryId:c.id, countryName:c.name, flag:c.flag, region:c.region });
-        }
+    function teamCrestHTML(teamName, asset, sizeClass = ""){
+      if(asset?.badge){
+        return `<div class="teamCrest ${sizeClass}"><img src="${esc(asset.badge)}" alt="${esc(teamName)}" loading="lazy" /></div>`;
       }
+      return `<div class="teamCrest ${sizeClass}"><div class="teamCrestFallback">${esc(teamInitials(teamName))}</div></div>`;
+    }
 
-      return all.sort((a, b) => {
-        if(a.id === "br-seriea") return -1;
-        if(b.id === "br-seriea") return 1;
-        return 0;
+    async function fetchSportsDBLeagueTeams(leagueId){
+      const dbId = THE_SPORTSDB_LEAGUES[leagueId];
+      if(!dbId) return [];
+
+      try{
+        const res = await fetch(`${SPORTSDB_BASE}/search_all_teams.php?l=${encodeURIComponent(findLeague(leagueId)?.name || "")}`);
+        const data = await res.json().catch(() => ({}));
+        if(Array.isArray(data?.teams) && data.teams.length) return data.teams;
+      }catch{}
+
+      try{
+        const res = await fetch(`${SPORTSDB_BASE}/lookup_all_teams.php?id=${dbId}`);
+        const data = await res.json().catch(() => ({}));
+        if(Array.isArray(data?.teams)) return data.teams;
+      }catch{}
+
+      return [];
+    }
+
+    async function warmLeagueAssets(leagueId){
+      const teams = await fetchSportsDBLeagueTeams(leagueId);
+      if(!teams.length) return;
+
+      let changed = false;
+
+      teams.forEach((t) => {
+        const badge = t?.strTeamBadge || t?.strBadge || "";
+        const name = t?.strTeam || "";
+        if(!name || !badge) return;
+
+        const aliases = resolveTeamAlias(name);
+        aliases.forEach((alias) => {
+          if(!state.assets[alias]?.badge){
+            state.assets[alias] = { badge };
+            changed = true;
+          }
+        });
       });
-    }
 
-    function getCompetitionRegions(){
-      return {
-        americas: state.db.countries.filter((c) => c.region === "americas"),
-        europe: state.db.countries.filter((c) => c.region === "europe")
-      };
-    }
-
-    function fmtWhenFromISO(iso){
-      try{
-        const d = new Date(iso);
-        const dia = d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
-        const hora = d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
-        return `${dia} ${hora}`;
-      }catch{
-        return "Em breve";
-      }
-    }
-
-    function formatDateHeader(iso){
-      const d = new Date(iso);
-      const week = d.toLocaleDateString("pt-BR", { weekday:"short" }).replace(".", "");
-      const day = d.toLocaleDateString("pt-BR", { day:"2-digit", month:"short" });
-      return `${week.charAt(0).toUpperCase() + week.slice(1)} ${day}`;
-    }
-
-    function formatHourOnly(iso){
-      try{
-        return new Date(iso).toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
-      }catch{
-        return "--:--";
-      }
-    }
-
-    function dateKeyFromISO(iso){
-      try{
-        const d = new Date(iso);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${y}-${m}-${day}`;
-      }catch{
-        return "sem-data";
-      }
+      if(changed) persistAssets();
     }
 
     async function fetchOddsBySportKey(sportKey){
-      const url =
-        `${ODDS_ENDPOINT}?sportKey=${encodeURIComponent(sportKey)}&markets=${encodeURIComponent(REAL_CFG.markets)}&regions=${encodeURIComponent(REAL_CFG.regions)}&oddsFormat=${encodeURIComponent(REAL_CFG.oddsFormat)}`;
-
-      const res = await fetch(url, { cache:"no-store" });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      return Array.isArray(data) ? data : [];
+      try{
+        const res = await fetch(`${ODDS_ENDPOINT}?sport=${encodeURIComponent(sportKey)}`);
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok) return [];
+        return Array.isArray(data?.events) ? data.events : [];
+      }catch{
+        return [];
+      }
     }
 
     function pickH2HOdds(ev){
@@ -3092,7 +2916,7 @@
         renderMobileLeagueRail();
         await renderMatches();
         await renderFeatured();
-        if(state.game.open) await renderGameScreen();
+        if(state.session.game.open) await renderGameScreen();
         return;
       }
 
@@ -3116,98 +2940,61 @@
 
         realCache[leagueId] = { ts: now, count: realMatches.length };
 
-        toast(`Liga atualizada: ${realMatches.length} jogos reais ✅`);
+        await warmLeagueAssets(leagueId);
 
         renderFeaturedLeagueList();
         renderMobileLeagueRail();
+        renderCompetitions();
         await renderMatches();
         await renderFeatured();
 
-        if(state.game.open) await renderGameScreen();
-      }catch(e){
-        console.log("Erro odds reais:", e);
-        toast("Falha ao puxar odds reais.");
+        if(state.session.game.open){
+          const exists = state.db.matches.some((m) => m.id === state.session.game.matchId);
+          if(!exists && realMatches[0]) state.session.game.matchId = realMatches[0].id;
+          await renderGameScreen();
+        }
+
+        toast(realMatches.length ? "Jogos reais atualizados ✅" : "Sem jogos reais agora.");
+      }catch{
+        ensureLeagueMatchesLoaded(leagueId);
+        toast("Falha ao atualizar jogos reais.");
       }
     }
 
-    function renderTopbar(){
-      const u = getCurrentUser();
-      const pill = $("#topAccountPill");
-      const btnEnter = $("#btnEnter");
-      const btnRegister = $("#btnRegister");
-      const btnLogout = $("#btnLogout");
+    function getMatchesFiltered(){
+      const q = (state.ui.search || "").trim().toLowerCase();
 
-      if(!u){
-        pill.classList.add("hide");
-        btnLogout.classList.add("hide");
-        btnEnter.classList.remove("hide");
-        btnRegister.classList.remove("hide");
-      }else{
-        const name = (u.username && String(u.username).trim()) ? String(u.username).trim() : "Usuário";
-        const planTxt = (u.plan || "free").toUpperCase();
+      let items = state.db.matches.slice();
 
-        pill.innerHTML = `
-          <strong>${esc(name)}</strong>
-          <span style="opacity:.65">•</span>
-          <span>${fmtCP(u.cp)} CP</span>
-          <span style="opacity:.65">•</span>
-          <span>${esc(planTxt)}</span>
-        `;
+      if(q){
+        items = items.filter((m) => {
+          const league = findLeague(m.leagueId);
+          const country = findCountryByLeague(m.leagueId);
+          const hay = [
+            m.home,
+            m.away,
+            m.whenTxt,
+            league?.name,
+            country?.name
+          ].filter(Boolean).join(" ").toLowerCase();
 
-        pill.classList.remove("hide");
-        btnLogout.classList.remove("hide");
-        btnEnter.classList.add("hide");
-        btnRegister.classList.add("hide");
+          return hay.includes(q);
+        });
+      }else if(state.ui.leagueId){
+        items = items.filter((m) => m.leagueId === state.ui.leagueId);
       }
 
-      $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(u?.email));
+      return items.sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime());
     }
 
-    function setNav(nav){
-      state.ui.nav = nav;
-      saveUI(state.ui);
-      renderNav();
-      renderAllViews();
-    }
-
-    function renderNav(){
-      $$(".navBtn").forEach((b) => b.classList.toggle("active", b.dataset.nav === state.ui.nav));
-    }
-
-    function renderLeftMode(){
-      $("#btnNavFootball").classList.toggle("active", state.ui.leftMode !== "competitions");
-      $("#btnNavCompetitions").classList.toggle("active", state.ui.leftMode === "competitions");
-      $("#competitionsSection").classList.toggle("hide", state.ui.leftMode !== "competitions");
-      $("#matchesSection").classList.toggle("hide", state.ui.leftMode === "competitions");
-    }
-
-    function lockBodyScroll(lock){
-      document.body.style.overflow = lock ? "hidden" : "";
-    }
-
-    function openPlans(){
-      $("#plansModal").classList.add("show");
-      lockBodyScroll(true);
-    }
-
-    function closePlans(){
-      $("#plansModal").classList.remove("show");
-      if(!$("#authModal").classList.contains("show")) lockBodyScroll(false);
-    }
-
-    function renderAllViews(){
-      $("#viewHome").classList.toggle("hide", state.ui.nav !== "home");
-      $("#viewHistory").classList.toggle("hide", state.ui.nav !== "history");
-      $("#viewLeagues").classList.toggle("hide", state.ui.nav !== "leagues");
-
-      if(state.ui.nav === "plans"){
-        openPlans();
-        state.ui.nav = "home";
-        saveUI(state.ui);
-        renderNav();
+    function groupMatchesByDate(matches){
+      const groups = new Map();
+      for(const m of matches){
+        const key = dateKeyFromISO(m.isoDate);
+        if(!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(m);
       }
-
-      renderLeftMode();
+      return Array.from(groups.entries()).map(([key, items]) => ({ key, items }));
     }
 
     function renderFeaturedLeagueList(){
@@ -3332,1127 +3119,461 @@
       renderRegion($("#regionEurope"), europe);
     }
 
-    function getMatchesFiltered(){
-      const q = (state.ui.search || "").trim().toLowerCase();
+    function marketTemplates(match){
+      const h = match.home;
+      const a = match.away;
 
-      let items = state.db.matches.slice();
+      const o = match.odds1x2 || { "1":"1.90", "X":"3.20", "2":"2.20" };
+      const over25 = formatOdd(rand(1.65, 2.20));
+      const under25 = formatOdd(rand(1.65, 2.20));
+      const bttsYes = formatOdd(rand(1.70, 2.15));
+      const bttsNo = formatOdd(rand(1.70, 2.20));
 
-      if(q){
-        items = items.filter((m) => {
-          const league = findLeague(m.leagueId);
-          const country = findCountryByLeague(m.leagueId);
-          const hay = [
-            m.home,
-            m.away,
-            m.whenTxt,
-            league?.name,
-            country?.name
-          ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
+      return {
+        principais: [
+          {
+            title:"Resultado Final",
+            open:true,
+            picks:[
+              { label:`${h}`, odd:o["1"], group:"1x2", key:"1" },
+              { label:"Empate", odd:o["X"], group:"1x2", key:"X" },
+              { label:`${a}`, odd:o["2"], group:"1x2", key:"2" }
+            ]
+          },
+          {
+            title:"Gols",
+            open:true,
+            picks:[
+              { label:"Mais de 2.5", odd:over25, group:"goals25", key:"over25" },
+              { label:"Menos de 2.5", odd:under25, group:"goals25", key:"under25" },
+              { label:"Ambos marcam • Sim", odd:bttsYes, group:"btts", key:"yes" },
+              { label:"Ambos marcam • Não", odd:bttsNo, group:"btts", key:"no" }
+            ]
+          }
+        ],
+        cartoes: [
+          {
+            title:"Cartões",
+            open:true,
+            picks:[
+              { label:"Mais de 3.5", odd:formatOdd(rand(1.55, 1.95)), group:"cards35", key:"over35" },
+              { label:"Mais de 4.5", odd:formatOdd(rand(1.85, 2.35)), group:"cards45", key:"over45" },
+              { label:`${h} mais cartões`, odd:formatOdd(rand(1.95, 2.70)), group:"mostcards", key:"home" },
+              { label:`${a} mais cartões`, odd:formatOdd(rand(1.95, 2.70)), group:"mostcards", key:"away" }
+            ]
+          }
+        ],
+        chutes: [
+          {
+            title:"Chutes no gol",
+            open:true,
+            picks:[
+              { label:`${h} mais chutes no gol`, odd:formatOdd(rand(1.70, 2.20)), group:"sot", key:"home" },
+              { label:`${a} mais chutes no gol`, odd:formatOdd(rand(1.70, 2.20)), group:"sot", key:"away" },
+              { label:"Mais de 8.5 no jogo", odd:formatOdd(rand(1.60, 2.10)), group:"sot85", key:"over85" }
+            ]
+          },
+          {
+            title:"Chutes totais",
+            open:false,
+            picks:[
+              { label:"Mais de 20.5", odd:formatOdd(rand(1.55, 1.95)), group:"shots205", key:"over205" },
+              { label:"Mais de 24.5", odd:formatOdd(rand(1.95, 2.60)), group:"shots245", key:"over245" },
+              { label:`${h} mais chutes`, odd:formatOdd(rand(1.65, 2.10)), group:"mostshots", key:"home" },
+              { label:`${a} mais chutes`, odd:formatOdd(rand(1.65, 2.10)), group:"mostshots", key:"away" }
+            ]
+          }
+        ],
+        especiais: [
+          {
+            title:"Especiais",
+            open:true,
+            picks:[
+              { label:`${h} vence sem sofrer gol`, odd:formatOdd(rand(2.40, 4.20)), group:"cleanwin", key:"home" },
+              { label:`${a} vence sem sofrer gol`, odd:formatOdd(rand(2.40, 4.20)), group:"cleanwin", key:"away" },
+              { label:"Gol nos dois tempos", odd:formatOdd(rand(1.80, 2.55)), group:"goalbothhalves", key:"yes" },
+              { label:"Empate no intervalo", odd:formatOdd(rand(1.90, 2.80)), group:"htdraw", key:"yes" }
+            ]
+          }
+        ]
+      };
+    }
 
-          return hay.includes(q);
-        });
-      }else if(state.ui.leagueId){
-        items = items.filter((m) => m.leagueId === state.ui.leagueId);
+    function isSameGameConflict(newPick, existing, builderOn){
+      if(newPick.matchId !== existing.matchId) return false;
+      if(builderOn) return false;
+      return true;
+    }
+
+    function isSameMarketConflict(newPick, existing){
+      return newPick.matchId === existing.matchId && newPick.group === existing.group;
+    }
+
+    function addPickToSlip(match, pick){
+      const builderOn = !!state.session.game.builder;
+
+      const newPick = {
+        id: uid(),
+        matchId: match.id,
+        leagueId: match.leagueId,
+        home: match.home,
+        away: match.away,
+        whenTxt: match.whenTxt,
+        label: pick.label,
+        odd: Number(pick.odd),
+        group: pick.group,
+        key: pick.key
+      };
+
+      state.session.slip = state.session.slip.filter((p) => {
+        if(isSameMarketConflict(newPick, p)) return false;
+        if(isSameGameConflict(newPick, p, builderOn)) return false;
+        return true;
+      });
+
+      state.session.slip.push(newPick);
+      if($("#betslip").classList.contains("hide")){
+        $("#betslip").classList.remove("hide");
+        state.ui.slipMini = false;
+        saveUI(state.ui);
+      }
+      renderBetslip();
+    }
+
+    function removeSlipPick(id){
+      state.session.slip = state.session.slip.filter((p) => p.id !== id);
+      renderBetslip();
+    }
+
+    function getSlipTotalOdds(){
+      if(!state.session.slip.length) return 1;
+      return state.session.slip.reduce((acc, p) => acc * Number(p.odd || 1), 1);
+    }
+
+    function getSlipStake(){
+      return Math.max(0, Number($("#stakeInput")?.value || 0));
+    }
+
+    function renderBetslip(){
+      const wrap = $("#betslip");
+      const body = $("#slipItems");
+      const count = state.session.slip.length;
+
+      $("#slipCount").textContent = String(count);
+
+      if(!count){
+        body.innerHTML = `<div class="smallText">Seu bilhete está vazio.</div>`;
+      }else{
+        body.innerHTML = state.session.slip.map((p) => `
+          <div class="slipItem">
+            <div class="slipTop">
+              <div>
+                <div class="slipPick">${esc(p.label)}</div>
+                <div class="slipMeta">${esc(p.home)} x ${esc(p.away)} • ${esc(p.whenTxt)}</div>
+              </div>
+              <div class="slipActions">
+                <div class="ticketOdd">${formatOdd(p.odd)}</div>
+                <button class="btn small danger" data-removeslip="${esc(p.id)}">✕</button>
+              </div>
+            </div>
+          </div>
+        `).join("");
       }
 
-      return items.sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime());
-    }
+      const totalOdds = getSlipTotalOdds();
+      const stake = getSlipStake();
+      const user = getCurrentUser();
+      const balance = Number(user?.cp || 0);
+      const est = stake > 0 ? totalOdds * stake : 0;
 
-    function groupMatchesByDate(matches){
-      const groups = new Map();
-      for(const m of matches){
-        const key = dateKeyFromISO(m.isoDate);
-        if(!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(m);
+      $("#modeLabel").textContent = count > 1 ? "Múltipla" : "Simples";
+      $("#modeHint").textContent = state.session.game.builder
+        ? "bet builder ON para o mesmo jogo"
+        : "1 seleção por jogo quando OFF";
+      $("#totalOdds").textContent = formatOdd(totalOdds);
+      $("#estReturn").textContent = `${fmtCP(est.toFixed(0))} CP`;
+      $("#slipBalance").textContent = `${fmtCP(balance)} CP`;
+
+      wrap.classList.toggle("mini", !!state.ui.slipMini);
+      $("#miniSlipTitle").textContent = count ? `Bilhete • ${count}` : "Bilhete";
+      $("#miniSlipSub").textContent = count ? `${count} seleção(ões)` : "Sem seleções";
+      $("#miniSlipOdds").textContent = formatOdd(totalOdds);
+
+      $$("[data-removeslip]").forEach((b) => {
+        b.onclick = () => removeSlipPick(b.dataset.removeslip);
+      });
+
+      if(!count && !state.ui.slipMini){
+        wrap.classList.add("hide");
+      }else{
+        wrap.classList.remove("hide");
       }
-      return Array.from(groups.entries()).map(([key, items]) => ({ key, items }));
     }
 
-    function isSelectedKey(key){
-      return state.slip.selections.some((s) => s.key === key);
+    function settleHistoryPick(id, status){
+      const item = state.db.picksHistory.find((h) => h.id === id);
+      if(!item) return;
+      item.status = status;
+      saveDB(state.db);
+      renderHistory();
+      renderAdminSettle();
     }
 
-    function oddButtonHTML(m, key, lab){
-      const odd = m.odds1x2[key];
-      const pickLabel = key === "1" ? `${m.home} vence` : key === "2" ? `${m.away} vence` : "Empate";
-      const pickKey = `1x2:${m.id}:${key}`;
-      const selected = isSelectedKey(pickKey) ? " selected" : "";
+    function renderHistory(){
+      const list = $("#historyList");
+      const auth = getAuth();
 
-      return `
-        <div
-          class="oddBtn${selected}"
-          data-pickkey="${esc(pickKey)}"
-          data-picklabel="${esc(pickLabel)}"
-          data-odd="${esc(odd)}"
-        >
-          <div class="lab">${esc(lab)}</div>
-          <div class="val">${esc(odd)}</div>
+      const mine = state.db.picksHistory
+        .filter((h) => auth.email && String(h.userEmail).toLowerCase() === String(auth.email).toLowerCase())
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      $("#historyCount").textContent = String(mine.length);
+
+      if(!mine.length){
+        list.innerHTML = `<div class="smallText">Nenhuma aposta encontrada.</div>`;
+        return;
+      }
+
+      list.innerHTML = mine.map((h) => `
+        <div class="itemRow">
+          <div>
+            <strong>${h.type === "single" ? "Simples" : "Múltipla"} • ${fmtCP(h.stake)} CP</strong>
+            <div class="smallText">Odds ${formatOdd(h.totalOdds)} • retorno ${fmtCP(h.returnEst.toFixed(0))} CP</div>
+            <div class="smallText">${new Date(h.createdAt).toLocaleString("pt-BR")}</div>
+          </div>
+          <span class="status ${h.status === "OPEN" ? "open" : h.status === "WON" ? "won" : "lost"}">${h.status === "OPEN" ? "ABERTA" : h.status === "WON" ? "GANHA" : "PERDIDA"}</span>
         </div>
-      `;
+      `).join("");
+    }
+
+    function renderMyLeagues(){
+      const list = $("#myLeaguesList");
+      const auth = getAuth();
+
+      const mine = state.db.userLeagues.filter((lg) => (lg.members || []).some((m) => String(m).toLowerCase() === String(auth.email || "").toLowerCase()));
+
+      $("#leagueCount").textContent = String(mine.length);
+
+      if(!mine.length){
+        list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
+        return;
+      }
+
+      list.innerHTML = mine.map((lg) => `
+        <div class="itemRow">
+          <div>
+            <strong>${esc(lg.name)}</strong>
+            <div class="smallText">Código: ${esc(lg.code)}</div>
+            <div class="smallText">Membros: ${(lg.members || []).length}</div>
+          </div>
+          <span class="badge">Liga</span>
+        </div>
+      `).join("");
+    }
+
+    function renderAdminSettle(){
+      const list = $("#adminSettleList");
+      const u = getCurrentUser();
+
+      $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(u?.email));
+
+      if(!isAdminEmail(u?.email)){
+        list.innerHTML = "";
+        return;
+      }
+
+      const openItems = state.db.picksHistory
+        .filter((h) => h.status === "OPEN")
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      if(!openItems.length){
+        list.innerHTML = `<div class="smallText">Nenhuma aposta aberta para liquidar.</div>`;
+        return;
+      }
+
+      list.innerHTML = openItems.map((h) => `
+        <div class="itemRow">
+          <div>
+            <strong>${esc(h.userEmail)}</strong>
+            <div class="smallText">${h.type === "single" ? "Simples" : "Múltipla"} • stake ${fmtCP(h.stake)} CP • odds ${formatOdd(h.totalOdds)}</div>
+          </div>
+          <div class="row">
+            <button class="btn small primary" data-settle="${h.id}" data-status="WON">Ganhar</button>
+            <button class="btn small danger" data-settle="${h.id}" data-status="LOST">Perder</button>
+          </div>
+        </div>
+      `).join("");
+
+      $$("[data-settle]").forEach((b) => {
+        b.onclick = () => {
+          settleHistoryPick(b.dataset.settle, b.dataset.status);
+          toast("Aposta liquidada.");
+        };
+      });
+    }
+
+    function renderFeatured(){
+      const list = $("#featuredList");
+      const featured = state.db.matches
+        .filter((m) => m.featured)
+        .sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime())
+        .slice(0, 6);
+
+      if(!featured.length){
+        list.innerHTML = `<div class="smallText">Sem destaques por enquanto.</div>`;
+        return;
+      }
+
+      list.innerHTML = featured.map((m) => `
+        <div class="itemRow" style="padding:10px">
+          <div>
+            <strong>${esc(m.home)} x ${esc(m.away)}</strong>
+            <div class="smallText">${esc(findLeague(m.leagueId)?.name || "")} • ${esc(m.whenTxt)}</div>
+          </div>
+          <button class="btn small" data-openmatch="${esc(m.id)}">Abrir</button>
+        </div>
+      `).join("");
+
+      $$("[data-openmatch]").forEach((b) => {
+        b.onclick = () => openGame(b.dataset.openmatch);
+      });
     }
 
     async function renderMatches(){
       const list = $("#matchesList");
-      list.innerHTML = "";
+      const currentLeague = findLeague(state.ui.leagueId);
+      $("#rightTitle").textContent = currentLeague?.name || "Jogos";
+      updateHeroBannerByLeague();
 
-      const ms = getMatchesFiltered();
-      const league = findLeague(state.ui.leagueId);
-
-      $("#rightTitle").textContent = state.ui.search ? "Resultados da busca" : (league ? league.name : "Jogos");
-
-      if(ms.length === 0){
-        list.innerHTML = `<div class="panelBody"><div class="smallText">Sem jogos para mostrar.</div></div>`;
+      const items = getMatchesFiltered();
+      if(!items.length){
+        list.innerHTML = `<div style="padding:14px" class="smallText">Nenhum jogo encontrado.</div>`;
         return;
       }
 
-      const groups = groupMatchesByDate(ms);
+      const groups = groupMatchesByDate(items);
 
-      for(const group of groups){
-        const groupWrap = document.createElement("div");
-        groupWrap.className = "dateGroup";
-
-        groupWrap.innerHTML = `
+      list.innerHTML = groups.map((g) => `
+        <div class="dateGroup">
           <div class="dateHeader">
-            <div>${esc(formatDateHeader(group.items[0].isoDate))}</div>
-            <div>Partidas</div>
-            <div class="cols">
-              <div>1</div>
-              <div>X</div>
-              <div>2</div>
-            </div>
+            <div>${esc(fmtDateLabelFromKey(g.key))}</div>
+            <div>Partida</div>
+            <div class="cols"><div>1</div><div>X</div><div>2</div></div>
             <div></div>
           </div>
-        `;
 
-        for(const m of group.items){
-          const [homeAsset, awayAsset] = await Promise.all([
-            fetchTeamAssets(m.home),
-            fetchTeamAssets(m.away)
-          ]);
+          ${g.items.map((m) => {
+            const homeAsset = getTeamAsset(m.home);
+            const awayAsset = getTeamAsset(m.away);
+            const selected = {};
+            state.session.slip
+              .filter((p) => p.matchId === m.id && p.group === "1x2")
+              .forEach((p) => { selected[p.key] = true; });
 
-          const l = findLeague(m.leagueId);
-          const country = findCountryByLeague(m.leagueId);
+            return `
+              <div class="matchRow">
+                <div class="matchTimeCol">
+                  <div class="matchTime">${esc((m.whenTxt.split("•")[1] || m.whenTxt).trim())}</div>
+                  <div class="matchLeagueMini">${esc(findLeague(m.leagueId)?.name || "")}</div>
+                </div>
 
-          const row = document.createElement("div");
-          row.className = "matchRow";
-          row.innerHTML = `
-            <div class="matchTimeCol">
-              <div class="matchTime">${esc(formatHourOnly(m.isoDate))}</div>
-              <div class="matchLeagueMini">${esc(country?.flag || "")} ${esc(l?.name || "")}</div>
-            </div>
+                <div class="matchTeamsCol">
+                  <div class="teamLine">
+                    ${teamCrestHTML(m.home, homeAsset)}
+                    <div class="teamName">${esc(m.home)}</div>
+                    <div class="teamTag">CASA</div>
+                  </div>
+                  <div class="teamLine">
+                    ${teamCrestHTML(m.away, awayAsset)}
+                    <div class="teamName">${esc(m.away)}</div>
+                    <div class="teamTag">FORA</div>
+                  </div>
+                </div>
 
-            <div class="matchTeamsCol">
-              <div class="teamLine">
-                <div class="teamName">${esc(m.home)}</div>
-                <div class="teamTag">Casa</div>
+                <div class="oddsCol">
+                  <button class="oddBtn ${selected["1"] ? "selected" : ""}" data-pickquick="${esc(m.id)}" data-k="1">
+                    <div class="lab">1</div>
+                    <div class="val">${formatOdd(m.odds1x2?.["1"])}</div>
+                  </button>
+                  <button class="oddBtn ${selected["X"] ? "selected" : ""}" data-pickquick="${esc(m.id)}" data-k="X">
+                    <div class="lab">X</div>
+                    <div class="val">${formatOdd(m.odds1x2?.["X"])}</div>
+                  </button>
+                  <button class="oddBtn ${selected["2"] ? "selected" : ""}" data-pickquick="${esc(m.id)}" data-k="2">
+                    <div class="lab">2</div>
+                    <div class="val">${formatOdd(m.odds1x2?.["2"])}</div>
+                  </button>
+                </div>
+
+                <div class="matchOpenCol">
+                  <button class="btn small" data-openmatch="${esc(m.id)}">Abrir</button>
+                </div>
               </div>
-
-              <div class="teamLine">
-                <div class="teamName">${esc(m.away)}</div>
-                <div class="teamTag">Fora</div>
-              </div>
-            </div>
-
-            <div class="oddsCol">
-              ${oddButtonHTML(m, "1", "1")}
-              ${oddButtonHTML(m, "X", "X")}
-              ${oddButtonHTML(m, "2", "2")}
-            </div>
-
-            <div class="matchOpenCol">
-              <button class="btn small" data-open="${m.id}">Abrir</button>
-            </div>
-          `;
-
-          row.querySelector(`[data-open="${m.id}"]`).onclick = () => openGame(m.id);
-
-          row.querySelectorAll(".oddBtn").forEach((btn) => {
-            btn.onclick = () => {
-              const pickKey = btn.dataset.pickkey;
-              const pickLabel = btn.dataset.picklabel;
-              const odd = btn.dataset.odd;
-              addSelectionFromQuick(m.id, "Principais", "Resultado (1X2)", pickLabel, odd, pickKey);
-            };
-          });
-
-          groupWrap.appendChild(row);
-        }
-
-        list.appendChild(groupWrap);
-      }
-    }
-
-    async function renderFeatured(){
-      const list = $("#featuredList");
-      list.innerHTML = "";
-
-      const featured = state.db.matches
-        .filter((m) => m.featured)
-        .sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate))
-        .slice(0, 5);
-
-      if(featured.length === 0){
-        list.innerHTML = `<div class="smallText">Sem destaques agora.</div>`;
-        return;
-      }
-
-      for(const m of featured){
-        const [homeAsset, awayAsset] = await Promise.all([
-          fetchTeamAssets(m.home),
-          fetchTeamAssets(m.away)
-        ]);
-
-        const league = findLeague(m.leagueId);
-        const country = findCountryByLeague(m.leagueId);
-
-        const el = document.createElement("div");
-        el.className = "itemRow";
-        el.innerHTML = `
-          <div style="display:flex;gap:10px;align-items:flex-start;min-width:0">
-            <div style="display:flex;gap:6px;align-items:center;flex:none">
-              ${teamCrestHTML(m.home, homeAsset)}
-              ${teamCrestHTML(m.away, awayAsset)}
-            </div>
-            <div>
-              <strong>${esc(m.home)} x ${esc(m.away)}</strong>
-              <div class="smallText">${esc(country?.flag || "")} ${esc(league?.name || "")} • ${esc(formatHourOnly(m.isoDate))}</div>
-            </div>
-          </div>
-          <button class="btn small" data-open="${m.id}">Abrir</button>
-        `;
-
-        el.querySelector(`[data-open="${m.id}"]`).onclick = () => openGame(m.id);
-        list.appendChild(el);
-      }
-    }
-
-    function openGame(matchId){
-      state.game.open = true;
-      state.game.matchId = matchId;
-      lockBodyScroll(true);
-      renderGameScreen();
-      $("#gameScreen").classList.add("show");
-    }
-
-    function closeGame(){
-      state.game.open = false;
-      state.game.matchId = null;
-      $("#gameScreen").classList.remove("show");
-      lockBodyScroll(false);
-    }
-
-    async function renderGameHero(m, league, country){
-      const [homeAsset, awayAsset] = await Promise.all([
-        fetchTeamAssets(m.home),
-        fetchTeamAssets(m.away)
-      ]);
-
-      $("#gameHero").innerHTML = `
-        <div class="gameHeroInner">
-          <div class="heroTeam">
-            <div class="heroTeamMeta">
-              <div class="heroTeamSub">Mandante</div>
-              <div class="heroTeamName">${esc(m.home)}</div>
-            </div>
-          </div>
-
-          <div class="heroCenter">
-            <div class="heroLeague">${esc(country?.flag || "")} ${esc(league?.name || "")}</div>
-            <div class="heroVs">VS</div>
-            <div class="heroTime">${esc(formatDateHeader(m.isoDate))} • ${esc(formatHourOnly(m.isoDate))}</div>
-            <div class="heroVenue">${esc(m.stadium || "Estádio indefinido")}</div>
-          </div>
-
-          <div class="heroTeam right">
-            <div class="heroTeamMeta" style="text-align:right">
-              <div class="heroTeamSub">Visitante</div>
-              <div class="heroTeamName">${esc(m.away)}</div>
-            </div>
-          </div>
+            `;
+          }).join("")}
         </div>
-      `;
-    }
+      `).join("");
 
-    function renderGameQuickOdds(m){
-      const wrap = $("#gameQuickOdds");
-      wrap.innerHTML = `
-        ${oddButtonHTML(m, "1", m.home)}
-        ${oddButtonHTML(m, "X", "Empate")}
-        ${oddButtonHTML(m, "2", m.away)}
-      `;
-
-      wrap.querySelectorAll(".oddBtn").forEach((btn) => {
-        btn.onclick = () => {
-          const pickKey = btn.dataset.pickkey;
-          const pickLabel = btn.dataset.picklabel;
-          const odd = btn.dataset.odd;
-          addSelectionFromQuick(m.id, "Principais", "Resultado (1X2)", pickLabel, odd, pickKey);
+      $$("[data-pickquick]").forEach((b) => {
+        b.onclick = () => {
+          const m = state.db.matches.find((x) => x.id === b.dataset.pickquick);
+          if(!m) return;
+          const k = b.dataset.k;
+          const label = k === "1" ? m.home : k === "2" ? m.away : "Empate";
+          addPickToSlip(m, { label, odd:m.odds1x2[k], group:"1x2", key:k });
         };
+      });
+
+      $$("[data-openmatch]").forEach((b) => {
+        b.onclick = () => openGame(b.dataset.openmatch);
       });
     }
 
-    async function renderGameScreen(){
-      if(!state.game.open || !state.game.matchId){
-        $("#gameScreen").classList.remove("show");
-        return;
-      }
-
-      const m = state.db.matches.find((x) => x.id === state.game.matchId);
-      if(!m){
-        closeGame();
-        return;
-      }
-
-      const league = findLeague(m.leagueId);
-      const country = findCountryByLeague(m.leagueId);
-
-      $("#gameTitle").textContent = `${m.home} x ${m.away}`;
-      $("#gameSub").textContent = `${country?.flag || ""} ${league?.name || ""} • ${formatDateHeader(m.isoDate)} • ${formatHourOnly(m.isoDate)} • ${m.stadium}`;
-
-      await renderGameHero(m, league, country);
-      renderGameQuickOdds(m);
-
-      const sw = $("#builderSwitchGame");
-      sw.classList.toggle("on", !!state.ui.builderOn);
-
-      $("#builderBadge").textContent = state.ui.builderOn ? "ON" : "OFF";
-      $("#builderBadge").style.borderColor = state.ui.builderOn ? "rgba(22,201,95,.32)" : "rgba(255,255,255,.12)";
-      $("#builderBadge").style.background = state.ui.builderOn ? "rgba(22,201,95,.12)" : "rgba(255,255,255,.05)";
-
-      const tabsWrap = $("#gameTabs");
-      tabsWrap.innerHTML = "";
-
-      TABS.forEach((t) => {
-        const el = document.createElement("div");
-        el.className = "tab" + (t === state.ui.activeGameTab ? " active" : "");
-        el.textContent = t;
-        el.onclick = () => {
-          state.ui.activeGameTab = t;
-          saveUI(state.ui);
-          renderGameScreen();
-        };
-        tabsWrap.appendChild(el);
-      });
-
-      const area = $("#marketsArea");
-      area.innerHTML = "";
-
-      const markets = (m.markets || []).filter((x) => x.tab === state.ui.activeGameTab);
-
-      if(markets.length === 0){
-        area.innerHTML = `<div class="smallText">Sem mercados nessa aba.</div>`;
-        return;
-      }
-
-      for(const mk of markets){
-        const card = document.createElement("div");
-        card.className = "marketCard open";
-        card.innerHTML = `
-          <div class="marketHead">
-            <div class="title">${esc(mk.title)}</div>
-            <div class="badge">Recolher</div>
-          </div>
-          <div class="marketBody">
-            <div class="marketGrid"></div>
-          </div>
-        `;
-
-        const head = card.querySelector(".marketHead");
-        head.onclick = () => {
-          card.classList.toggle("open");
-          card.querySelector(".badge").textContent = card.classList.contains("open") ? "Recolher" : "Abrir";
-        };
-
-        const grid = card.querySelector(".marketGrid");
-
-        mk.picks.forEach((p) => {
-          const isInfo = p.meta?.info;
-          const key = `pick:${m.id}:${mk.id}:${p.id}`;
-          const selected = isSelectedKey(key);
-
-          const btn = document.createElement("div");
-          btn.className = "pickBtn" + (selected ? " selected" : "");
-          btn.innerHTML = `<div class="lab">${esc(p.label)}</div><div class="val">${esc(p.odd)}</div>`;
-          btn.onclick = () => {
-            if(isInfo){
-              toast("Escalação disponível em breve.");
-              return;
-            }
-            addSelection(m, mk, p, key);
-          };
-
-          grid.appendChild(btn);
-        });
-
-        area.appendChild(card);
-      }
+    function setNav(nav){
+      state.ui.nav = nav;
+      saveUI(state.ui);
+      renderNav();
+      renderAllViews();
     }
 
-    function addSelectionFromQuick(matchId, tab, marketTitle, pickLabel, odd, pickKey){
-      const m = state.db.matches.find((x) => x.id === matchId);
-      if(!m) return;
-      addSelection(m, { title: marketTitle, tab }, { label: pickLabel, odd }, pickKey);
+    function renderNav(){
+      $$(".navBtn").forEach((b) => b.classList.toggle("active", b.dataset.nav === state.ui.nav));
     }
 
-    function addSelection(match, market, pick, key){
-      const previousCount = state.slip.selections.length;
-
-      if(isSelectedKey(key)){
-        state.slip.selections = state.slip.selections.filter((s) => s.key !== key);
-        renderBetslip();
-        renderAll();
-        return;
-      }
-
-      const isSameMatch = (s) => s.matchId === match.id;
-
-      if(!state.ui.builderOn){
-        state.slip.selections = state.slip.selections.filter((s) => !isSameMatch(s));
-      }else{
-        state.slip.selections = state.slip.selections.filter((s) => {
-          const sameMatch = s.matchId === match.id;
-          const sameMarket = s.marketTitle === market.title && s.tab === market.tab;
-          return !(sameMatch && sameMarket);
-        });
-      }
-
-      const groupKey = `m:${match.id}`;
-
-      state.slip.selections.push({
-        matchId: match.id,
-        leagueId: match.leagueId,
-        matchTitle: `${match.home} x ${match.away}`,
-        tab: market.tab,
-        marketTitle: market.title,
-        pickLabel: pick.label,
-        odd: String(pick.odd),
-        key,
-        groupKey
-      });
-
-      if(previousCount === 0 && state.ui.betslipMini){
-        state.ui.betslipMini = false;
-        saveUI(state.ui);
-      }
-
-      renderBetslip();
-      renderAll();
-      toast(state.ui.builderOn ? "Bet Builder (mesmo jogo)" : "Adicionado ao bilhete");
+    function renderLeftMode(){
+      $("#btnNavFootball").classList.toggle("active", state.ui.leftMode !== "competitions");
+      $("#btnNavCompetitions").classList.toggle("active", state.ui.leftMode === "competitions");
+      $("#competitionsSection").classList.toggle("hide", state.ui.leftMode !== "competitions");
+      $("#matchesSection").classList.toggle("hide", state.ui.leftMode === "competitions");
     }
 
-    function calcTotalOdds(){
-      if(state.slip.selections.length === 0) return 1;
-      let t = 1;
-      for(const s of state.slip.selections){
-        const o = Number(s.odd);
-        if(Number.isFinite(o)) t *= o;
-      }
-      return t;
+    function lockBodyScroll(lock){
+      document.body.style.overflow = lock ? "hidden" : "";
     }
 
-    function groupSlip(){
-      const map = new Map();
-
-      for(const s of state.slip.selections){
-        if(!map.has(s.groupKey)) map.set(s.groupKey, []);
-        map.get(s.groupKey).push(s);
-      }
-
-      const out = [];
-
-      for(const [gk, items] of map.entries()){
-        const m = state.db.matches.find((x) => x.id === items[0].matchId);
-        const league = findLeague(items[0].leagueId);
-        const country = findCountryByLeague(items[0].leagueId);
-
-        out.push({
-          groupKey: gk,
-          title: `${m?.home || ""} x ${m?.away || ""}`,
-          subtitle: `${country?.flag || ""} ${league?.name || ""} • ${m ? formatDateHeader(m.isoDate) + " • " + formatHourOnly(m.isoDate) : ""}`,
-          items
-        });
-      }
-
-      return out;
-    }
-
-    function renderBetslip(){
-      const slipEl = $("#betslip");
-      const u = getCurrentUser();
-
-      slipEl.classList.toggle("hide", state.slip.selections.length === 0);
-      slipEl.classList.toggle("mini", !!state.ui.betslipMini);
-
-      $("#btnMini").textContent = state.ui.betslipMini ? "Expandir" : "Diminuir";
-      $("#slipCount").textContent = String(state.slip.selections.length);
-
-      $("#modeLabel").textContent = state.slip.selections.length > 1 ? "Múltipla" : "Simples";
-      $("#modeHint").textContent = state.ui.builderOn
-        ? "Bet Builder ON (mesmo jogo) + múltipla entre jogos"
-        : "Bet Builder OFF (1 seleção por jogo) + múltipla entre jogos";
-
-      const itemsWrap = $("#slipItems");
-      itemsWrap.innerHTML = "";
-
-      const groups = groupSlip();
-
-      for(const g of groups){
-        const groupBox = document.createElement("div");
-        groupBox.className = "slipItem";
-        groupBox.innerHTML = `
-          <div class="slipTop">
-            <div>
-              <div class="slipPick">${esc(g.title)}</div>
-              <div class="slipMeta">${esc(g.subtitle)}</div>
-            </div>
-            <button class="btn small danger" data-delgroup="${esc(g.groupKey)}">Remover</button>
-          </div>
-          <div class="stack" style="gap:8px" data-group="${esc(g.groupKey)}"></div>
-        `;
-
-        const inner = groupBox.querySelector(`[data-group="${g.groupKey}"]`);
-
-        g.items.forEach((it) => {
-          const row = document.createElement("div");
-          row.className = "ticketSel";
-          row.innerHTML = `
-            <div>
-              <strong>${esc(it.pickLabel)}</strong>
-              <div class="smallText">${esc(it.marketTitle)} • ${esc(it.tab)}</div>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-              <span class="ticketOdd">${esc(it.odd)}</span>
-              <button class="btn small danger" data-del="${esc(it.key)}">X</button>
-            </div>
-          `;
-          inner.appendChild(row);
-        });
-
-        groupBox.querySelector(`[data-delgroup="${g.groupKey}"]`).onclick = (e) => {
-          e.stopPropagation();
-          state.slip.selections = state.slip.selections.filter((s) => s.groupKey !== g.groupKey);
-          renderBetslip();
-          renderAll();
-        };
-
-        groupBox.querySelectorAll("[data-del]").forEach((btn) => {
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            const k = btn.dataset.del;
-            state.slip.selections = state.slip.selections.filter((s) => s.key !== k);
-            renderBetslip();
-            renderAll();
-          };
-        });
-
-        itemsWrap.appendChild(groupBox);
-      }
-
-      $("#stakeInput").value = String(state.slip.stake || 50);
-
-      const totalOdds = calcTotalOdds();
-      $("#totalOdds").textContent = totalOdds.toFixed(2);
-
-      const stake = Number(state.slip.stake || 0);
-      const est = Math.floor(stake * totalOdds);
-      $("#estReturn").textContent = `${fmtCP(est)} CP`;
-      $("#slipBalance").textContent = `${fmtCP(u?.cp || 0)} CP`;
-
-      $("#miniSlipTitle").textContent = state.slip.selections.length > 1 ? `Bilhete (${state.slip.selections.length})` : "Bilhete";
-      $("#miniSlipSub").textContent =
-        state.slip.selections.length === 0
-          ? "Sem seleções"
-          : state.slip.selections.length === 1
-            ? "1 seleção"
-            : `${state.slip.selections.length} seleções`;
-
-      $("#miniSlipOdds").textContent = totalOdds.toFixed(2);
-
-      $("#btnPlaceBet").disabled = !u;
-      $("#btnPlaceBet").style.opacity = u ? "1" : ".5";
-    }
-
-    async function persistProfilePatch(email, patch){
-      try{
-        await fetch("/.netlify/functions/profile-upsert", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ email, ...patch })
-        });
-      }catch{}
-    }
-
-    function placeBet(){
-      const u = getCurrentUser();
-
-      if(!u){
-        toast("Entre para apostar.");
-        return;
-      }
-
-      if(state.slip.selections.length === 0){
-        toast("Bilhete vazio.");
-        return;
-      }
-
-      const stake = Math.floor(Number(state.slip.stake || 0));
-      if(!Number.isFinite(stake) || stake <= 0){
-        toast("Stake inválida.");
-        return;
-      }
-
-      if(Number(u.cp || 0) < stake){
-        toast("CP insuficiente.");
-        return;
-      }
-
-      u.cp = Number(u.cp || 0) - stake;
-      persistProfilePatch(u.email, { cp: u.cp });
-
-      const totalOdds = calcTotalOdds();
-      const estReturn = Math.floor(stake * totalOdds);
-
-      state.db.bets.push({
-        id: uid(),
-        userEmail: u.email,
-        createdAt: nowIso(),
-        status: "ABERTA",
-        title: state.slip.selections.length > 1 ? `Múltipla (${state.slip.selections.length})` : "Simples",
-        stake,
-        totalOdds,
-        estimatedReturn: estReturn,
-        payout: 0,
-        selections: JSON.parse(JSON.stringify(state.slip.selections))
-      });
-
-      state.slip.selections = [];
-      saveDB(state.db);
-
-      toast("Aposta criada (ABERTA).");
-      renderTopbar();
-      renderBetslip();
-      renderHistory();
-      renderLeaguesView();
-      renderAll();
-    }
-
-        function settleBet(betId, result){
-      const admin = getCurrentUser();
-      if(!isAdminEmail(admin?.email)){
-        toast("Somente admin.");
-        return;
-      }
-
-      const bet = state.db.bets.find((b) => b.id === betId);
-      if(!bet || bet.status !== "ABERTA"){
-        toast("Não disponível.");
-        return;
-      }
-
-      if(result === "GANHA"){
-        bet.status = "GANHA";
-        bet.payout = Math.floor(bet.stake * bet.totalOdds);
-      }else{
-        bet.status = "PERDIDA";
-        bet.payout = 0;
-      }
-
-      saveDB(state.db);
-
-      if(result === "GANHA"){
-        fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(bet.userEmail)}`)
-          .then((r) => r.json())
-          .then((j) => {
-            const newCp = Number(j.cp || 0) + Number(bet.payout || 0);
-            persistProfilePatch(bet.userEmail, { cp:newCp });
-
-            if(state.session.profile && state.session.profile.email === bet.userEmail){
-              state.session.profile.cp = newCp;
-              renderTopbar();
-            }
-          })
-          .catch(() => {});
-      }
-
-      toast("Liquidação: " + bet.status);
-      renderTopbar();
-      renderHistory();
-      renderLeaguesView();
-    }
-
-    function renderHistory(){
-      const u = getCurrentUser();
-      const list = $("#historyList");
-      list.innerHTML = "";
-
-      if(!u){
-        list.innerHTML = `<div class="smallText">Entre para ver seu histórico.</div>`;
-        $("#historyCount").textContent = "0";
-        return;
-      }
-
-      const bets = state.db.bets
-        .filter((b) => b.userEmail === u.email)
-        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-      $("#historyCount").textContent = String(bets.length);
-
-      if(bets.length === 0){
-        list.innerHTML = `<div class="smallText">Sem apostas ainda.</div>`;
-        return;
-      }
-
-      for(const b of bets){
-        const st = b.status;
-        const stClass = st === "GANHA" ? "won" : st === "PERDIDA" ? "lost" : "open";
-        const picks = b.selections.map((s) => `${s.pickLabel} (${s.odd})`).join(" • ");
-        const ret =
-          b.status === "GANHA"
-            ? `${fmtCP(b.payout)} CP`
-            : (b.status === "PERDIDA" ? "0 CP" : `≈ ${fmtCP(b.estimatedReturn)} CP`);
-
-        const row = document.createElement("div");
-        row.className = "itemRow";
-        row.innerHTML = `
-          <div style="min-width:0">
-            <strong>${esc(b.title)}</strong>
-            <div class="smallText">${esc(new Date(b.createdAt).toLocaleString("pt-BR"))} • Stake: ${fmtCP(b.stake)} CP • Odds: ${b.totalOdds.toFixed(2)}</div>
-            <div class="smallText" style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(picks)}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-            <span class="status ${stClass}">${esc(st)}</span>
-            <span class="badge">${esc(ret)}</span>
-          </div>
-        `;
-        list.appendChild(row);
-      }
-    }
-
-    function makeCode(){
-      const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-      let c = "";
-      for(let i = 0; i < 6; i++){
-        c += alphabet[Math.floor(Math.random() * alphabet.length)];
-      }
-      return c;
-    }
-
-    function createLeague(){
-      const u = getCurrentUser();
-      if(!isAdminEmail(u?.email)){
-        toast("Somente admin.");
-        return;
-      }
-
-      const name = ($("#newLeagueName").value || "").trim();
-      if(name.length < 3){
-        toast("Nome muito curto.");
-        return;
-      }
-
-      const code = makeCode();
-      const L = {
-        id: uid(),
-        name,
-        code,
-        createdAt: nowIso(),
-        ownerEmail: u.email,
-        members:[u.email]
-      };
-
-      state.db.leagues.push(L);
-      saveDB(state.db);
-      $("#newLeagueName").value = "";
-      toast("Liga criada! Código: " + code);
-      renderLeaguesView();
-    }
-
-    function joinByCode(){
-      const u = getCurrentUser();
-      if(!u){
-        toast("Entre para entrar em ligas.");
-        return;
-      }
-
-      const code = prompt("Digite o código da liga:");
-      if(!code) return;
-
-      const L = state.db.leagues.find((x) => x.code.toLowerCase() === code.trim().toLowerCase());
-      if(!L){
-        toast("Código inválido.");
-        return;
-      }
-
-      if(!L.members.includes(u.email)) L.members.push(u.email);
-      saveDB(state.db);
-      toast("Entrou na liga!");
-      renderLeaguesView();
-    }
-
-    function renderAdminSettle(){
-      const u = getCurrentUser();
-      const wrap = $("#adminSettleList");
-      wrap.innerHTML = "";
-
-      if(!isAdminEmail(u?.email)){
-        wrap.innerHTML = `<div class="smallText">Somente admin pode liquidar apostas.</div>`;
-        return;
-      }
-
-      const openBets = state.db.bets
-        .filter((b) => b.status === "ABERTA")
-        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-      if(openBets.length === 0){
-        wrap.innerHTML = `<div class="smallText">Nenhuma aposta aberta para liquidar.</div>`;
-        return;
-      }
-
-      for(const b of openBets){
-        const row = document.createElement("div");
-        row.className = "itemRow";
-        row.innerHTML = `
-          <div style="min-width:0">
-            <strong>${esc(b.title)}</strong>
-            <div class="smallText">Usuário: ${esc(b.userEmail)} • Stake: ${fmtCP(b.stake)} CP • Odds: ${b.totalOdds.toFixed(2)}</div>
-            <div class="smallText" style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-              ${esc(b.selections.map((s) => s.pickLabel).join(" • "))}
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-            <button class="btn small primary" data-win="${esc(b.id)}">Marcar GANHA</button>
-            <button class="btn small danger" data-lose="${esc(b.id)}">Marcar PERDIDA</button>
-          </div>
-        `;
-
-        row.querySelector(`[data-win="${b.id}"]`).onclick = () => settleBet(b.id, "GANHA");
-        row.querySelector(`[data-lose="${b.id}"]`).onclick = () => settleBet(b.id, "PERDIDA");
-
-        wrap.appendChild(row);
-      }
-    }
-
-    function renderLeaguesView(){
-      const u = getCurrentUser();
-      const myList = $("#myLeaguesList");
-      myList.innerHTML = "";
-
-      if(!u){
-        myList.innerHTML = `<div class="smallText">Entre para ver/participar de ligas.</div>`;
-        $("#leagueCount").textContent = "0";
-        $("#adminSettleList").innerHTML = `<div class="smallText">Entre como admin para liquidar apostas.</div>`;
-        return;
-      }
-
-      const mine = state.db.leagues.filter((L) => (L.members || []).includes(u.email));
-      $("#leagueCount").textContent = String(mine.length);
-
-      if(mine.length === 0){
-        myList.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga. Use "Entrar por código".</div>`;
-      }else{
-        mine.forEach((L) => {
-          const row = document.createElement("div");
-          row.className = "itemRow";
-          row.innerHTML = `
-            <div>
-              <strong>${esc(L.name)}</strong>
-              <div class="smallText">Código: <strong>${esc(L.code)}</strong> • Membros: ${L.members.length}</div>
-            </div>
-            <button class="btn small danger" data-leave="${esc(L.id)}">Sair</button>
-          `;
-
-          row.querySelector(`[data-leave="${L.id}"]`).onclick = () => {
-            L.members = L.members.filter((em) => em !== u.email);
-            saveDB(state.db);
-            renderLeaguesView();
-            toast("Você saiu da liga.");
-          };
-
-          myList.appendChild(row);
-        });
-      }
-
-      renderAdminSettle();
-    }
-
-    function openAuth(mode){
-      authMode = mode;
-      $("#authModal").classList.add("show");
+    function openPlans(){
+      $("#plansModal").classList.add("show");
       lockBodyScroll(true);
-
-      const isLogin = mode === "login";
-      const isRegister = mode === "register";
-      const isVerify = mode === "verify";
-
-      $("#authTitle").textContent = isLogin ? "Entrar" : isRegister ? "Registrar" : "Confirmar e-mail";
-      $("#authHint").textContent = isLogin
-        ? "Entre com email e senha."
-        : isRegister
-          ? "Crie sua conta. Vamos enviar um código para confirmar seu e-mail."
-          : "Digite o código que enviamos por e-mail.";
-
-      $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
-
-      $("#loginBox").classList.toggle("hide", !isLogin);
-      $("#registerBox").classList.toggle("hide", !isRegister);
-      $("#verifyBox").classList.toggle("hide", !isVerify);
-
-      if(isRegister) pendingRegisterPayload = null;
     }
 
-    function closeAuth(){
-      $("#authModal").classList.remove("show");
-      lockBodyScroll(false);
-      if(!$("#plansModal").classList.contains("show")) lockBodyScroll(false);
+    function closePlans(){
+      $("#plansModal").classList.remove("show");
+      if(!$("#authModal").classList.contains("show")) lockBodyScroll(false);
     }
 
-    function pickGender(g){
-      $("#regGender").value = g;
-      $("#genderM").classList.toggle("active", g === "Masculino");
-      $("#genderF").classList.toggle("active", g === "Feminino");
-    }
+    function renderAllViews(){
+      $("#viewHome").classList.toggle("hide", state.ui.nav !== "home");
+      $("#viewHistory").classList.toggle("hide", state.ui.nav !== "history");
+      $("#viewLeagues").classList.toggle("hide", state.ui.nav !== "leagues");
 
-    function onlyDigits(v){
-      return String(v || "").replace(/\D/g, "");
-    }
-
-    function applyCPFMask(v){
-      const d = onlyDigits(v).slice(0, 11);
-      return d
-        .replace(/^(\d{3})(\d)/, "$1.$2")
-        .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
-        .replace(/\.(\d{3})(\d)/, ".$1-$2");
-    }
-
-    function applyPhoneMask(v){
-      const d = onlyDigits(v).slice(0, 11);
-      if(d.length <= 2) return d ? `(${d}` : "";
-      if(d.length <= 7) return `(${d.slice(0,2)}) ${d.slice(2)}`;
-      if(d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
-      return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
-    }
-
-    async function doLogin(){
-      const email = ($("#authEmail").value || "").trim().toLowerCase();
-      const pass = ($("#authPass").value || "").trim();
-
-      if(!email.includes("@") || pass.length < 4){
-        toast("Email/senha inválidos.");
-        return;
+      if(state.ui.nav === "plans"){
+        openPlans();
+        state.ui.nav = "home";
+        saveUI(state.ui);
+        renderNav();
       }
 
-      try{
-        const res = await fetch("/.netlify/functions/auth-login", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ email, pass })
-        });
-
-        const j = await res.json().catch(() => ({}));
-
-        if(!res.ok){
-          toast(j?.error || "Falha no login");
-          return;
-        }
-
-        state.session.profile = j.profile;
-        setAuthEmail(email);
-        toast("Entrou!");
-        closeAuth();
-        renderAll();
-      }catch{
-        toast("Erro ao conectar no login.");
-      }
-    }
-
-    async function sendRegisterCode(){
-      const email = ($("#regEmail").value || "").trim().toLowerCase();
-      const pass = ($("#regPass").value || "").trim();
-      const username = ($("#regUsername").value || "").trim();
-
-      if(!email.includes("@") || pass.length < 4){
-        toast("Email/senha inválidos.");
-        return;
-      }
-
-      if(username.length < 3){
-        toast("Nome de usuário muito curto.");
-        return;
-      }
-
-      const dddDigits = onlyDigits($("#regDDD").value || "+55");
-      const phoneMasked = applyPhoneMask($("#regPhone").value || "");
-
-      const payload = {
-        email,
-        pass,
-        username,
-        country: ($("#regCountry").value || "Brasil"),
-        phone: `+${dddDigits} ${phoneMasked}`.trim(),
-        gender: ($("#regGender").value || "Masculino"),
-        firstName: ($("#regFirstName").value || "").trim(),
-        lastName: ($("#regLastName").value || "").trim(),
-        birthDay: ($("#regBirthDay").value || "").trim(),
-        birthMonth: ($("#regBirthMonth").value || "").trim(),
-        birthYear: ($("#regBirthYear").value || "").trim(),
-        cpf: ($("#regCPF").value || "").trim(),
-        fullname: `${($("#regFirstName").value || "").trim()} ${($("#regLastName").value || "").trim()}`.trim()
-      };
-
-      pendingRegisterPayload = payload;
-
-      try{
-        const res = await fetch("/.netlify/functions/auth-register-start", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        const j = await res.json().catch(() => ({}));
-
-        if(!res.ok){
-          toast(j?.error || "Erro ao enviar código");
-          return;
-        }
-
-        $("#verifyEmailBadge").textContent = email;
-        toast("Código enviado ✅");
-        openAuth("verify");
-      }catch{
-        toast("Erro ao conectar no registro.");
-      }
-    }
-
-    async function verifyRegisterCode(){
-      if(!pendingRegisterPayload?.email){
-        toast("Volte e envie o código novamente.");
-        openAuth("register");
-        return;
-      }
-
-      const email = pendingRegisterPayload.email;
-      const code = ($("#regCode").value || "").trim();
-
-      if(code.length !== 6){
-        toast("Digite os 6 dígitos.");
-        return;
-      }
-
-      try{
-        const res = await fetch("/.netlify/functions/auth-register-verify", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ email, code })
-        });
-
-        const j = await res.json().catch(() => ({}));
-
-        if(!res.ok){
-          toast(j?.error || "Código inválido");
-          return;
-        }
-
-        toast("E-mail confirmado. Agora entre na sua conta.");
-        $("#authEmail").value = email;
-        $("#authPass").value = "";
-        openAuth("login");
-      }catch{
-        toast("Erro ao confirmar código.");
-      }
-    }
-
-    async function resendCode(){
-      if(!pendingRegisterPayload?.email){
-        toast("Volte e preencha o cadastro.");
-        openAuth("register");
-        return;
-      }
-
-      try{
-        const res = await fetch("/.netlify/functions/auth-register-start", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify(pendingRegisterPayload)
-        });
-
-        const j = await res.json().catch(() => ({}));
-
-        if(!res.ok){
-          toast(j?.error || "Erro ao reenviar");
-          return;
-        }
-
-        toast("Código reenviado ✅");
-      }catch{
-        toast("Erro ao reenviar código.");
-      }
-    }
-
-    async function startCheckout(plan){
-      const u = getCurrentUser();
-
-      if(!u){
-        toast("Entre para assinar um plano.");
-        openAuth("login");
-        return;
-      }
-
-      try{
-        const res = await fetch("/.netlify/functions/create-checkout", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ email: u.email, plan })
-        });
-
-        const data = await res.json().catch(() => ({}));
-
-        if(!res.ok){
-          toast(data?.error || "Erro no checkout");
-          return;
-        }
-
-        if(data?.url){
-          window.location.href = data.url;
-        }else{
-          toast("Checkout sem URL");
-        }
-      }catch{
-        toast("Erro ao iniciar checkout.");
-      }
-    }
-
-    async function registerSW(){
-      if(!("serviceWorker" in navigator)) return;
-      try{
-        await navigator.serviceWorker.register("./sw.js");
-      }catch{}
-    }
-
-    async function restoreSessionFromServer(){
-      const a = getAuth();
-      if(!a?.email) return;
-
-      try{
-        const r = await fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(a.email)}`);
-        const j = await r.json().catch(() => ({}));
-
-        if(r.ok && j){
-          state.session.profile = {
-            email: a.email,
-            username: j.username || "Usuário",
-            fullname: j.fullname || "",
-            plan: j.plan || "free",
-            cp: Number(j.cp || 0)
-          };
-        }else{
-          setAuthEmail(null);
-        }
-      }catch{
-        setAuthEmail(null);
-      }
+      renderLeftMode();
     }
 
     function updateHeroBannerByLeague(){
@@ -4488,39 +3609,648 @@
         },
         "ita-sa": {
           kicker: "🔥 CravaAí • Serie A",
-          title: "Clássicos da Itália com odds compactas e navegação rápida",
-          text: "Veja os jogos mais fortes da Serie A e monte suas seleções com uma experiência mais organizada."
+          title: "A Serie A em destaque com odds compactas e navegação limpa",
+          text: "Entre nas principais partidas da Itália, abra mercados rápidos e monte combinações no estilo sportsbook."
         },
         "ger-bl": {
           kicker: "🔥 CravaAí • Bundesliga",
-          title: "Bundesliga em destaque com visual compacto e direto",
-          text: "Acesse os principais jogos da Alemanha, escolha suas odds e entre nas competições do CravaAí."
+          title: "Bundesliga com experiência compacta e jogos bem organizados",
+          text: "Visual mais limpo, separação por dia e acesso rápido aos principais mercados da Alemanha."
         },
         "fra-l1": {
           kicker: "🔥 CravaAí • Ligue 1",
-          title: "Ligue 1 com bilhete rápido e mercados organizados",
-          text: "Navegue pelos jogos da França e acompanhe as ligas em um layout mais limpo e prático."
-        },
-        "uefa-ucl": {
-          kicker: "⭐ CravaAí • Champions",
-          title: "Grandes noites europeias com destaque total no CravaAí",
-          text: "Veja os confrontos mais fortes da Champions, entre nas competições e selecione mercados com mais rapidez."
+          title: "Ligue 1 com foco nos jogos mais fortes e navegação mais leve",
+          text: "Escolha partidas da França, abra mercados e entre em competições com uma interface mais direta."
         }
       };
 
-      const content = map[state.ui.leagueId] || {
+      const copy = map[league?.id] || {
         kicker: "🔥 CravaAí • futebol em destaque",
         title: "Escolha os melhores palpites e entre nas competições do CravaAí",
         text: "Acompanhe as principais ligas, monte seu bilhete com odds compactas e participe de competições em uma experiência mais limpa, rápida e no estilo sportsbook."
       };
 
-      kicker.textContent = content.kicker;
-      title.textContent = content.title;
-      text.textContent = content.text;
+      kicker.textContent = copy.kicker;
+      title.textContent = copy.title;
+      text.textContent = copy.text;
+    }
+
+    function openGame(matchId){
+      state.session.game.open = true;
+      state.session.game.matchId = matchId;
+      state.session.game.tab = "principais";
+      $("#gameScreen").classList.add("show");
+      lockBodyScroll(true);
+      renderGameScreen();
+    }
+
+    function closeGame(){
+      state.session.game.open = false;
+      state.session.game.matchId = null;
+      $("#gameScreen").classList.remove("show");
+      if(!$("#authModal").classList.contains("show") && !$("#plansModal").classList.contains("show")) lockBodyScroll(false);
+    }
+
+    function renderGameTabs(){
+      const tabs = [
+        ["principais", "Principais"],
+        ["cartoes", "Cartões"],
+        ["chutes", "Chutes"],
+        ["especiais", "Especiais"]
+      ];
+
+      $("#gameTabs").innerHTML = tabs.map(([key, label]) => `
+        <div class="tab ${state.session.game.tab === key ? "active" : ""}" data-gametab="${key}">${label}</div>
+      `).join("");
+
+      $$("[data-gametab]").forEach((el) => {
+        el.onclick = () => {
+          state.session.game.tab = el.dataset.gametab;
+          renderGameScreen();
+        };
+      });
+    }
+
+    function renderGameHero(match){
+      const league = findLeague(match.leagueId);
+      const homeAsset = getTeamAsset(match.home);
+      const awayAsset = getTeamAsset(match.away);
+
+      $("#gameTitle").textContent = `${match.home} x ${match.away}`;
+      $("#gameSub").textContent = `${league?.name || "Liga"} • ${match.whenTxt}`;
+
+      $("#gameHero").innerHTML = `
+        <div class="gameHeroInner">
+          <div class="heroTeam">
+            ${teamCrestHTML(match.home, homeAsset, "xl")}
+            <div class="heroTeamMeta">
+              <div class="heroTeamName">${esc(match.home)}</div>
+              <div class="heroTeamSub">Casa</div>
+            </div>
+          </div>
+
+          <div class="heroCenter">
+            <div class="heroLeague">${esc(league?.name || "Liga")}</div>
+            <div class="heroVs">VS</div>
+            <div class="heroTime">${esc(match.whenTxt)}</div>
+            <div class="heroVenue">${esc(match.stadium || "—")}</div>
+          </div>
+
+          <div class="heroTeam right">
+            <div class="heroTeamMeta" style="text-align:right">
+              <div class="heroTeamName">${esc(match.away)}</div>
+              <div class="heroTeamSub">Fora</div>
+            </div>
+            ${teamCrestHTML(match.away, awayAsset, "xl")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGameQuickOdds(match){
+      const picks = [
+        { label:match.home, odd:match.odds1x2["1"], group:"1x2", key:"1" },
+        { label:"Empate", odd:match.odds1x2["X"], group:"1x2", key:"X" },
+        { label:match.away, odd:match.odds1x2["2"], group:"1x2", key:"2" }
+      ];
+
+      $("#gameQuickOdds").innerHTML = picks.map((p) => {
+        const selected = state.session.slip.some((s) => s.matchId === match.id && s.group === p.group && s.key === p.key);
+        return `
+          <button class="pickBtn ${selected ? "selected" : ""}" data-gamequick="${esc(p.key)}">
+            <div class="lab">${esc(p.label)}</div>
+            <div class="val">${formatOdd(p.odd)}</div>
+          </button>
+        `;
+      }).join("");
+
+      $$("[data-gamequick]").forEach((b) => {
+        b.onclick = () => {
+          const k = b.dataset.gamequick;
+          const label = k === "1" ? match.home : k === "2" ? match.away : "Empate";
+          addPickToSlip(match, { label, odd:match.odds1x2[k], group:"1x2", key:k });
+          renderGameScreen();
+        };
+      });
+    }
+
+    async function renderGameScreen(){
+      if(!state.session.game.open) return;
+
+      const match = state.db.matches.find((m) => m.id === state.session.game.matchId);
+      if(!match){
+        closeGame();
+        return;
+      }
+
+      if(THE_SPORTSDB_LEAGUES[match.leagueId]){
+        warmLeagueAssets(match.leagueId).then(() => {
+          if(state.session.game.open && state.session.game.matchId === match.id){
+            renderGameScreen();
+            renderMatches();
+          }
+        }).catch(() => {});
+      }
+
+      $("#builderSwitchGame").classList.toggle("on", !!state.session.game.builder);
+      $("#builderBadge").textContent = state.session.game.builder ? "ON" : "OFF";
+
+      renderGameHero(match);
+      renderGameQuickOdds(match);
+      renderGameTabs();
+
+      const templates = marketTemplates(match);
+      const tabKey = state.session.game.tab || "principais";
+      const cards = templates[tabKey] || [];
+
+      $("#marketsArea").innerHTML = cards.map((card, idx) => `
+        <div class="marketCard ${card.open ? "open" : ""}">
+          <div class="marketHead" data-openmarket="${idx}">
+            <div class="title">${esc(card.title)}</div>
+            <div class="badge">${card.picks.length}</div>
+          </div>
+          <div class="marketBody">
+            <div class="marketGrid">
+              ${card.picks.map((p) => {
+                const selected = state.session.slip.some((s) => s.matchId === match.id && s.group === p.group && s.key === p.key);
+                return `
+                  <button class="pickBtn ${selected ? "selected" : ""}" data-marketpick='${esc(JSON.stringify(p))}'>
+                    <div class="lab">${esc(p.label)}</div>
+                    <div class="val">${formatOdd(p.odd)}</div>
+                  </button>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      $$("[data-openmarket]").forEach((b) => {
+        b.onclick = () => {
+          b.closest(".marketCard").classList.toggle("open");
+        };
+      });
+
+      $$("[data-marketpick]").forEach((b) => {
+        b.onclick = () => {
+          try{
+            const p = JSON.parse(b.dataset.marketpick);
+            addPickToSlip(match, p);
+            renderGameScreen();
+          }catch{}
+        };
+      });
+    }
+
+    function openAuth(mode = "login"){
+      $("#authModal").classList.add("show");
+      lockBodyScroll(true);
+
+      const isLogin = mode === "login";
+      $("#authTitle").textContent = isLogin ? "Entrar" : mode === "verify" ? "Confirmar e-mail" : "Registrar";
+      $("#authHint").textContent = isLogin
+        ? "Entre com email e senha."
+        : mode === "verify"
+          ? "Digite o código enviado para o seu e-mail."
+          : "Crie sua conta para entrar nas ligas e usar os recursos do CravaAí.";
+
+      $("#loginBox").classList.toggle("hide", !isLogin);
+      $("#registerBox").classList.toggle("hide", mode !== "register");
+      $("#verifyBox").classList.toggle("hide", mode !== "verify");
+      $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
+    }
+
+    function closeAuth(){
+      $("#authModal").classList.remove("show");
+      if(!$("#plansModal").classList.contains("show") && !state.session.game.open) lockBodyScroll(false);
+    }
+
+    function getRegisterForm(){
+      return {
+        country: $("#regCountry").value.trim(),
+        ddd: $("#regDDD").value.trim(),
+        phone: $("#regPhone").value.trim(),
+        email: $("#regEmail").value.trim().toLowerCase(),
+        gender: $("#regGender").value.trim(),
+        firstName: $("#regFirstName").value.trim(),
+        lastName: $("#regLastName").value.trim(),
+        birthDay: $("#regBirthDay").value.trim(),
+        birthMonth: $("#regBirthMonth").value.trim(),
+        birthYear: $("#regBirthYear").value.trim(),
+        cpf: $("#regCPF").value.trim(),
+        username: $("#regUsername").value.trim(),
+        password: $("#regPass").value
+      };
+    }
+
+    function validateRegisterForm(f){
+      if(!f.email || !f.password || !f.username || !f.firstName || !f.lastName) return "Preencha nome, usuário, e-mail e senha.";
+      if(!f.phone || !f.cpf) return "Preencha celular e CPF.";
+      if(!f.birthDay || !f.birthMonth || !f.birthYear) return "Preencha sua data de nascimento.";
+      if(state.db.users.some((u) => String(u.email).toLowerCase() === f.email)) return "Esse e-mail já está cadastrado.";
+      if(state.db.users.some((u) => String(u.username).toLowerCase() === f.username.toLowerCase())) return "Esse nome de usuário já existe.";
+      return "";
+    }
+
+    function makeCode(){
+      return String(Math.floor(100000 + Math.random() * 900000));
+    }
+
+    async function sendRegisterCode(reuseCode = null){
+      const f = getRegisterForm();
+      const err = validateRegisterForm(f);
+      if(err){
+        toast(err);
+        return;
+      }
+
+      const code = reuseCode || makeCode();
+
+      const draft = {
+        id: uid(),
+        createdAt: nowIso(),
+        email: f.email,
+        payload: f,
+        code
+      };
+
+      state.db.registerDrafts = state.db.registerDrafts.filter((d) => String(d.email).toLowerCase() !== f.email);
+      state.db.registerDrafts.push(draft);
+      saveDB(state.db);
+
+      try{
+        const res = await fetch("/.netlify/functions/auth-register-start", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({
+            email: f.email,
+            code,
+            username: f.username,
+            fullname: `${f.firstName} ${f.lastName}`.trim()
+          })
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(data?.error || "Erro ao enviar código.");
+          return;
+        }
+
+        $("#verifyEmailBadge").textContent = f.email;
+        $("#regCode").value = "";
+        openAuth("verify");
+        toast("Código enviado ✅");
+      }catch{
+        toast("Erro ao enviar código.");
+      }
+    }
+
+    async function verifyRegisterCode(){
+      const email = String($("#verifyEmailBadge").textContent || "").trim().toLowerCase();
+      const code = $("#regCode").value.trim();
+      const draft = state.db.registerDrafts.find((d) => String(d.email).toLowerCase() === email);
+
+      if(!draft){
+        toast("Cadastro não encontrado.");
+        openAuth("register");
+        return;
+      }
+
+      if(!code){
+        toast("Digite o código.");
+        return;
+      }
+
+      try{
+        const res = await fetch("/.netlify/functions/auth-register-verify", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ email, code })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if(!res.ok){
+          toast(data?.error || "Código inválido.");
+          return;
+        }
+
+        const p = draft.payload;
+        state.db.users.push({
+          id: uid(),
+          createdAt: nowIso(),
+          email: p.email,
+          username: p.username,
+          fullname: `${p.firstName} ${p.lastName}`.trim(),
+          password: p.password,
+          plan: "free",
+          cp: 1000,
+          country: p.country,
+          ddd: p.ddd,
+          phone: p.phone,
+          gender: p.gender,
+          birthDay: p.birthDay,
+          birthMonth: p.birthMonth,
+          birthYear: p.birthYear,
+          cpf: p.cpf
+        });
+
+        state.db.registerDrafts = state.db.registerDrafts.filter((d) => d.id !== draft.id);
+        saveDB(state.db);
+
+        openAuth("login");
+        $("#authEmail").value = p.email;
+        $("#authPass").value = "";
+        toast("Cadastro confirmado ✅");
+      }catch{
+        toast("Erro ao confirmar código.");
+      }
+    }
+
+    async function resendRegisterCode(){
+      const email = String($("#verifyEmailBadge").textContent || "").trim().toLowerCase();
+      const draft = state.db.registerDrafts.find((d) => String(d.email).toLowerCase() === email);
+      if(!draft){
+        toast("Cadastro não encontrado.");
+        return;
+      }
+
+      try{
+        const res = await fetch("/.netlify/functions/auth-register-start", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({
+            email: draft.email,
+            code: draft.code,
+            username: draft.payload.username,
+            fullname: `${draft.payload.firstName} ${draft.payload.lastName}`.trim()
+          })
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok){
+          toast(data?.error || "Erro ao reenviar código.");
+          return;
+        }
+
+        toast("Código reenviado ✅");
+      }catch{
+        toast("Erro ao reenviar código.");
+      }
+    }
+
+    async function loginSubmit(){
+      const email = $("#authEmail").value.trim().toLowerCase();
+      const pass = $("#authPass").value;
+      const u = state.db.users.find((x) => String(x.email).toLowerCase() === email && x.password === pass);
+
+      if(!u){
+        toast("Email ou senha inválidos.");
+        return;
+      }
+
+      setAuthEmail(u.email);
+      state.session.profile = {
+        email: u.email,
+        username: u.username,
+        fullname: u.fullname,
+        plan: u.plan || "free",
+        cp: Number(u.cp || 0)
+      };
+
+      renderAccount();
+      renderHistory();
+      renderMyLeagues();
+      renderAdminSettle();
+      closeAuth();
+      toast("Entrou com sucesso ✅");
+    }
+
+    function logout(){
+      setAuthEmail(null);
+      state.session.profile = null;
+      renderAccount();
+      renderHistory();
+      renderMyLeagues();
+      renderAdminSettle();
+      toast("Sessão encerrada.");
+    }
+
+    async function startCheckout(plan){
+      const u = getCurrentUser();
+
+      if(!u){
+        toast("Entre para assinar um plano.");
+        openAuth("login");
+        return;
+      }
+
+      try{
+        const res = await fetch("/.netlify/functions/create-checkout", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ email: u.email, plan })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if(!res.ok){
+          toast(data?.error || "Erro no checkout");
+          return;
+        }
+
+        if(data?.url){
+          window.location.href = data.url;
+        }else{
+          toast("Checkout sem URL");
+        }
+      }catch{
+        toast("Erro ao iniciar checkout.");
+      }
+    }
+
+    async function placeBet(){
+      const user = getCurrentUser();
+      if(!user){
+        toast("Entre para apostar.");
+        openAuth("login");
+        return;
+      }
+
+      const stake = Math.floor(getSlipStake());
+      if(!state.session.slip.length){
+        toast("Seu bilhete está vazio.");
+        return;
+      }
+      if(stake <= 0){
+        toast("Digite uma stake válida.");
+        return;
+      }
+      if(Number(user.cp || 0) < stake){
+        toast("CP insuficiente.");
+        return;
+      }
+
+      const totalOdds = getSlipTotalOdds();
+      const entry = {
+        id: uid(),
+        userEmail: user.email,
+        type: state.session.slip.length > 1 ? "multi" : "single",
+        picks: state.session.slip.map((p) => ({ ...p })),
+        stake,
+        totalOdds,
+        returnEst: stake * totalOdds,
+        status: "OPEN",
+        createdAt: nowIso()
+      };
+
+      state.db.picksHistory.push(entry);
+      saveDB(state.db);
+
+      const newCp = Number(user.cp || 0) - stake;
+      setCurrentUserPatch({ cp:newCp });
+
+      state.session.slip = [];
+      $("#stakeInput").value = "";
+      renderBetslip();
+      renderAccount();
+      renderHistory();
+      renderAdminSettle();
+      toast("Aposta registrada ✅");
+    }
+
+    function createUserLeague(){
+      const user = getCurrentUser();
+      if(!isAdminEmail(user?.email)){
+        toast("Somente admin pode criar liga.");
+        return;
+      }
+
+      const name = $("#newLeagueName").value.trim();
+      if(!name){
+        toast("Digite o nome da liga.");
+        return;
+      }
+
+      const code = Math.random().toString(36).slice(2, 8).toUpperCase();
+
+      state.db.userLeagues.push({
+        id: uid(),
+        createdAt: nowIso(),
+        name,
+        code,
+        ownerEmail: user.email,
+        members: [user.email]
+      });
+
+      saveDB(state.db);
+      $("#newLeagueName").value = "";
+      renderMyLeagues();
+      toast(`Liga criada • código ${code}`);
+    }
+
+    function joinLeagueByCode(){
+      const user = getCurrentUser();
+      if(!user){
+        toast("Entre para participar de uma liga.");
+        openAuth("login");
+        return;
+      }
+
+      const code = prompt("Digite o código da liga:");
+      if(!code) return;
+
+      const lg = state.db.userLeagues.find((x) => String(x.code).toUpperCase() === String(code).trim().toUpperCase());
+      if(!lg){
+        toast("Liga não encontrada.");
+        return;
+      }
+
+      lg.members = Array.isArray(lg.members) ? lg.members : [];
+      if(!lg.members.some((m) => String(m).toLowerCase() === String(user.email).toLowerCase())){
+        lg.members.push(user.email);
+        saveDB(state.db);
+      }
+
+      renderMyLeagues();
+      toast("Você entrou na liga ✅");
+    }
+
+    function renderAccount(){
+      const u = getCurrentUser();
+      const pill = $("#topAccountPill");
+
+      if(u){
+        pill.classList.remove("hide");
+        pill.innerHTML = `👤 <strong>${esc(u.username || "Usuário")}</strong> • ${fmtCP(Number(u.cp || 0))} CP • ${(u.plan || "free").toUpperCase()}`;
+        $("#btnLogout").classList.remove("hide");
+        $("#btnEnter").classList.add("hide");
+        $("#btnRegister").classList.add("hide");
+      }else{
+        pill.classList.add("hide");
+        pill.innerHTML = "";
+        $("#btnLogout").classList.add("hide");
+        $("#btnEnter").classList.remove("hide");
+        $("#btnRegister").classList.remove("hide");
+      }
+
+      renderAdminSettle();
+    }
+
+    async function registerSW(){
+      if(!("serviceWorker" in navigator)) return;
+      try{
+        await navigator.serviceWorker.register("./sw.js");
+      }catch{}
+    }
+
+    async function restoreSessionFromServer(){
+      const a = getAuth();
+      if(!a?.email) return;
+
+      try{
+        const r = await fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(a.email)}`);
+        const j = await r.json().catch(() => ({}));
+
+        if(r.ok && j){
+          state.session.profile = {
+            email: a.email,
+            username: j.username || "Usuário",
+            fullname: j.fullname || "",
+            plan: j.plan || "free",
+            cp: Number(j.cp || 0)
+          };
+        }else{
+          const local = state.db.users.find((u) => String(u.email).toLowerCase() === String(a.email).toLowerCase());
+          if(local){
+            state.session.profile = {
+              email: local.email,
+              username: local.username || "Usuário",
+              fullname: local.fullname || "",
+              plan: local.plan || "free",
+              cp: Number(local.cp || 0)
+            };
+          }else{
+            setAuthEmail(null);
+          }
+        }
+      }catch{
+        const local = state.db.users.find((u) => String(u.email).toLowerCase() === String(a.email).toLowerCase());
+        if(local){
+          state.session.profile = {
+            email: local.email,
+            username: local.username || "Usuário",
+            fullname: local.fullname || "",
+            plan: local.plan || "free",
+            cp: Number(local.cp || 0)
+          };
+        }else{
+          setAuthEmail(null);
+        }
+      }
     }
 
     function renderAll(){
-      renderTopbar();
       renderNav();
       renderAllViews();
       renderFeaturedLeagueList();
@@ -4528,14 +4258,15 @@
       renderCompetitions();
       renderMatches();
       renderFeatured();
-      renderBetslip();
       renderHistory();
-      renderLeaguesView();
-      renderGameScreen();
-      updateHeroBannerByLeague();
+      renderMyLeagues();
+      renderAccount();
+      renderBetslip();
     }
 
     function hookUI(){
+      $("#goHome").onclick = () => setNav("home");
+
       $$(".navBtn").forEach((b) => {
         b.onclick = () => setNav(b.dataset.nav);
       });
@@ -4555,177 +4286,138 @@
       };
 
       $("#mobileCompetitionsCard").onclick = () => {
-        setNav("home");
         state.ui.leftMode = "competitions";
         saveUI(state.ui);
         renderLeftMode();
         updateHeroBannerByLeague();
       };
 
+      $("#searchInput").value = state.ui.search || "";
+      $("#searchInput").addEventListener("input", (e) => {
+        state.ui.search = e.target.value;
+        saveUI(state.ui);
+        renderMatches();
+      });
+
       $("#btnRefresh").onclick = async () => {
-        if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
-          await updateLeagueReal(state.ui.leagueId, { force:true });
-        }else{
-          toast("Atualizado.");
-          await renderFeatured();
-          await renderMatches();
+        ensureLeagueMatchesLoaded(state.ui.leagueId);
+        if(REAL_LEAGUE_MAP[state.ui.leagueId]) await updateLeagueReal(state.ui.leagueId, { force:true });
+        else{
+          renderMatches();
+          renderFeatured();
+          toast("Jogos atualizados.");
         }
       };
 
-      $("#searchInput").value = state.ui.search || "";
-      $("#searchInput").oninput = async (e) => {
-        state.ui.search = e.target.value;
-        saveUI(state.ui);
-        await renderMatches();
-        await renderFeatured();
-      };
-
-      $("#btnRegister").onclick = () => openAuth("register");
-      $("#btnEnter").onclick = () => openAuth("login");
-      $("#btnBannerRegister").onclick = () => openAuth("register");
-      $("#btnBannerPlans").onclick = openPlans;
-
-      $("#btnLogout").onclick = () => {
-        setAuthEmail(null);
-        state.session.profile = null;
-        toast("Saiu.");
-        renderAll();
-      };
-
-      $("#goHome").onclick = () => {
-        setNav("home");
-        state.ui.leftMode = "football";
-        saveUI(state.ui);
-        renderLeftMode();
-        updateHeroBannerByLeague();
-      };
-
-      $("#btnCloseAuth").onclick = closeAuth;
-      $("#btnSwitchAuth").onclick = () => {
-        openAuth(authMode === "login" ? "register" : "login");
-      };
-
-      $("#btnSubmitAuth").onclick = doLogin;
-      $("#btnSendCode").onclick = sendRegisterCode;
-      $("#btnVerifyCode").onclick = verifyRegisterCode;
-      $("#btnBackRegister").onclick = () => openAuth("register");
-      $("#btnResendCode").onclick = resendCode;
-
-      $("#genderM").onclick = () => pickGender("Masculino");
-      $("#genderF").onclick = () => pickGender("Feminino");
-
-      $("#regCPF").addEventListener("input", (e) => {
-        e.target.value = applyCPFMask(e.target.value);
-      });
-
-      $("#regPhone").addEventListener("input", (e) => {
-        e.target.value = applyPhoneMask(e.target.value);
-      });
-
-      $("#regDDD").addEventListener("input", (e) => {
-        const digits = onlyDigits(e.target.value).slice(0, 3);
-        e.target.value = digits ? `+${digits}` : "+";
-      });
-
-      $("#regBirthDay").addEventListener("input", (e) => {
-        e.target.value = onlyDigits(e.target.value).slice(0, 2);
-      });
-
-      $("#regBirthMonth").addEventListener("input", (e) => {
-        e.target.value = onlyDigits(e.target.value).slice(0, 2);
-      });
-
-      $("#regBirthYear").addEventListener("input", (e) => {
-        e.target.value = onlyDigits(e.target.value).slice(0, 4);
-      });
-
-      $("#btnCloseGame").onclick = closeGame;
+      $("#btnCloseGame").onclick = () => closeGame();
 
       $("#toggleBuilderGame").onclick = () => {
-        state.ui.builderOn = !state.ui.builderOn;
-        saveUI(state.ui);
-        toast("Criar aposta: " + (state.ui.builderOn ? "ON (Bet Builder no jogo)" : "OFF (1 seleção por jogo)"));
+        state.session.game.builder = !state.session.game.builder;
         renderGameScreen();
         renderBetslip();
-        renderAll();
       };
 
-      $("#btnMini").onclick = (e) => {
-        e.stopPropagation();
-        state.ui.betslipMini = !state.ui.betslipMini;
+      $("#btnMini").onclick = () => {
+        state.ui.slipMini = !state.ui.slipMini;
         saveUI(state.ui);
         renderBetslip();
       };
 
-      $("#betslipMiniBar").onclick = (e) => {
-        e.stopPropagation();
-        state.ui.betslipMini = false;
+      $("#betslipMiniBar").onclick = () => {
+        state.ui.slipMini = false;
         saveUI(state.ui);
         renderBetslip();
       };
 
-      $$(".stakeChip").forEach((el) => {
-        el.onclick = () => {
-          const add = Number(el.dataset.stakeadd || 0);
-          state.slip.stake = Math.max(0, Number(state.slip.stake || 0) + add);
+      $("#btnEditSlip").onclick = () => {
+        state.ui.slipMini = false;
+        saveUI(state.ui);
+        renderBetslip();
+      };
+
+      $("#btnCombos").onclick = () => {
+        toast("Combinações em breve.");
+      };
+
+      $$("[data-stakeadd]").forEach((b) => {
+        b.onclick = () => {
+          const cur = Number($("#stakeInput").value || 0);
+          $("#stakeInput").value = String(cur + Number(b.dataset.stakeadd || 0));
           renderBetslip();
         };
       });
 
-      $("#stakeInput").oninput = (e) => {
-        state.slip.stake = Math.floor(Number(e.target.value || 0));
-        renderBetslip();
+      $("#stakeInput").addEventListener("input", () => renderBetslip());
+      $("#btnPlaceBet").onclick = () => placeBet();
+
+      $("#btnEnter").onclick = () => openAuth("login");
+      $("#btnRegister").onclick = () => openAuth("register");
+      $("#btnBannerRegister").onclick = () => openAuth("register");
+      $("#btnLogout").onclick = () => logout();
+
+      $("#btnCloseAuth").onclick = () => closeAuth();
+      $("#btnSwitchAuth").onclick = () => {
+        const loginVisible = !$("#loginBox").classList.contains("hide");
+        openAuth(loginVisible ? "register" : "login");
       };
 
-      $("#btnPlaceBet").onclick = placeBet;
+      $("#btnSubmitAuth").onclick = () => loginSubmit();
+      $("#btnSendCode").onclick = () => sendRegisterCode();
+      $("#btnVerifyCode").onclick = () => verifyRegisterCode();
+      $("#btnResendCode").onclick = () => resendRegisterCode();
+      $("#btnBackRegister").onclick = () => openAuth("register");
 
-      $("#btnEditSlip").onclick = () => toast("Editar: remova seleções no bilhete (X).");
-
-      $("#btnCombos").onclick = () => {
-        const n = state.slip.selections.length;
-        if(n < 2){
-          toast("Adicione 2+ seleções para combinações.");
-          return;
-        }
-        toast("Combinações: odds total = produto.");
+      $("#genderM").onclick = () => {
+        $("#regGender").value = "Masculino";
+        $("#genderM").classList.add("active");
+        $("#genderF").classList.remove("active");
+      };
+      $("#genderF").onclick = () => {
+        $("#regGender").value = "Feminino";
+        $("#genderF").classList.add("active");
+        $("#genderM").classList.remove("active");
       };
 
-      $("#btnClearHistory").onclick = () => {
-        const u = getCurrentUser();
-        if(!u){
-          toast("Entre.");
-          return;
-        }
-
-        if(confirm("Limpar seu histórico?")){
-          state.db.bets = state.db.bets.filter((b) => b.userEmail !== u.email);
-          saveDB(state.db);
-          renderHistory();
-          renderLeaguesView();
-          toast("Histórico limpo.");
-        }
-      };
-
-      $("#btnJoinByCode").onclick = joinByCode;
-      $("#btnCreateLeague").onclick = createLeague;
-      $("#btnRefreshAdmin").onclick = () => renderLeaguesView();
-
-      $("#btnClosePlans").onclick = closePlans;
+      $("#btnClosePlans").onclick = () => closePlans();
       $("#btnBuyPro").onclick = () => startCheckout("pro");
       $("#btnBuyElite").onclick = () => startCheckout("elite");
 
-      document.addEventListener("pointerdown", (e) => {
-        const slip = $("#betslip");
-        if(!slip || slip.classList.contains("hide")) return;
-        if($("#authModal")?.classList.contains("show")) return;
-        if($("#plansModal")?.classList.contains("show")) return;
-        if($("#gameScreen")?.classList.contains("show")) return;
+      $("#btnCreateLeague").onclick = () => createUserLeague();
+      $("#btnJoinByCode").onclick = () => joinLeagueByCode();
+      $("#btnRefreshAdmin").onclick = () => renderAdminSettle();
 
-        const insideSlip = slip.contains(e.target);
-        if(!insideSlip && !state.ui.betslipMini){
-          state.ui.betslipMini = true;
+      $("#btnClearHistory").onclick = () => {
+        const auth = getAuth();
+        if(!auth?.email) return;
+        state.db.picksHistory = state.db.picksHistory.filter((h) => String(h.userEmail).toLowerCase() !== String(auth.email).toLowerCase());
+        saveDB(state.db);
+        renderHistory();
+        renderAdminSettle();
+        toast("Histórico limpo.");
+      };
+
+      document.addEventListener("click", (e) => {
+        const slip = $("#betslip");
+        if(!slip || slip.classList.contains("hide") || state.ui.slipMini) return;
+        const inside = slip.contains(e.target);
+        if(!inside && state.session.slip.length){
+          state.ui.slipMini = true;
           saveUI(state.ui);
           renderBetslip();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape"){
+          if($("#authModal").classList.contains("show")) closeAuth();
+          else if($("#plansModal").classList.contains("show")) closePlans();
+          else if(state.session.game.open) closeGame();
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
+          renderLeftMode();
         }
       }, { passive:true });
     }
