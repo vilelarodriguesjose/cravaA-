@@ -37,13 +37,17 @@
         radial-gradient(1200px 500px at 50% -10%, rgba(22,201,95,.10), transparent 60%),
         radial-gradient(700px 260px at 50% 0%, rgba(242,201,76,.06), transparent 65%);
       --bannerGrad:
-        linear-gradient(135deg, rgba(15,61,42,.98), rgba(10,42,29,.98));
+        linear-gradient(135deg, rgba(8,53,33,.99), rgba(8,37,24,.98) 48%, rgba(6,24,16,.99));
       --bannerGlow:
         radial-gradient(760px 280px at 85% 18%, rgba(15,220,140,.17), transparent 60%),
         radial-gradient(420px 190px at 15% 28%, rgba(242,201,76,.11), transparent 60%);
       --plansGlow:
         radial-gradient(500px 240px at 50% 0%, rgba(22,201,95,.10), transparent 70%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      --slipGlass:linear-gradient(180deg, rgba(15,31,20,.985), rgba(10,18,13,.99));
+      --slipCard:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+      --slipAccent:linear-gradient(180deg, var(--green), rgba(242,201,76,.85));
+      --verifyGlow:radial-gradient(220px 110px at 50% 0%, rgba(22,201,95,.12), transparent 70%);
     }
 
     *{box-sizing:border-box}
@@ -165,6 +169,7 @@
     .btn.danger{background:rgba(255,87,87,.14);border-color:rgba(255,87,87,.28)}
     .btn.ghost{background:transparent}
     .btn.small{padding:8px 10px;border-radius:10px;font-size:13px}
+    .btn.full{width:100%}
     .hide{display:none !important}
 
     .layout{
@@ -361,10 +366,10 @@
       position:relative;
       padding:22px 18px;
       display:grid;
-      grid-template-columns:minmax(0,1fr) 380px;
+      grid-template-columns:minmax(0,1fr) 390px;
       gap:18px;
       align-items:stretch;
-      min-height:250px;
+      min-height:260px;
       overflow:hidden;
       background:
         linear-gradient(90deg, rgba(7,19,11,.18), rgba(7,19,11,.04)),
@@ -390,7 +395,7 @@
       flex-direction:column;
       justify-content:center;
       align-items:flex-start;
-      max-width:620px;
+      max-width:640px;
     }
 
     .heroBannerKicker{
@@ -463,36 +468,40 @@
     .heroBannerVisual{
       position:relative;
       z-index:1;
-      min-height:220px;
+      min-height:224px;
       border-radius:18px;
       overflow:hidden;
       align-self:stretch;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
       background:
-  linear-gradient(90deg, rgba(10,42,29,.05), rgba(10,42,29,.00)),
-  url("https://images.unsplash.com/photo-1518091043644-c1d4457512c6?q=80&w=1200&auto=format&fit=crop") center right/cover no-repeat;
-}
+        linear-gradient(90deg, rgba(10,42,29,.08), rgba(10,42,29,.00)),
+        url("https://images.unsplash.com/photo-1518091043644-c1d4457512c6?q=80&w=1200&auto=format&fit=crop") center right/cover no-repeat;
+    }
 
     .heroBannerVisual:before{
       content:"";
       position:absolute;
       inset:0;
       background:
-        linear-gradient(90deg, rgba(10,42,29,.72) 0%, rgba(10,42,29,.18) 38%, rgba(10,42,29,.02) 58%, rgba(10,42,29,.04) 100%),
-        radial-gradient(220px 220px at 15% 50%, rgba(15,220,140,.18), transparent 65%);
+        linear-gradient(90deg, rgba(10,42,29,.76) 0%, rgba(10,42,29,.20) 38%, rgba(10,42,29,.03) 58%, rgba(10,42,29,.04) 100%),
+        radial-gradient(220px 220px at 15% 50%, rgba(15,220,140,.16), transparent 65%);
     }
 
     .heroBannerVisual:after{
-      content:"";
+      content:"BRASILEIRÃO";
       position:absolute;
-      left:-42px;
-      top:50%;
-      transform:translateY(-50%) rotate(7deg);
-      width:10px;
-      height:74%;
+      left:16px;
+      bottom:16px;
+      padding:8px 12px;
       border-radius:999px;
-      background:linear-gradient(180deg, rgba(21,234,164,.06), rgba(21,234,164,.82), rgba(21,234,164,.06));
-      box-shadow:0 0 28px rgba(21,234,164,.42);
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(8,18,12,.50);
+      backdrop-filter:blur(8px);
+      font-size:11px;
+      font-weight:1000;
+      letter-spacing:.7px;
+      color:#f0fbf4;
+      box-shadow:0 8px 24px rgba(0,0,0,.22);
     }
 
     .mobileCompetitionsCard{
@@ -517,8 +526,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background:
-        radial-gradient(180px 90px at 100% 0%, rgba(255,255,255,.10), transparent 70%);
+      background:radial-gradient(180px 90px at 100% 0%, rgba(255,255,255,.10), transparent 70%);
       pointer-events:none;
     }
 
@@ -635,7 +643,7 @@
       }
 
       .heroBanner{
-        min-height:270px;
+        min-height:278px;
         grid-template-columns:1fr;
         padding:16px 12px;
       }
@@ -653,12 +661,12 @@
         border-radius:0;
         background:
           linear-gradient(90deg, rgba(7,19,11,.18), rgba(7,19,11,.04)),
-          url("https://images.unsplash.com/photo-1547347298-4074fc3086f0?q=80&w=1200&auto=format&fit=crop") center/cover no-repeat;
+          url("https://images.unsplash.com/photo-1518091043644-c1d4457512c6?q=80&w=1200&auto=format&fit=crop") center/cover no-repeat;
       }
 
       .heroBannerVisual:before{
         background:
-          linear-gradient(180deg, rgba(5,14,9,.16), rgba(5,14,9,.48) 35%, rgba(5,14,9,.86) 100%),
+          linear-gradient(180deg, rgba(5,14,9,.14), rgba(5,14,9,.48) 35%, rgba(5,14,9,.88) 100%),
           linear-gradient(90deg, rgba(10,42,29,.62), rgba(10,42,29,.16));
       }
 
@@ -1384,18 +1392,29 @@
       position:fixed;
       right:14px;
       bottom:calc(98px + env(safe-area-inset-bottom, 0px));
-      width:388px;
+      width:404px;
       max-width:calc(100vw - 28px);
       z-index:70;
-      border-radius:18px;
+      border-radius:20px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(180deg, rgba(15,31,20,.98), rgba(10,18,13,.98));
-      backdrop-filter:blur(10px);
+      background:var(--slipGlass);
+      backdrop-filter:blur(12px);
       box-shadow:var(--shadow2);
-      max-height:calc(100vh - 130px);
+      max-height:calc(100vh - 126px);
       display:flex;
       flex-direction:column;
+      transition:.18s ease;
+    }
+
+    .betslip:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent 18%),
+        radial-gradient(280px 120px at 100% 0%, rgba(22,201,95,.10), transparent 65%);
     }
 
     @media (max-width:920px){
@@ -1403,7 +1422,7 @@
     }
 
     .betslipHead{
-      padding:12px;
+      padding:13px 14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -1419,9 +1438,9 @@
     .betslipHeadLeft{display:flex;align-items:center;gap:10px}
 
     .ticketMark{
-      width:34px;
-      height:34px;
-      border-radius:10px;
+      width:36px;
+      height:36px;
+      border-radius:12px;
       display:grid;
       place-items:center;
       font-size:15px;
@@ -1429,10 +1448,11 @@
       border:1px solid rgba(255,255,255,.10);
       background:linear-gradient(180deg, rgba(22,201,95,.18), rgba(22,201,95,.08));
       color:#d9ffe8;
+      flex:none;
     }
 
     .betslipBody{
-      padding:10px 12px;
+      padding:12px;
       display:block;
       overflow:auto;
       -webkit-overflow-scrolling:touch;
@@ -1442,7 +1462,7 @@
 
     .betslipMiniBar{
       display:none;
-      padding:12px;
+      padding:13px;
       cursor:pointer;
       border-top:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
@@ -1464,18 +1484,18 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
+      padding:11px 12px;
+      border-radius:15px;
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.035);
-      margin-bottom:10px;
+      margin-bottom:12px;
     }
 
     .slipItem{
-      padding:10px;
-      border-radius:14px;
+      padding:12px;
+      border-radius:16px;
       border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      background:var(--slipCard);
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -1490,7 +1510,7 @@
       top:0;
       bottom:0;
       width:3px;
-      background:linear-gradient(180deg, var(--green), rgba(242,201,76,.85));
+      background:var(--slipAccent);
     }
 
     .slipTop{
@@ -1500,8 +1520,8 @@
       gap:10px;
     }
 
-    .slipPick{font-weight:1000;font-size:14px}
-    .slipMeta{font-size:12px;color:var(--muted);font-weight:850}
+    .slipPick{font-weight:1000;font-size:14px;line-height:1.25}
+    .slipMeta{font-size:12px;color:var(--muted);font-weight:850;line-height:1.35}
     .slipActions{display:flex;gap:8px;align-items:center;justify-content:flex-end}
 
     .ticketSel{
@@ -1749,6 +1769,69 @@
 
     .registerStack{display:flex;flex-direction:column;gap:14px}
 
+    .verifyBox{
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02)),
+        var(--verifyGlow);
+      border-radius:16px;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .verifyHero{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .verifyMark{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-size:18px;
+      background:linear-gradient(180deg, rgba(22,201,95,.18), rgba(22,201,95,.08));
+      border:1px solid rgba(22,201,95,.24);
+      flex:none;
+    }
+
+    .verifyTitle{
+      font-size:16px;
+      font-weight:1000;
+      line-height:1.15;
+      margin-bottom:4px;
+    }
+
+    .verifyText{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .codeInputs{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:8px;
+    }
+
+    .codeDigit{
+      width:100%;
+      height:54px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:var(--fieldBg);
+      color:var(--text);
+      text-align:center;
+      font-size:22px;
+      font-weight:1000;
+      outline:none;
+    }
+
     .authSubmitRow{
       margin-top:4px;
       width:100%;
@@ -1756,7 +1839,13 @@
 
     .authSubmitBtn{min-height:48px}
 
-    .plansShell{
+    .authAltRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+        .plansShell{
       padding:0;
       background:var(--plansGlow);
     }
@@ -1999,6 +2088,15 @@
         border-radius:14px;
       }
 
+      .codeInputs{
+        gap:6px;
+      }
+
+      .codeDigit{
+        height:50px;
+        font-size:20px;
+      }
+
       #plansModal.show{
         align-items:stretch;
         justify-content:stretch;
@@ -2138,10 +2236,10 @@
         <section class="heroSports">
           <div class="heroBanner">
             <div class="heroBannerContent">
-              <div class="heroBannerKicker">NOVOS USUÁRIOS</div>
-              <h1 class="heroBannerTitle">Ao se registrar, ganhe acesso a uma liga premiada</h1>
+              <div class="heroBannerKicker">BRASILEIRÃO • NOVOS USUÁRIOS</div>
+              <h1 class="heroBannerTitle">Crie sua conta e entre no clima do Brasileirão com uma liga premiada</h1>
               <div class="heroBannerText">
-                Crie sua conta, monte seus palpites e dispute competições em uma experiência rápida, limpa e com visual no estilo sportsbook.
+                Cadastre-se, confirme seu e-mail, escolha seu plano e monte seus palpites em uma experiência mais limpa, rápida e próxima do estilo 365.
               </div>
 
               <div class="heroBannerActions">
@@ -2277,1434 +2375,1546 @@
             </div>
 
             <div class="sep"></div>
-            <div class="list" id="adminSettleList"></div>
+            <div class="list" id="adminOpenBets"></div>
           </div>
         </div>
 
-        <div class="h2">Minhas ligas</div>
+        <div class="sep"></div>
         <div class="list" id="myLeaguesList"></div>
       </div>
     </div>
-  </div>
 
     <div id="gameScreen" class="screen">
-    <div class="screenInner">
-      <div class="screenHead">
-        <button class="btn small" id="btnCloseGame">← Voltar</button>
-
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <div class="screenTitle" id="gameTitle">Jogo</div>
-          <div class="smallText" id="gameSub">Liga • data</div>
+      <div class="screenInner">
+        <div class="screenHead">
+          <button class="btn small" id="btnBackGame">← Voltar</button>
+          <div class="screenTitle">Detalhes do jogo</div>
         </div>
 
-        <div class="spacer"></div>
-
-        <div
-          class="toggle"
-          id="toggleBuilderGame"
-          title="OFF: 1 seleção por jogo | ON: várias seleções no mesmo jogo"
-        >
-          <span style="opacity:.9">Criar aposta</span>
-          <div class="switch" id="builderSwitchGame"><div class="knob"></div></div>
-        </div>
-
-        <span class="badge" id="builderBadge">OFF</span>
-      </div>
-
-      <div id="gameHero" class="gameHero"></div>
-      <div id="gameQuickOdds" class="gameQuickOdds"></div>
-      <div class="tabs" id="gameTabs"></div>
-
-      <div class="screenBody">
-        <div id="marketsArea"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="betslip" class="betslip hide">
-    <div class="betslipHead">
-      <div class="betslipHeadLeft">
-        <div class="ticketMark">🎟️</div>
-        <div class="row" style="gap:10px">
-          <div class="betslipTitle">Bilhete</div>
-          <span class="badge" id="slipCount">0</span>
-        </div>
-      </div>
-
-      <div class="row" style="gap:8px">
-        <button class="btn small" id="btnMini">Diminuir</button>
+        <div id="gameScreenContent"></div>
       </div>
     </div>
 
-    <div class="betslipBody" id="betslipBody">
-      <div class="slipModeBar">
-        <div class="smallText">
-          <strong id="modeLabel">Múltipla</strong>
-          <span style="opacity:.8">•</span>
-          <span id="modeHint" class="muted">jogos diferentes + regra do mesmo jogo</span>
+    <div id="betslip" class="betslip hide">
+      <div class="betslipHead">
+        <div class="betslipHeadLeft">
+          <div class="ticketMark">🎟</div>
+          <div>
+            <div class="betslipTitle">Bilhete</div>
+            <div class="smallText">Visual mais limpo e compacto</div>
+          </div>
         </div>
-
-        <div class="slipActions">
-          <button class="btn small" id="btnEditSlip">Editar</button>
-          <button class="btn small yellow" id="btnCombos">Combinações</button>
-        </div>
-      </div>
-
-      <div class="stack" id="slipItems"></div>
-
-      <div class="slipFooter">
-        <div class="stakeRow">
-          <input id="stakeInput" type="number" min="1" step="1" placeholder="Stake (CP)" />
-          <button class="btn primary" id="btnPlaceBet">Confirmar</button>
-        </div>
-
-        <div class="stakeQuick">
-          <div class="stakeChip" data-stakeadd="10">+10</div>
-          <div class="stakeChip" data-stakeadd="50">+50</div>
-          <div class="stakeChip" data-stakeadd="100">+100</div>
-          <div class="stakeChip" data-stakeadd="500">+500</div>
-        </div>
-
-        <div class="summaryBox">
-          <span>Saldo</span>
-          <span id="slipBalance">0 CP</span>
-        </div>
-
-        <div class="summaryBox">
-          <span>Odds total</span>
-          <span id="totalOdds">1.00</span>
-        </div>
-
-        <div class="summaryBox big">
-          <span>Retorno estimado</span>
-          <span id="estReturn">0 CP</span>
+        <div class="row" style="gap:8px">
+          <button class="btn small" id="btnMiniSlip">—</button>
+          <button class="btn small danger" id="btnClearSlip">Limpar</button>
         </div>
       </div>
-    </div>
 
-    <div class="betslipMiniBar" id="betslipMiniBar">
-      <div class="miniMain">
-        <strong id="miniSlipTitle">Bilhete</strong>
-        <div class="miniSub" id="miniSlipSub">0 seleções</div>
-      </div>
-      <div class="badge" id="miniSlipOdds">1.00</div>
-    </div>
-  </div>
+      <div class="betslipBody">
+        <div class="slipModeBar">
+          <div class="row" style="gap:8px">
+            <div class="badge">Bilhete</div>
+            <div class="smallText"><span id="slipCount">0</span> seleção(ões)</div>
+          </div>
+          <div class="toggle" id="toggleMultiple">
+            <div class="switch" id="multipleSwitch"><div class="knob"></div></div>
+            <span>Múltipla</span>
+          </div>
+        </div>
 
-  <div id="authModal" class="modal">
-    <div class="modalCard">
-      <div class="modalHead">
-        <h3 id="authTitle">Entrar</h3>
-        <button class="btn small" id="btnCloseAuth">✕</button>
-      </div>
+        <div id="slipItems"></div>
 
-      <div class="authSub" id="authHint">Entre com email e senha.</div>
-
-      <div class="modalBody">
-        <div class="authShell">
-          <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:14px">
-            <div class="smallText">CravaAí • Conta</div>
-            <button class="btn small" id="btnSwitchAuth">Ir para Registrar</button>
+        <div class="slipFooter">
+          <div class="stakeRow">
+            <input id="stakeInput" type="number" min="0" step="1" placeholder="Valor em CP" />
           </div>
 
-          <div id="loginBox" class="stack">
-            <div class="field">
-              <label>E-mail</label>
-              <input id="authEmail" placeholder="seuemail@exemplo.com" />
-            </div>
-
-            <div class="field">
-              <label>Senha</label>
-              <input id="authPass" type="password" placeholder="••••••••" />
-            </div>
-
-            <div class="row" style="justify-content:flex-end">
-              <button class="btn primary" id="btnSubmitAuth">Entrar</button>
-            </div>
+          <div class="stakeQuick">
+            <div class="stakeChip" data-stake="10">+10</div>
+            <div class="stakeChip" data-stake="25">+25</div>
+            <div class="stakeChip" data-stake="50">+50</div>
+            <div class="stakeChip" data-stake="100">+100</div>
           </div>
 
-          <div id="registerBox" class="registerStack hide">
-            <div class="field">
-              <label>País de Residência</label>
-              <select id="regCountry">
-                <option value="Brasil" selected>🇧🇷 Brasil</option>
-                <option value="Portugal">🇵🇹 Portugal</option>
-                <option value="Espanha">🇪🇸 Espanha</option>
-                <option value="Itália">🇮🇹 Itália</option>
-                <option value="Alemanha">🇩🇪 Alemanha</option>
-                <option value="França">🇫🇷 França</option>
-                <option value="Inglaterra">🏴 Inglaterra</option>
-              </select>
+          <div class="summaryBox">
+            <span>Odds totais</span>
+            <strong id="totalOdds">1.00</strong>
+          </div>
+
+          <div class="summaryBox">
+            <span>Saldo</span>
+            <strong id="slipBalance">0 CP</strong>
+          </div>
+
+          <div class="summaryBox big">
+            <span>Retorno estimado</span>
+            <strong id="estReturn">0</strong>
+          </div>
+
+          <button class="btn primary full" id="btnPlaceBet">Fazer aposta</button>
+        </div>
+      </div>
+
+      <div class="betslipMiniBar" id="miniSlipBar">
+        <div class="miniMain">
+          <strong id="miniSlipTitle">Bilhete ativo</strong>
+          <div class="miniSub" id="miniSlipSub">0 seleções</div>
+        </div>
+        <div class="ticketOdd" id="miniSlipOdds">1.00</div>
+      </div>
+    </div>
+
+    <div id="authModal" class="modal">
+      <div class="modalCard">
+        <div class="modalHead">
+          <h3 id="authTitle">Entrar</h3>
+          <button class="btn small" id="btnCloseAuth">✕</button>
+        </div>
+
+        <div class="modalBody">
+          <div class="authSub" id="authSubtext">Entre na sua conta para continuar.</div>
+
+          <div class="authShell">
+            <div class="segRow" style="margin-bottom:14px">
+              <button class="segBtn active" id="tabLogin" type="button">Entrar</button>
+              <button class="segBtn" id="tabRegister" type="button">Registrar</button>
             </div>
 
-            <div class="authGrid2">
+            <div id="authLoginView" class="registerStack">
               <div class="field">
-                <label>DDD</label>
-                <input id="regDDD" value="+55" />
+                <label>E-mail</label>
+                <input id="loginEmail" placeholder="seuemail@exemplo.com" />
               </div>
 
               <div class="field">
-                <label>Número de celular</label>
-                <input id="regPhone" placeholder="(11) 99999-9999" />
+                <label>Senha</label>
+                <input id="loginPass" type="password" placeholder="Sua senha" />
+              </div>
+
+              <div class="authSubmitRow">
+                <button class="btn primary authSubmitBtn full" id="btnSubmitLogin">Entrar</button>
               </div>
             </div>
 
-            <div class="field">
-              <label>E-mail</label>
-              <input id="regEmail" placeholder="seuemail@exemplo.com" />
-            </div>
+            <div id="authRegisterView" class="registerStack hide">
+              <div id="registerFormStep" class="registerStack">
+                <div class="field">
+                  <label>E-mail</label>
+                  <input id="regEmail" placeholder="seuemail@exemplo.com" />
+                </div>
 
-            <div class="field">
-              <label>Sexo</label>
-              <div class="segRow">
-                <div class="segBtn active" id="genderM">Masculino</div>
-                <div class="segBtn" id="genderF">Feminino</div>
+                <div class="field">
+                  <label>Sexo</label>
+                  <div class="segRow">
+                    <div class="segBtn active" id="genderM">Masculino</div>
+                    <div class="segBtn" id="genderF">Feminino</div>
+                  </div>
+                  <input type="hidden" id="regGender" value="Masculino" />
+                </div>
+
+                <div class="field">
+                  <label>Nome</label>
+                  <div class="authGridName">
+                    <input id="regFirstName" placeholder="Nomes" />
+                    <input id="regLastName" placeholder="Sobrenomes" />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>Data de nascimento</label>
+                  <div class="birthGrid">
+                    <input id="regBirthDay" placeholder="DD" inputmode="numeric" />
+                    <input id="regBirthMonth" placeholder="MM" inputmode="numeric" />
+                    <input id="regBirthYear" placeholder="AAAA" inputmode="numeric" />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>Senha</label>
+                  <input id="regPass" type="password" placeholder="Crie uma senha" />
+                </div>
+
+                <div class="field">
+                  <label>Confirmar senha</label>
+                  <input id="regPass2" type="password" placeholder="Repita a senha" />
+                </div>
+
+                <div class="authSubmitRow">
+                  <button class="btn primary authSubmitBtn full" id="btnSubmitRegister">Criar conta</button>
+                </div>
               </div>
-              <input type="hidden" id="regGender" value="Masculino" />
-            </div>
 
-            <div class="field">
-              <label>Nome</label>
-              <div class="authGridName">
-                <input id="regFirstName" placeholder="Nomes" />
-                <input id="regLastName" placeholder="Sobrenomes" />
+              <div id="registerVerifyStep" class="verifyBox hide">
+                <div class="verifyHero">
+                  <div class="verifyMark">✉️</div>
+                  <div>
+                    <div class="verifyTitle">Confirme seu e-mail</div>
+                    <div class="verifyText">
+                      Enviamos um código de 6 dígitos para <strong id="verifyEmailLabel">seu e-mail</strong>.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="codeInputs">
+                  <input class="codeDigit" id="code1" maxlength="1" inputmode="numeric" />
+                  <input class="codeDigit" id="code2" maxlength="1" inputmode="numeric" />
+                  <input class="codeDigit" id="code3" maxlength="1" inputmode="numeric" />
+                  <input class="codeDigit" id="code4" maxlength="1" inputmode="numeric" />
+                  <input class="codeDigit" id="code5" maxlength="1" inputmode="numeric" />
+                  <input class="codeDigit" id="code6" maxlength="1" inputmode="numeric" />
+                </div>
+
+                <div class="authAltRow">
+                  <button class="btn primary" id="btnVerifyCode">Confirmar código</button>
+                  <button class="btn" id="btnResendCode">Reenviar código</button>
+                  <button class="btn ghost" id="btnBackToRegister">Voltar</button>
+                </div>
               </div>
-            </div>
-
-            <div class="field">
-              <label>Data de Nascimento</label>
-              <div class="birthGrid">
-                <input id="regBirthDay" placeholder="DD" inputmode="numeric" />
-                <input id="regBirthMonth" placeholder="MM" inputmode="numeric" />
-                <input id="regBirthYear" placeholder="AAAA" inputmode="numeric" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label>Senha</label>
-              <input id="regPass" type="password" placeholder="Crie uma senha" />
-            </div>
-
-            <div class="field">
-              <label>Confirmar senha</label>
-              <input id="regPass2" type="password" placeholder="Repita a senha" />
-            </div>
-
-            <div class="authSubmitRow">
-              <button class="btn primary authSubmitBtn" id="btnSubmitRegister">Criar conta</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div id="plansModal" class="modal">
-    <div class="modalCard">
-      <div class="modalHead">
-        <h3>Planos CravaAí</h3>
-        <button class="btn small" id="btnClosePlans">✕</button>
-      </div>
-
-      <div class="modalBody plansShell">
-        <div class="plansHero">
-          <div class="plansHeroKicker">Planos e benefícios</div>
-          <h2 class="plansHeroTitle">Escolha o plano ideal para competir no CravaAí</h2>
-          <div class="plansHeroText">
-            Compare os benefícios e escolha a opção que faz mais sentido para acompanhar ligas, entrar em competições e evoluir sua experiência.
-          </div>
+    <div id="plansModal" class="modal">
+      <div class="modalCard">
+        <div class="modalHead">
+          <h3>Planos CravaAí</h3>
+          <button class="btn small" id="btnClosePlans">✕</button>
         </div>
 
-        <div class="plansGrid">
-          <div class="planCard">
-            <div class="planHead">
-              <div class="planName">Free</div>
-              <div class="planPrice">R$ 0 <small>/mês</small></div>
-              <div class="planSub">Para começar e conhecer a plataforma.</div>
-            </div>
-
-            <div class="planBody">
-              <div class="planFeat"><i>✓</i><span>Acesso básico às ligas</span></div>
-              <div class="planFeat"><i>✓</i><span>Bilhete simples e múltipla</span></div>
-              <div class="planFeat"><i>✓</i><span>Histórico de apostas</span></div>
-            </div>
-
-            <div class="planActions">
-              <button class="btn" data-plan="Free">Continuar no Free</button>
+        <div class="modalBody plansShell">
+          <div class="plansHero">
+            <div class="plansHeroKicker">Planos e benefícios</div>
+            <h2 class="plansHeroTitle">Escolha o plano ideal para competir no CravaAí</h2>
+            <div class="plansHeroText">
+              Compare os benefícios e escolha a opção que faz mais sentido para acompanhar ligas, entrar em competições e evoluir sua experiência.
             </div>
           </div>
 
-          <div class="planCard featured">
-            <div class="planBadge">Mais escolhido</div>
+          <div class="plansGrid">
+            <div class="planCard">
+              <div class="planHead">
+                <div class="planName">Free</div>
+                <div class="planPrice">R$ 0 <small>/mês</small></div>
+                <div class="planSub">Para começar e conhecer a plataforma.</div>
+              </div>
 
-            <div class="planHead">
-              <div class="planName">Pro</div>
-              <div class="planPrice">R$ 29,90 <small>/mês</small></div>
-              <div class="planSub">Mais recursos para quem quer competir com frequência.</div>
+              <div class="planBody">
+                <div class="planFeat"><i>✓</i><span>Acesso básico às ligas</span></div>
+                <div class="planFeat"><i>✓</i><span>Bilhete simples e múltipla</span></div>
+                <div class="planFeat"><i>✓</i><span>Histórico de apostas</span></div>
+              </div>
+
+              <div class="planActions">
+                <button class="btn" data-plan="Free">Continuar no Free</button>
+              </div>
             </div>
 
-            <div class="planBody">
-              <div class="planFeat"><i>✓</i><span>Acesso expandido às competições</span></div>
-              <div class="planFeat"><i>✓</i><span>Mais destaque e organização no bilhete</span></div>
-              <div class="planFeat"><i>✓</i><span>Vantagens em ligas e recursos premium</span></div>
+            <div class="planCard featured">
+              <div class="planBadge">Mais escolhido</div>
+
+              <div class="planHead">
+                <div class="planName">Pro</div>
+                <div class="planPrice">R$ 29,90 <small>/mês</small></div>
+                <div class="planSub">Mais recursos para quem quer competir com frequência.</div>
+              </div>
+
+              <div class="planBody">
+                <div class="planFeat"><i>✓</i><span>Acesso expandido às competições</span></div>
+                <div class="planFeat"><i>✓</i><span>Mais destaque e organização no bilhete</span></div>
+                <div class="planFeat"><i>✓</i><span>Vantagens em ligas e recursos premium</span></div>
+              </div>
+
+              <div class="planActions">
+                <button class="btn yellow" data-plan="Pro">Escolher Pro</button>
+              </div>
             </div>
 
-            <div class="planActions">
-              <button class="btn yellow" data-plan="Pro">Escolher Pro</button>
-            </div>
-          </div>
+            <div class="planCard">
+              <div class="planHead">
+                <div class="planName">Elite</div>
+                <div class="planPrice">R$ 49,90 <small>/mês</small></div>
+                <div class="planSub">A experiência mais completa do CravaAí.</div>
+              </div>
 
-          <div class="planCard">
-            <div class="planHead">
-              <div class="planName">Elite</div>
-              <div class="planPrice">R$ 49,90 <small>/mês</small></div>
-              <div class="planSub">A experiência mais completa do CravaAí.</div>
-            </div>
+              <div class="planBody">
+                <div class="planFeat"><i>✓</i><span>Todos os benefícios do Pro</span></div>
+                <div class="planFeat"><i>✓</i><span>Máximo acesso aos recursos premium</span></div>
+                <div class="planFeat"><i>✓</i><span>Plano pensado para usuários mais ativos</span></div>
+              </div>
 
-            <div class="planBody">
-              <div class="planFeat"><i>✓</i><span>Todos os benefícios do Pro</span></div>
-              <div class="planFeat"><i>✓</i><span>Máximo acesso aos recursos premium</span></div>
-              <div class="planFeat"><i>✓</i><span>Plano pensado para usuários mais ativos</span></div>
-            </div>
-
-            <div class="planActions">
-              <button class="btn primary" data-plan="Elite">Escolher Elite</button>
+              <div class="planActions">
+                <button class="btn primary" data-plan="Elite">Escolher Elite</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div id="toast" class="toast"></div>
+    <div id="toast" class="toast"></div>
 
-  <div class="bottomNav">
-    <div class="bottomNavInner">
-      <div class="navBtn active" id="navHome">Início<span>Jogos</span></div>
-      <div class="navBtn" id="navHistory">Histórico<span>Apostas</span></div>
-      <div class="navBtn" id="navLeagues">Ligas<span>Competições</span></div>
-      <div class="navBtn" id="navPlans">Planos<span>Assinatura</span></div>
+    <div class="bottomNav">
+      <div class="bottomNavInner">
+        <div class="navBtn active" id="navHome">Início<span>Jogos</span></div>
+        <div class="navBtn" id="navHistory">Histórico<span>Apostas</span></div>
+        <div class="navBtn" id="navLeagues">Ligas<span>Competições</span></div>
+        <div class="navBtn" id="navPlans">Planos<span>Assinatura</span></div>
+      </div>
     </div>
-  </div>
 
-  <script>
-    const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
+    <script>
+      const ADMIN_EMAIL = "josevilelarodrigues@hotmail.com";
 
-    const $ = (s) => document.querySelector(s);
-    const $$ = (s) => Array.from(document.querySelectorAll(s));
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => Array.from(document.querySelectorAll(s));
 
-    const fmtCP = (n) => {
-      const x = Number(n || 0);
-      try { return x.toLocaleString("pt-BR"); }
-      catch { return String(x); }
-    };
+      const fmtCP = (n) => {
+        const x = Number(n || 0);
+        try { return x.toLocaleString("pt-BR"); }
+        catch { return String(x); }
+      };
 
-    const fmtMoneyBR = (n) => {
-      const x = Number(n || 0);
-      try {
-        return x.toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
-      } catch {
-        return `R$ ${x.toFixed(2)}`;
-      }
-    };
+      const esc = (str) => String(str ?? "").replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      }[m]));
 
-    const esc = (str) => String(str ?? "").replace(/[&<>"']/g, (m) => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      "\"":"&quot;",
-      "'":"&#39;"
-    }[m]));
+      const uid = () => crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      const nowIso = () => new Date().toISOString();
+      const isAdminEmail = (email) => String(email || "").trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-    const uid = () => crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
-    const nowIso = () => new Date().toISOString();
-    const isAdminEmail = (email) => String(email || "").trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-    const storage = {
-      get(key, fallback){
-        try{
-          const raw = localStorage.getItem(key);
-          return raw ? JSON.parse(raw) : fallback;
-        }catch{
-          return fallback;
-        }
-      },
-      set(key, value){
-        localStorage.setItem(key, JSON.stringify(value));
-      }
-    };
-
-    const LS_KEYS = {
-      user: "cravaai_user",
-      users: "cravaai_users",
-      history: "cravaai_history",
-      leagues: "cravaai_user_leagues",
-      competitions: "cravaai_competitions",
-      slipMini: "cravaai_slip_mini"
-    };
-
-    const DEFAULT_LEAGUES = [
-      { id:"brasileirao", name:"Brasileirão Série A", country:"Brasil", region:"americas", featured:true },
-      { id:"copa-do-brasil", name:"Copa do Brasil", country:"Brasil", region:"americas", featured:true },
-      { id:"libertadores", name:"Libertadores", country:"América do Sul", region:"americas", featured:true },
-      { id:"sulamericana", name:"Sul-Americana", country:"América do Sul", region:"americas", featured:false },
-      { id:"premier-league", name:"Premier League", country:"Inglaterra", region:"europe", featured:true },
-      { id:"la-liga", name:"La Liga", country:"Espanha", region:"europe", featured:true },
-      { id:"serie-a-italia", name:"Serie A", country:"Itália", region:"europe", featured:true },
-      { id:"bundesliga", name:"Bundesliga", country:"Alemanha", region:"europe", featured:true },
-      { id:"ligue-1", name:"Ligue 1", country:"França", region:"europe", featured:true },
-      { id:"champions-league", name:"Champions League", country:"Europa", region:"europe", featured:true },
-      { id:"europa-league", name:"Europa League", country:"Europa", region:"europe", featured:false }
-    ];
-
-    const MATCHES = {
-      "brasileirao": [
-        {
-          id:"m1",
-          leagueId:"brasileirao",
-          league:"Brasileirão Série A",
-          date:"2026-03-25T19:00:00",
-          home:"Flamengo",
-          away:"Palmeiras",
-          venue:"Maracanã",
-          odds:{ "1":2.18, "X":3.22, "2":3.06 },
-          markets:{
-            principais:[
-              ["Casa vence",2.18],["Empate",3.22],["Visitante vence",3.06],
-              ["Mais de 2.5",2.02],["Menos de 2.5",1.79],["Ambos marcam",1.88]
-            ],
-            gols:[
-              ["Mais de 0.5",1.10],["Mais de 1.5",1.42],["Mais de 2.5",2.02],
-              ["Menos de 2.5",1.79],["Mais de 3.5",3.30],["Menos de 3.5",1.29]
-            ],
-            especiais:[
-              ["Flamengo marca 1+",1.22],["Palmeiras marca 1+",1.36],["Flamengo ou empate",1.34],
-              ["Palmeiras ou empate",1.61],["Empate anula Casa",1.54],["Empate anula Visitante",1.83]
-            ]
+      const storage = {
+        get(key, fallback){
+          try{
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : fallback;
+          }catch{
+            return fallback;
           }
         },
-        {
-          id:"m2",
+        set(key, val){
+          localStorage.setItem(key, JSON.stringify(val));
+        }
+      };
+
+      const AUTH_API = {
+        registerStart: "/.netlify/functions/auth-register-start",
+        registerVerify: "/.netlify/functions/auth-register-verify",
+        login: "/.netlify/functions/auth-login"
+      };
+
+      const state = {
+        ui:{
+          view:"home",
           leagueId:"brasileirao",
-          league:"Brasileirão Série A",
-          date:"2026-03-25T21:30:00",
-          home:"São Paulo",
-          away:"Corinthians",
-          venue:"MorumBIS",
-          odds:{ "1":2.24, "X":3.01, "2":3.20 },
-          markets:{
-            principais:[
-              ["Casa vence",2.24],["Empate",3.01],["Visitante vence",3.20],
-              ["Mais de 2.5",2.18],["Menos de 2.5",1.71],["Ambos marcam",1.94]
-            ],
-            gols:[
-              ["Mais de 0.5",1.12],["Mais de 1.5",1.50],["Mais de 2.5",2.18],
-              ["Menos de 2.5",1.71],["Mais de 3.5",3.55],["Menos de 3.5",1.27]
-            ],
-            especiais:[
-              ["São Paulo marca 1+",1.27],["Corinthians marca 1+",1.44],["Casa ou empate",1.35],
-              ["Visitante ou empate",1.60],["Empate anula Casa",1.58],["Empate anula Visitante",1.87]
-            ]
-          }
+          currentGameId:null,
+          competitionsOpen:false
         },
-        {
-          id:"m3",
-          leagueId:"brasileirao",
-          league:"Brasileirão Série A",
-          date:"2026-03-26T18:30:00",
-          home:"Atlético-MG",
-          away:"Internacional",
-          venue:"Arena MRV",
-          odds:{ "1":2.05, "X":3.20, "2":3.58 },
-          markets:{
-            principais:[
-              ["Casa vence",2.05],["Empate",3.20],["Visitante vence",3.58],
-              ["Mais de 2.5",2.05],["Menos de 2.5",1.77],["Ambos marcam",1.91]
-            ],
-            gols:[
-              ["Mais de 0.5",1.11],["Mais de 1.5",1.47],["Mais de 2.5",2.05],
-              ["Menos de 2.5",1.77],["Mais de 3.5",3.44],["Menos de 3.5",1.28]
-            ],
-            especiais:[
-              ["Atlético-MG marca 1+",1.20],["Internacional marca 1+",1.48],["Casa ou empate",1.28],
-              ["Visitante ou empate",1.73],["Empate anula Casa",1.45],["Empate anula Visitante",2.00]
-            ]
+        slip:[],
+        slipMini:false,
+        multiple:false,
+        history:storage.get("cravai_history", []),
+        myLeagues:storage.get("cravai_my_leagues", []),
+        user:storage.get("cravai_user", null),
+        pendingRegister:null,
+        leagues:[
+          { id:"brasileirao", name:"Brasileirão Série A", country:"Brasil", region:"americas", featured:true },
+          { id:"cdb", name:"Copa do Brasil", country:"Brasil", region:"americas", featured:true },
+          { id:"libertadores", name:"Libertadores", country:"América do Sul", region:"americas", featured:true },
+          { id:"premier", name:"Premier League", country:"Inglaterra", region:"europe", featured:true },
+          { id:"laliga", name:"La Liga", country:"Espanha", region:"europe", featured:true },
+          { id:"seriea", name:"Serie A", country:"Itália", region:"europe", featured:false },
+          { id:"bundesliga", name:"Bundesliga", country:"Alemanha", region:"europe", featured:false },
+          { id:"ligue1", name:"Ligue 1", country:"França", region:"europe", featured:false }
+        ],
+        matches:[
+          {
+            id:"m1",
+            leagueId:"brasileirao",
+            league:"Brasileirão Série A",
+            date:"2026-03-28T16:00:00-03:00",
+            home:"Flamengo",
+            away:"Palmeiras",
+            venue:"Maracanã",
+            odds:{ home:2.18, draw:3.22, away:3.16 },
+            markets:{
+              principais:[
+                { label:"Casa", odd:2.18 },
+                { label:"Empate", odd:3.22 },
+                { label:"Fora", odd:3.16 }
+              ],
+              gols:[
+                { label:"Mais de 1.5", odd:1.34 },
+                { label:"Mais de 2.5", odd:1.88 },
+                { label:"Menos de 2.5", odd:1.92 },
+                { label:"Ambas marcam", odd:1.78 }
+              ],
+              especiais:[
+                { label:"Mais de 8.5 escanteios", odd:1.83 },
+                { label:"Mais de 3.5 cartões", odd:1.74 },
+                { label:"Flamengo marca primeiro", odd:1.72 },
+                { label:"Palmeiras marca primeiro", odd:2.35 }
+              ]
+            }
+          },
+          {
+            id:"m2",
+            leagueId:"brasileirao",
+            league:"Brasileirão Série A",
+            date:"2026-03-28T18:30:00-03:00",
+            home:"São Paulo",
+            away:"Corinthians",
+            venue:"MorumBIS",
+            odds:{ home:2.40, draw:3.00, away:3.00 },
+            markets:{
+              principais:[
+                { label:"Casa", odd:2.40 },
+                { label:"Empate", odd:3.00 },
+                { label:"Fora", odd:3.00 }
+              ],
+              gols:[
+                { label:"Mais de 1.5", odd:1.42 },
+                { label:"Mais de 2.5", odd:2.08 },
+                { label:"Menos de 2.5", odd:1.72 },
+                { label:"Ambas marcam", odd:1.95 }
+              ],
+              especiais:[
+                { label:"Mais de 9.5 escanteios", odd:1.93 },
+                { label:"Mais de 4.5 cartões", odd:1.68 },
+                { label:"São Paulo vence 1º tempo", odd:3.10 },
+                { label:"Corinthians vence 1º tempo", odd:3.55 }
+              ]
+            }
+          },
+          {
+            id:"m3",
+            leagueId:"premier",
+            league:"Premier League",
+            date:"2026-03-29T12:00:00-03:00",
+            home:"Liverpool",
+            away:"Arsenal",
+            venue:"Anfield",
+            odds:{ home:2.10, draw:3.45, away:3.25 },
+            markets:{
+              principais:[
+                { label:"Casa", odd:2.10 },
+                { label:"Empate", odd:3.45 },
+                { label:"Fora", odd:3.25 }
+              ],
+              gols:[
+                { label:"Mais de 1.5", odd:1.26 },
+                { label:"Mais de 2.5", odd:1.72 },
+                { label:"Menos de 2.5", odd:2.02 },
+                { label:"Ambas marcam", odd:1.62 }
+              ],
+              especiais:[
+                { label:"Mais de 10.5 escanteios", odd:2.04 },
+                { label:"Mais de 3.5 cartões", odd:1.71 },
+                { label:"Liverpool marca primeiro", odd:1.69 },
+                { label:"Arsenal marca primeiro", odd:2.42 }
+              ]
+            }
           }
-        }
-      ],
-      "copa-do-brasil": [
-        {
-          id:"m4",
-          leagueId:"copa-do-brasil",
-          league:"Copa do Brasil",
-          date:"2026-03-25T20:00:00",
-          home:"Grêmio",
-          away:"Athletico-PR",
-          venue:"Arena do Grêmio",
-          odds:{ "1":2.12, "X":3.10, "2":3.30 },
-          markets:{
-            principais:[
-              ["Casa vence",2.12],["Empate",3.10],["Visitante vence",3.30],
-              ["Mais de 2.5",2.16],["Menos de 2.5",1.72],["Ambos marcam",1.92]
-            ],
-            gols:[
-              ["Mais de 0.5",1.13],["Mais de 1.5",1.53],["Mais de 2.5",2.16],
-              ["Menos de 2.5",1.72],["Mais de 3.5",3.62],["Menos de 3.5",1.26]
-            ],
-            especiais:[
-              ["Grêmio marca 1+",1.25],["Athletico-PR marca 1+",1.41],["Casa ou empate",1.32],
-              ["Visitante ou empate",1.66],["Empate anula Casa",1.51],["Empate anula Visitante",1.90]
-            ]
-          }
-        }
-      ],
-      "libertadores": [
-        {
-          id:"m5",
-          leagueId:"libertadores",
-          league:"Libertadores",
-          date:"2026-03-25T21:00:00",
-          home:"River Plate",
-          away:"Boca Juniors",
-          venue:"Monumental",
-          odds:{ "1":2.31, "X":2.96, "2":3.12 },
-          markets:{
-            principais:[
-              ["Casa vence",2.31],["Empate",2.96],["Visitante vence",3.12],
-              ["Mais de 2.5",2.28],["Menos de 2.5",1.68],["Ambos marcam",1.97]
-            ],
-            gols:[
-              ["Mais de 0.5",1.14],["Mais de 1.5",1.58],["Mais de 2.5",2.28],
-              ["Menos de 2.5",1.68],["Mais de 3.5",3.88],["Menos de 3.5",1.24]
-            ],
-            especiais:[
-              ["River marca 1+",1.30],["Boca marca 1+",1.49],["Casa ou empate",1.39],
-              ["Visitante ou empate",1.56],["Empate anula Casa",1.62],["Empate anula Visitante",1.84]
-            ]
-          }
-        }
-      ],
-      "premier-league": [
-        {
-          id:"m6",
-          leagueId:"premier-league",
-          league:"Premier League",
-          date:"2026-03-26T16:00:00",
-          home:"Arsenal",
-          away:"Chelsea",
-          venue:"Emirates Stadium",
-          odds:{ "1":2.04, "X":3.38, "2":3.62 },
-          markets:{
-            principais:[
-              ["Casa vence",2.04],["Empate",3.38],["Visitante vence",3.62],
-              ["Mais de 2.5",1.93],["Menos de 2.5",1.83],["Ambos marcam",1.79]
-            ],
-            gols:[
-              ["Mais de 0.5",1.08],["Mais de 1.5",1.33],["Mais de 2.5",1.93],
-              ["Menos de 2.5",1.83],["Mais de 3.5",3.02],["Menos de 3.5",1.36]
-            ],
-            especiais:[
-              ["Arsenal marca 1+",1.18],["Chelsea marca 1+",1.35],["Casa ou empate",1.24],
-              ["Visitante ou empate",1.79],["Empate anula Casa",1.41],["Empate anula Visitante",2.06]
-            ]
-          }
-        }
-      ],
-      "la-liga": [
-        {
-          id:"m7",
-          leagueId:"la-liga",
-          league:"La Liga",
-          date:"2026-03-26T18:15:00",
-          home:"Real Madrid",
-          away:"Sevilla",
-          venue:"Santiago Bernabéu",
-          odds:{ "1":1.72, "X":3.78, "2":4.90 },
-          markets:{
-            principais:[
-              ["Casa vence",1.72],["Empate",3.78],["Visitante vence",4.90],
-              ["Mais de 2.5",1.82],["Menos de 2.5",1.90],["Ambos marcam",1.86]
-            ],
-            gols:[
-              ["Mais de 0.5",1.05],["Mais de 1.5",1.24],["Mais de 2.5",1.82],
-              ["Menos de 2.5",1.90],["Mais de 3.5",2.76],["Menos de 3.5",1.43]
-            ],
-            especiais:[
-              ["Real Madrid marca 1+",1.07],["Sevilla marca 1+",1.57],["Casa ou empate",1.13],
-              ["Visitante ou empate",2.11],["Empate anula Casa",1.23],["Empate anula Visitante",2.60]
-            ]
-          }
-        }
-      ]
-    };
+        ]
+      };
 
-    const state = {
-      ui: {
-        view: "home",
-        selectedLeagueId: "brasileirao",
-        competitionsOpen: false,
-        currentGameId: null,
-        authMode: "login",
-        builderOn: false
-      },
-      user: storage.get(LS_KEYS.user, null),
-      users: storage.get(LS_KEYS.users, []),
-      history: storage.get(LS_KEYS.history, []),
-      myLeagues: storage.get(LS_KEYS.leagues, []),
-      competitions: storage.get(LS_KEYS.competitions, []),
-      slip: [],
-      slipMini: storage.get(LS_KEYS.slipMini, false),
-      slipRaisedOnce: false
-    };
+            function groupMatchesByDate(matches){
+        const groups = new Map();
 
-    function seedCompetitions(){
-      if (!state.competitions.length){
-        state.competitions = [
-          { id:uid(), name:"CravaAí Masters", code:"MASTER10", createdAt:nowIso() },
-          { id:uid(), name:"Liga Premiada Brasil", code:"PREMIADA", createdAt:nowIso() }
-        ];
-        persistCompetitions();
-      }
-    }
-
-    function persistUser(){ storage.set(LS_KEYS.user, state.user); }
-    function persistUsers(){ storage.set(LS_KEYS.users, state.users); }
-    function persistHistory(){ storage.set(LS_KEYS.history, state.history); }
-    function persistMyLeagues(){ storage.set(LS_KEYS.leagues, state.myLeagues); }
-    function persistCompetitions(){ storage.set(LS_KEYS.competitions, state.competitions); }
-    function persistSlipMini(){ storage.set(LS_KEYS.slipMini, state.slipMini); }
-
-    function getSelectedLeague(){
-      return DEFAULT_LEAGUES.find(l => l.id === state.ui.selectedLeagueId) || DEFAULT_LEAGUES[0];
-    }
-
-    function getMatchesForLeague(leagueId){
-      return MATCHES[leagueId] || [];
-    }
-
-    function getAllMatches(){
-      return Object.values(MATCHES).flat();
-    }
-
-    function findMatchById(id){
-      return getAllMatches().find(m => m.id === id) || null;
-    }
-
-    function showToast(msg){
-      const el = $("#toast");
-      el.textContent = msg;
-      el.style.display = "block";
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => {
-        el.style.display = "none";
-      }, 2200);
-    }
-
-    function groupMatchesByDate(matches){
-      const groups = new Map();
-
-      matches.forEach(m => {
-        const d = new Date(m.date);
-        const key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString();
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(m);
-      });
-
-      return Array.from(groups.entries())
-        .sort((a,b) => new Date(a[0]) - new Date(b[0]))
-        .map(([dateKey, items]) => ({ dateKey, items }));
-    }
-
-    function formatDateLabel(dateKey){
-      const d = new Date(dateKey);
-      try{
-        return d.toLocaleDateString("pt-BR", {
-          weekday:"long",
-          day:"2-digit",
-          month:"2-digit"
+        matches.forEach(m => {
+          const d = new Date(m.date);
+          const key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString();
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(m);
         });
-      }catch{
-        return d.toDateString();
+
+        return Array.from(groups.entries())
+          .sort((a,b) => new Date(a[0]) - new Date(b[0]))
+          .map(([dateKey, items]) => ({ dateKey, items }));
       }
-    }
 
-    function formatTime(iso){
-      const d = new Date(iso);
-      try{
-        return d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
-      }catch{
-        return "--:--";
-      }
-    }
-
-    function teamCrestHTML(teamName, sizeClass=""){
-      const initials = String(teamName || "?")
-        .split(" ")
-        .map(w => w[0] || "")
-        .join("")
-        .slice(0,2)
-        .toUpperCase();
-
-      return `
-        <div class="teamCrest ${sizeClass}">
-          <div class="teamCrestFallback">${esc(initials)}</div>
-        </div>
-      `;
-    }
-
-    function calcSlipOdds(){
-      if (!state.slip.length) return 1;
-      return state.slip.reduce((acc, item) => acc * Number(item.odd || 1), 1);
-    }
-
-    function calcEstReturn(){
-      const stake = Number($("#stakeInput")?.value || 0);
-      return stake * calcSlipOdds();
-    }
-
-    function isSameGameSelectionConflict(newItem){
-      if (state.ui.builderOn) return false;
-      return state.slip.some(item => item.matchId === newItem.matchId);
-    }
-
-    function addSelectionToSlip(item){
-      const already = state.slip.find(x => x.matchId === item.matchId && x.label === item.label);
-      if (already){
-        state.slip = state.slip.filter(x => !(x.matchId === item.matchId && x.label === item.label));
-      } else {
-        if (isSameGameSelectionConflict(item)){
-          state.slip = state.slip.filter(x => x.matchId !== item.matchId);
+      function formatDateLabel(dateKey){
+        const d = new Date(dateKey);
+        try{
+          return d.toLocaleDateString("pt-BR", {
+            weekday:"long",
+            day:"2-digit",
+            month:"2-digit"
+          });
+        }catch{
+          return d.toDateString();
         }
-        state.slip.push(item);
       }
 
-      if (state.slip.length && !state.slipRaisedOnce){
-        state.slipMini = false;
-        state.slipRaisedOnce = true;
+      function formatTime(iso){
+        const d = new Date(iso);
+        try{
+          return d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+        }catch{
+          return "--:--";
+        }
       }
 
-      renderSlip();
-      renderMatches();
-      renderGameScreenSelections();
-    }
+      function teamCrestHTML(teamName, sizeClass=""){
+        const initials = String(teamName || "?")
+          .split(" ")
+          .map(w => w[0] || "")
+          .join("")
+          .slice(0,2)
+          .toUpperCase();
 
-    function removeSlipItem(index){
-      state.slip.splice(index, 1);
-      renderSlip();
-      renderMatches();
-      renderGameScreenSelections();
-    }
-
-    function clearSlip(){
-      state.slip = [];
-      renderSlip();
-      renderMatches();
-      renderGameScreenSelections();
-    }
-
-    function setActiveBottomNav(id){
-      ["navHome","navHistory","navLeagues","navPlans"].forEach(x => {
-        const el = document.getElementById(x);
-        if (el) el.classList.toggle("active", x === id);
-      });
-    }
-
-    function showHome(){
-      state.ui.view = "home";
-      $("#viewHome").classList.remove("hide");
-      $("#viewHistory").classList.add("hide");
-      $("#viewLeagues").classList.add("hide");
-      setActiveBottomNav("navHome");
-      renderHomeSections();
-    }
-
-    function showHistory(){
-      state.ui.view = "history";
-      $("#viewHome").classList.add("hide");
-      $("#viewHistory").classList.remove("hide");
-      $("#viewLeagues").classList.add("hide");
-      setActiveBottomNav("navHistory");
-      renderHistory();
-    }
-
-    function showLeagues(){
-      state.ui.view = "leagues";
-      $("#viewHome").classList.add("hide");
-      $("#viewHistory").classList.add("hide");
-      $("#viewLeagues").classList.remove("hide");
-      setActiveBottomNav("navLeagues");
-      renderLeaguesView();
-    }
-
-    function openPlans(){
-      $("#plansModal").classList.add("show");
-      setActiveBottomNav("navPlans");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closePlans(){
-      $("#plansModal").classList.remove("show");
-      document.body.style.overflow = "";
-      if (state.ui.view === "history") setActiveBottomNav("navHistory");
-      else if (state.ui.view === "leagues") setActiveBottomNav("navLeagues");
-      else setActiveBottomNav("navHome");
-      renderHomeSections();
-    }
-
-    function openAuth(mode="login"){
-      state.ui.authMode = mode;
-      $("#authModal").classList.add("show");
-      document.body.style.overflow = "hidden";
-      syncAuthMode();
-    }
-
-    function closeAuth(){
-      $("#authModal").classList.remove("show");
-      document.body.style.overflow = $("#plansModal").classList.contains("show") ? "hidden" : "";
-    }
-
-    function syncAuthMode(){
-      const isLogin = state.ui.authMode === "login";
-      $("#authTitle").textContent = isLogin ? "Entrar" : "Registrar";
-      $("#authHint").textContent = isLogin
-        ? "Entre com email e senha."
-        : "Crie sua conta para entrar nas competições.";
-      $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
-      $("#loginBox").classList.toggle("hide", !isLogin);
-      $("#registerBox").classList.toggle("hide", isLogin);
-    }
-
-    function toggleCompetitions(open = !state.ui.competitionsOpen){
-      state.ui.competitionsOpen = open;
-      $("#competitionsSection").classList.toggle("hide", !open);
-      $("#matchesSection").classList.toggle("hide", open);
-      $("#btnNavFootball").classList.toggle("active", !open);
-      $("#btnNavCompetitions").classList.toggle("active", open);
-    }
-
-    function renderHomeSections(){
-      renderFeaturedLeagues();
-      renderCompetitions();
-      renderFeaturedList();
-      renderMatches();
-      renderMobileLeagueRail();
-    }
-
-    function renderFeaturedLeagues(){
-      const list = $("#featuredLeagueList");
-      const featured = DEFAULT_LEAGUES.filter(l => l.featured);
-
-      list.innerHTML = featured.map(l => `
-        <div class="leagueItem ${l.id === state.ui.selectedLeagueId && !state.ui.competitionsOpen ? "active" : ""}" data-league="${esc(l.id)}">
-          <div>
-            <div class="leagueName">${esc(l.name)}</div>
-            <div class="smallText">${esc(l.country)}</div>
+        return `
+          <div class="teamCrest ${sizeClass}">
+            <div class="teamCrestFallback">${esc(initials)}</div>
           </div>
-          <div class="badge">${l.region === "americas" ? "AM" : "EU"}</div>
-        </div>
-      `).join("");
+        `;
+      }
 
-      $$("#featuredLeagueList .leagueItem").forEach(el => {
-        el.onclick = () => {
-          state.ui.selectedLeagueId = el.dataset.league;
-          toggleCompetitions(false);
-          renderHomeSections();
-        };
-      });
-    }
+      function showToast(msg){
+        const el = $("#toast");
+        el.textContent = msg;
+        el.style.display = "block";
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => {
+          el.style.display = "none";
+        }, 2200);
+      }
 
-    function renderMobileLeagueRail(){
-      const rail = $("#mobileLeagueRail");
-      const featured = DEFAULT_LEAGUES.filter(l => l.featured);
+      function getSelectedLeague(){
+        return state.leagues.find(l => l.id === state.ui.leagueId) || state.leagues[0];
+      }
 
-      rail.innerHTML = featured.map(l => `
-        <div class="mobileLeagueChip ${l.id === state.ui.selectedLeagueId && !state.ui.competitionsOpen ? "active" : ""}" data-league="${esc(l.id)}">
-          ${esc(l.name)}
-          <small>${esc(l.country)}</small>
-        </div>
-      `).join("");
+      function getMatchesForLeague(leagueId){
+        return state.matches.filter(m => m.leagueId === leagueId);
+      }
 
-      $$("#mobileLeagueRail .mobileLeagueChip").forEach(el => {
-        el.onclick = () => {
-          state.ui.selectedLeagueId = el.dataset.league;
-          toggleCompetitions(false);
-          renderHomeSections();
-        };
-      });
-    }
+      function getAllMatches(){
+        return state.matches.slice();
+      }
 
-    function renderFeaturedList(){
-      const featured = getAllMatches().slice(0, 4);
-      $("#featuredList").innerHTML = featured.map(m => `
-        <div class="itemRow">
-          <div>
-            <strong>${esc(m.home)} x ${esc(m.away)}</strong>
-            <div class="smallText">${esc(m.league)} • ${formatTime(m.date)}</div>
+      function findMatchById(id){
+        return getAllMatches().find(m => m.id === id) || null;
+      }
+
+      function calcSlipOdds(){
+        if (!state.slip.length) return 1;
+        if (!state.multiple) return Number(state.slip[0]?.odd || 1);
+        return state.slip.reduce((acc, item) => acc * Number(item.odd || 1), 1);
+      }
+
+      function calcEstReturn(){
+        const stake = Number($("#stakeInput")?.value || 0);
+        return stake * calcSlipOdds();
+      }
+
+      function persistUser(){ storage.set("cravai_user", state.user); }
+      function persistHistory(){ storage.set("cravai_history", state.history); }
+      function persistMyLeagues(){ storage.set("cravai_my_leagues", state.myLeagues); }
+
+      function setActiveBottomNav(key){
+        $("#navHome").classList.toggle("active", key === "home");
+        $("#navHistory").classList.toggle("active", key === "history");
+        $("#navLeagues").classList.toggle("active", key === "leagues");
+        $("#navPlans").classList.toggle("active", key === "plans");
+      }
+
+      function showHome(){
+        state.ui.view = "home";
+        $("#viewHome").classList.remove("hide");
+        $("#viewHistory").classList.add("hide");
+        $("#viewLeagues").classList.add("hide");
+        setActiveBottomNav("home");
+      }
+
+      function showHistory(){
+        state.ui.view = "history";
+        $("#viewHome").classList.add("hide");
+        $("#viewHistory").classList.remove("hide");
+        $("#viewLeagues").classList.add("hide");
+        setActiveBottomNav("history");
+        renderHistory();
+      }
+
+      function showLeagues(){
+        state.ui.view = "leagues";
+        $("#viewHome").classList.add("hide");
+        $("#viewHistory").classList.add("hide");
+        $("#viewLeagues").classList.remove("hide");
+        setActiveBottomNav("leagues");
+        renderLeaguesView();
+      }
+
+      function openPlans(){
+        $("#plansModal").classList.add("show");
+        setActiveBottomNav("plans");
+      }
+
+      function closePlans(){
+        $("#plansModal").classList.remove("show");
+        if (state.ui.view === "history") setActiveBottomNav("history");
+        else if (state.ui.view === "leagues") setActiveBottomNav("leagues");
+        else setActiveBottomNav("home");
+      }
+
+      function openAuth(mode="login"){
+        $("#authModal").classList.add("show");
+        syncAuthMode(mode);
+      }
+
+      function closeAuth(){
+        $("#authModal").classList.remove("show");
+      }
+
+      function syncAuthMode(mode="login"){
+        const isLogin = mode === "login";
+        $("#tabLogin").classList.toggle("active", isLogin);
+        $("#tabRegister").classList.toggle("active", !isLogin);
+        $("#authLoginView").classList.toggle("hide", !isLogin);
+        $("#authRegisterView").classList.toggle("hide", isLogin);
+        $("#authTitle").textContent = isLogin ? "Entrar" : "Registrar";
+        $("#authSubtext").textContent = isLogin
+          ? "Entre na sua conta para continuar."
+          : "Crie sua conta e confirme seu e-mail para liberar acesso.";
+      }
+
+      function renderFeaturedLeagues(){
+        const list = $("#featuredLeagueList");
+        list.innerHTML = state.leagues
+          .filter(l => l.featured)
+          .map(l => `
+            <div class="leagueItem ${l.id === state.ui.leagueId ? "active" : ""}" data-league="${l.id}">
+              <div>
+                <div class="leagueName">${esc(l.name)}</div>
+                <div class="smallText">${esc(l.country)}</div>
+              </div>
+              <div class="badge">›</div>
+            </div>
+          `).join("");
+
+        $$("[data-league]").forEach(btn => {
+          btn.onclick = () => {
+            state.ui.leagueId = btn.dataset.league;
+            state.ui.competitionsOpen = false;
+            $("#competitionsSection").classList.add("hide");
+            renderHomeSections();
+          };
+        });
+      }
+
+      function renderMobileLeagueRail(){
+        $("#mobileLeagueRail").innerHTML = state.leagues
+          .filter(l => l.featured)
+          .map(l => `
+            <div class="mobileLeagueChip ${l.id === state.ui.leagueId ? "active" : ""}" data-mleague="${l.id}">
+              ${esc(l.name)}
+              <small>${esc(l.country)}</small>
+            </div>
+          `).join("");
+
+        $$("[data-mleague]").forEach(btn => {
+          btn.onclick = () => {
+            state.ui.leagueId = btn.dataset.mleague;
+            state.ui.competitionsOpen = false;
+            $("#competitionsSection").classList.add("hide");
+            renderHomeSections();
+          };
+        });
+      }
+
+      function renderFeaturedList(){
+        const upcoming = getAllMatches()
+          .slice()
+          .sort((a,b) => new Date(a.date) - new Date(b.date))
+          .slice(0,4);
+
+        $("#featuredList").innerHTML = upcoming.map(m => `
+          <div class="itemRow">
+            <div>
+              <strong>${esc(m.home)} x ${esc(m.away)}</strong>
+              <div class="smallText">${esc(m.league)} • ${formatTime(m.date)}</div>
+            </div>
+            <div class="badge">${Number(m.odds.home).toFixed(2)}</div>
           </div>
-          <button class="btn small" data-openmatch="${esc(m.id)}">Abrir</button>
-        </div>
-      `).join("");
+        `).join("");
+      }
 
-      $$("[data-openmatch]").forEach(btn => {
-        btn.onclick = () => openGame(btn.dataset.openmatch);
-      });
-    }
+      function renderCompetitions(){
+        const americas = {};
+        const europe = {};
 
-    function renderCompetitions(){
-      const americas = DEFAULT_LEAGUES.filter(l => l.region === "americas");
-      const europe = DEFAULT_LEAGUES.filter(l => l.region === "europe");
+        state.leagues.forEach(l => {
+          const bucket = l.region === "americas" ? americas : europe;
+          if (!bucket[l.country]) bucket[l.country] = [];
+          bucket[l.country].push(l);
+        });
 
-      renderRegion("regionAmericas", americas);
-      renderRegion("regionEurope", europe);
-    }
+        const renderRegion = (obj, targetId) => {
+          $(targetId).innerHTML = Object.entries(obj).map(([country, leagues]) => `
+            <div class="regionCountry">
+              <div class="regionCountryTitle">🏳️ ${esc(country)}</div>
+              <div class="regionLeagueGrid">
+                ${leagues.map(l => `
+                  <div class="regionLeagueBtn ${l.id === state.ui.leagueId ? "active" : ""}" data-region-league="${l.id}">
+                    <span>${esc(l.name)}</span>
+                    <span>›</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          `).join("");
+        };
 
-    function renderRegion(targetId, leagues){
-      const target = $("#" + targetId);
-      const byCountry = leagues.reduce((acc, l) => {
-        acc[l.country] ||= [];
-        acc[l.country].push(l);
-        return acc;
-      }, {});
+        renderRegion(americas, "#regionAmericas");
+        renderRegion(europe, "#regionEurope");
 
-      target.innerHTML = Object.entries(byCountry).map(([country, items]) => `
-        <div class="regionCountry">
-          <div class="regionCountryTitle">🏳️ ${esc(country)}</div>
-          <div class="regionLeagueGrid">
-            ${items.map(l => `
-              <div class="regionLeagueBtn ${l.id === state.ui.selectedLeagueId ? "active" : ""}" data-regionleague="${esc(l.id)}">
-                <span>${esc(l.name)}</span>
-                <span class="smallText">abrir</span>
+        $$("[data-region-league]").forEach(btn => {
+          btn.onclick = () => {
+            state.ui.leagueId = btn.dataset.regionLeague;
+            state.ui.competitionsOpen = false;
+            $("#competitionsSection").classList.add("hide");
+            renderHomeSections();
+          };
+        });
+      }
+
+      function renderMatches(){
+        const league = getSelectedLeague();
+        const matches = getMatchesForLeague(league.id);
+        const groups = groupMatchesByDate(matches);
+
+        $("#rightTitle").textContent = league.name;
+        $("#selectedLeagueBadge").textContent = league.name;
+
+        $("#matchesList").innerHTML = groups.map(group => `
+          <div class="dateGroup">
+            <div class="dateHeader">
+              <div>${formatDateLabel(group.dateKey)}</div>
+              <div>Jogo</div>
+              <div class="cols">
+                <div>1</div>
+                <div>X</div>
+                <div>2</div>
+              </div>
+              <div>+</div>
+            </div>
+
+            ${group.items.map(m => `
+              <div class="matchRow">
+                <div class="matchTimeCol">
+                  <div class="matchTime">${formatTime(m.date)}</div>
+                  <div class="matchLeagueMini">${esc(m.league)}</div>
+                </div>
+
+                <div class="matchTeamsCol">
+                  <div class="teamLine">
+                    ${teamCrestHTML(m.home)}
+                    <div class="teamName">${esc(m.home)}</div>
+                    <div class="teamTag">CASA</div>
+                  </div>
+                  <div class="teamLine">
+                    ${teamCrestHTML(m.away)}
+                    <div class="teamName">${esc(m.away)}</div>
+                    <div class="teamTag">FORA</div>
+                  </div>
+                </div>
+
+                <div class="oddsCol">
+                  <button class="oddBtn ${isSelectedMainOdd(m.id, "Casa") ? "selected" : ""}" data-pick='${JSON.stringify({
+                    matchId:m.id,label:"Casa",odd:m.odds.home,matchLabel:`${m.home} x ${m.away}`,league:m.league
+                  })}'>
+                    <div class="lab">1</div>
+                    <div class="val">${Number(m.odds.home).toFixed(2)}</div>
+                  </button>
+
+                  <button class="oddBtn ${isSelectedMainOdd(m.id, "Empate") ? "selected" : ""}" data-pick='${JSON.stringify({
+                    matchId:m.id,label:"Empate",odd:m.odds.draw,matchLabel:`${m.home} x ${m.away}`,league:m.league
+                  })}'>
+                    <div class="lab">X</div>
+                    <div class="val">${Number(m.odds.draw).toFixed(2)}</div>
+                  </button>
+
+                  <button class="oddBtn ${isSelectedMainOdd(m.id, "Fora") ? "selected" : ""}" data-pick='${JSON.stringify({
+                    matchId:m.id,label:"Fora",odd:m.odds.away,matchLabel:`${m.home} x ${m.away}`,league:m.league
+                  })}'>
+                    <div class="lab">2</div>
+                    <div class="val">${Number(m.odds.away).toFixed(2)}</div>
+                  </button>
+                </div>
+
+                <div class="matchOpenCol">
+                  <button class="btn small" data-open-game="${m.id}">+ mercados</button>
+                </div>
               </div>
             `).join("")}
           </div>
-        </div>
-      `).join("");
+        `).join("") || `<div class="panelBody"><div class="smallText">Sem jogos nesta liga.</div></div>`;
 
-      $$(`#${targetId} [data-regionleague]`).forEach(el => {
-        el.onclick = () => {
-          state.ui.selectedLeagueId = el.dataset.regionleague;
-          toggleCompetitions(false);
-          renderHomeSections();
-        };
-      });
-    }
+        $$("[data-pick]").forEach(btn => {
+          btn.onclick = () => {
+            const data = JSON.parse(btn.dataset.pick);
+            toggleSlipItem(data);
+          };
+        });
 
-    function renderMatches(){
-      const league = getSelectedLeague();
-      const matches = getMatchesForLeague(league.id);
-      const groups = groupMatchesByDate(matches);
+        $$("[data-open-game]").forEach(btn => {
+          btn.onclick = () => openGame(btn.dataset.openGame);
+        });
+      }
 
-      $("#rightTitle").textContent = league.name;
-      $("#selectedLeagueBadge").textContent = league.name;
+      function renderHomeSections(){
+        renderFeaturedLeagues();
+        renderMobileLeagueRail();
+        renderFeaturedList();
+        renderCompetitions();
+        renderMatches();
+      }
 
-      const html = groups.map(group => `
-        <div class="dateGroup">
-          <div class="dateHeader">
-            <div>${esc(formatDateLabel(group.dateKey))}</div>
-            <div>Jogo</div>
-            <div class="cols">
-              <div>1</div>
-              <div>X</div>
-              <div>2</div>
-            </div>
-            <div></div>
-          </div>
+      function isSelectedMainOdd(matchId, label){
+        return state.slip.some(s => s.matchId === matchId && s.label === label);
+      }
 
-          ${group.items.map(m => `
-            <div class="matchRow">
-              <div class="matchTimeCol">
-                <div class="matchTime">${formatTime(m.date)}</div>
-                <div class="matchLeagueMini">${esc(m.venue)}</div>
-              </div>
+      function toggleSlipItem(item){
+        const idx = state.slip.findIndex(s => s.matchId === item.matchId && s.label === item.label);
 
-              <div class="matchTeamsCol">
-                <div class="teamLine">
-                  ${teamCrestHTML(m.home)}
-                  <div class="teamName">${esc(m.home)}</div>
-                  <div class="teamTag">CASA</div>
+        if (idx >= 0){
+          state.slip.splice(idx, 1);
+        } else {
+          if (!state.multiple){
+            state.slip = [item];
+          } else {
+            state.slip.push(item);
+          }
+        }
+
+        renderSlip();
+        renderMatches();
+        renderGameScreenSelections();
+
+        if (state.slip.length && state.slipMini){
+          state.slipMini = false;
+        }
+      }
+
+      function removeSlipItem(index){
+        state.slip.splice(index, 1);
+        renderSlip();
+        renderMatches();
+        renderGameScreenSelections();
+      }
+
+      function clearSlip(){
+        state.slip = [];
+        renderSlip();
+        renderMatches();
+        renderGameScreenSelections();
+      }
+
+      function renderSlip(){
+        const el = $("#betslip");
+        const count = state.slip.length;
+
+        el.classList.toggle("hide", !count);
+        $("#slipCount").textContent = count;
+        $("#multipleSwitch").classList.toggle("on", state.multiple);
+
+        const items = $("#slipItems");
+
+        if (!count){
+          items.innerHTML = `
+            <div class="smallText">Nenhuma seleção no bilhete.</div>
+          `;
+        } else {
+          items.innerHTML = state.slip.map((s, i) => `
+            <div class="slipItem">
+              <div class="slipTop">
+                <div>
+                  <div class="slipPick">${esc(s.label)}</div>
+                  <div class="slipMeta">${esc(s.matchLabel)} • ${esc(s.league)}</div>
                 </div>
-
-                <div class="teamLine">
-                  ${teamCrestHTML(m.away)}
-                  <div class="teamName">${esc(m.away)}</div>
-                  <div class="teamTag">FORA</div>
+                <div class="slipActions">
+                  <div class="ticketOdd">${Number(s.odd).toFixed(2)}</div>
+                  <button class="btn small danger" data-rem="${i}">✕</button>
                 </div>
               </div>
-
-              <div class="oddsCol">
-                ${["1","X","2"].map(key => {
-                  const selected = state.slip.some(s => s.matchId === m.id && s.label === key);
-                  return `
-                    <button class="oddBtn ${selected ? "selected" : ""}" data-pickmatch="${esc(m.id)}" data-picklabel="${key}" data-pickodd="${m.odds[key]}">
-                      <span class="lab">${key}</span>
-                      <span class="val">${Number(m.odds[key]).toFixed(2)}</span>
-                    </button>
-                  `;
-                }).join("")}
-              </div>
-
-              <div class="matchOpenCol">
-                <button class="btn small" data-open="${esc(m.id)}">Abrir</button>
-              </div>
             </div>
-          `).join("")}
-        </div>
-      `).join("");
+          `).join("");
+        }
 
-      $("#matchesList").innerHTML = html || `
-        <div class="panelBody">
-          <div class="smallText">Nenhum jogo encontrado nesta liga.</div>
-        </div>
-      `;
+        $$("[data-rem]").forEach(btn => {
+          btn.onclick = () => removeSlipItem(Number(btn.dataset.rem));
+        });
 
-      $$("[data-open]").forEach(btn => {
-        btn.onclick = () => openGame(btn.dataset.open);
-      });
+        const totalOdds = calcSlipOdds();
+        $("#totalOdds").textContent = totalOdds.toFixed(2);
+        $("#estReturn").textContent = fmtCP(calcEstReturn());
 
-      $$("[data-pickmatch]").forEach(btn => {
-        btn.onclick = () => {
-          const match = findMatchById(btn.dataset.pickmatch);
-          if (!match) return;
+        const bal = state.user?.balance || 0;
+        $("#slipBalance").textContent = fmtCP(bal) + " CP";
 
-          addSelectionToSlip({
-            id: uid(),
-            matchId: match.id,
-            matchLabel: `${match.home} x ${match.away}`,
-            league: match.league,
-            label: btn.dataset.picklabel,
-            odd: Number(btn.dataset.pickodd)
-          });
-        };
-      });
-    }
+        $("#miniSlipTitle").textContent = count ? "Bilhete ativo" : "Sem seleções";
+        $("#miniSlipSub").textContent = `${count} seleção${count === 1 ? "" : "ões"}`;
+        $("#miniSlipOdds").textContent = totalOdds.toFixed(2);
 
-    function openGame(matchId){
-      const match = findMatchById(matchId);
-      if (!match) return;
+        el.classList.toggle("mini", state.slipMini);
+      }
 
-      state.ui.currentGameId = matchId;
-      $("#gameScreen").classList.add("show");
-      document.body.style.overflow = "hidden";
+      function renderHistory(){
+        $("#historyCount").textContent = state.history.length;
 
-      $("#gameTitle").textContent = `${match.home} x ${match.away}`;
-      $("#gameSub").textContent = `${match.league} • ${formatTime(match.date)}`;
-
-      $("#gameHero").innerHTML = `
-        <div class="gameHeroInner">
-          <div class="heroTeam">
-            ${teamCrestHTML(match.home, "xl")}
-            <div class="heroTeamMeta">
-              <div class="heroTeamName">${esc(match.home)}</div>
-              <div class="heroTeamSub">Casa</div>
-            </div>
-          </div>
-
-          <div class="heroCenter">
-            <div class="heroLeague">${esc(match.league)}</div>
-            <div class="heroVs">VS</div>
-            <div class="heroTime">${formatTime(match.date)}</div>
-            <div class="heroVenue">${esc(match.venue)}</div>
-          </div>
-
-          <div class="heroTeam right">
-            <div class="heroTeamMeta" style="text-align:right">
-              <div class="heroTeamName">${esc(match.away)}</div>
-              <div class="heroTeamSub">Visitante</div>
-            </div>
-            ${teamCrestHTML(match.away, "xl")}
-          </div>
-        </div>
-      `;
-
-      $("#gameQuickOdds").innerHTML = ["1","X","2"].map(key => {
-        const selected = state.slip.some(s => s.matchId === match.id && s.label === key);
-        return `
-          <button class="pickBtn ${selected ? "selected" : ""}" data-gamequick="${esc(match.id)}" data-label="${key}" data-odd="${match.odds[key]}">
-            <span class="lab">${key}</span>
-            <span class="val">${Number(match.odds[key]).toFixed(2)}</span>
-          </button>
-        `;
-      }).join("");
-
-      const marketMap = [
-        ["principais", "Principais"],
-        ["gols", "Gols"],
-        ["especiais", "Especiais"]
-      ];
-
-      $("#gameTabs").innerHTML = marketMap.map(([key, label], idx) => `
-        <div class="tab ${idx === 0 ? "active" : ""}" data-tab="${esc(key)}">${esc(label)}</div>
-      `).join("");
-
-      $("#marketsArea").innerHTML = marketMap.map(([key, label], idx) => `
-        <div class="marketCard ${idx === 0 ? "open" : ""}" data-market="${esc(key)}">
-          <div class="marketHead">
-            <div class="title">${esc(label)}</div>
-            <div class="badge">${match.markets[key]?.length || 0}</div>
-          </div>
-          <div class="marketBody">
-            <div class="marketGrid">
-              ${(match.markets[key] || []).map(([lab, odd]) => {
-                const selected = state.slip.some(s => s.matchId === match.id && s.label === lab);
-                return `
-                  <button class="pickBtn ${selected ? "selected" : ""}" data-marketpick="${esc(match.id)}" data-label="${esc(lab)}" data-odd="${odd}">
-                    <span class="lab">${esc(lab)}</span>
-                    <span class="val">${Number(odd).toFixed(2)}</span>
-                  </button>
-                `;
-              }).join("")}
-            </div>
-          </div>
-        </div>
-      `).join("");
-
-      bindGameScreenEvents();
-    }
-
-    function bindGameScreenEvents(){
-      $$("[data-gamequick]").forEach(btn => {
-        btn.onclick = () => {
-          const match = findMatchById(btn.dataset.gamequick);
-          if (!match) return;
-          addSelectionToSlip({
-            id: uid(),
-            matchId: match.id,
-            matchLabel: `${match.home} x ${match.away}`,
-            league: match.league,
-            label: btn.dataset.label,
-            odd: Number(btn.dataset.odd)
-          });
-        };
-      });
-
-      $$("[data-marketpick]").forEach(btn => {
-        const match = findMatchById(btn.dataset.marketpick);
-        if (!match) return;
-
-        btn.onclick = () => {
-          addSelectionToSlip({
-            id: uid(),
-            matchId: match.id,
-            matchLabel: `${match.home} x ${match.away}`,
-            league: match.league,
-            label: btn.dataset.label,
-            odd: Number(btn.dataset.odd)
-          });
-        };
-      });
-
-      $$("#marketsArea .marketHead").forEach(head => {
-        head.onclick = () => head.parentElement.classList.toggle("open");
-      });
-
-      $$("#gameTabs .tab").forEach(tab => {
-        tab.onclick = () => {
-          $$("#gameTabs .tab").forEach(x => x.classList.remove("active"));
-          tab.classList.add("active");
-
-          const key = tab.dataset.tab;
-          $$("[data-market]").forEach(card => {
-            card.classList.toggle("open", card.dataset.market === key);
-          });
-        };
-      });
-    }
-
-    function renderGameScreenSelections(){
-      const match = findMatchById(state.ui.currentGameId);
-      if (!match || !$("#gameScreen").classList.contains("show")) return;
-      openGame(match.id);
-    }
-
-        function closeGame(){
-      $("#gameScreen").classList.remove("show");
-      document.body.style.overflow = "";
-      state.ui.currentGameId = null;
-    }
-
-    function renderSlip(){
-      const el = $("#betslip");
-      const count = state.slip.length;
-
-      el.classList.toggle("hide", !count);
-
-      $("#slipCount").textContent = count;
-
-      const items = $("#slipItems");
-      items.innerHTML = state.slip.map((s, i) => `
-        <div class="slipItem">
-          <div class="slipTop">
+        $("#historyList").innerHTML = state.history.map(h => `
+          <div class="itemRow">
             <div>
-              <div class="slipPick">${esc(s.label)}</div>
-              <div class="slipMeta">${esc(s.matchLabel)} • ${esc(s.league)}</div>
+              <strong>${esc(h.label)}</strong>
+              <div class="smallText">${esc(h.league)} • ${new Date(h.date).toLocaleString("pt-BR")}</div>
             </div>
-            <div class="slipActions">
-              <div class="ticketOdd">${Number(s.odd).toFixed(2)}</div>
-              <button class="btn small danger" data-rem="${i}">✕</button>
+            <div class="status ${h.status}">${String(h.status || "").toUpperCase()}</div>
+          </div>
+        `).join("") || `<div class="smallText">Nenhuma aposta ainda.</div>`;
+      }
+
+      function renderLeaguesView(){
+        $("#leagueCount").textContent = state.myLeagues.length;
+        $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(state.user?.email));
+
+        $("#myLeaguesList").innerHTML = state.myLeagues.map(l => `
+          <div class="itemRow">
+            <div>
+              <strong>${esc(l.name)}</strong>
+              <div class="smallText">Código: ${esc(l.code)}</div>
             </div>
           </div>
-        </div>
-      `).join("");
+        `).join("") || `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
 
-      $$("[data-rem]").forEach(btn => {
-        btn.onclick = () => removeSlipItem(Number(btn.dataset.rem));
-      });
-
-      const totalOdds = calcSlipOdds();
-      $("#totalOdds").textContent = totalOdds.toFixed(2);
-
-      const est = calcEstReturn();
-      $("#estReturn").textContent = fmtCP(est);
-
-      const bal = state.user?.balance || 0;
-      $("#slipBalance").textContent = fmtCP(bal) + " CP";
-
-      const miniTitle = count ? "Bilhete ativo" : "Sem seleções";
-      $("#miniSlipTitle").textContent = miniTitle;
-      $("#miniSlipSub").textContent = `${count} seleção${count === 1 ? "" : "ões"}`;
-      $("#miniSlipOdds").textContent = totalOdds.toFixed(2);
-
-      el.classList.toggle("mini", state.slipMini);
-    }
-
-    function renderHistory(){
-      $("#historyCount").textContent = state.history.length;
-
-      $("#historyList").innerHTML = state.history.map(h => `
-        <div class="itemRow">
-          <div>
-            <strong>${esc(h.label)}</strong>
-            <div class="smallText">${esc(h.league)} • ${new Date(h.date).toLocaleString("pt-BR")}</div>
-          </div>
-          <div class="status ${h.status}">${h.status.toUpperCase()}</div>
-        </div>
-      `).join("") || `<div class="smallText">Nenhuma aposta ainda.</div>`;
-    }
-
-    function renderLeaguesView(){
-      $("#leagueCount").textContent = state.myLeagues.length;
-
-      $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(state.user?.email));
-
-      $("#myLeaguesList").innerHTML = state.myLeagues.map(l => `
-        <div class="itemRow">
-          <div>
-            <strong>${esc(l.name)}</strong>
-            <div class="smallText">Código: ${esc(l.code)}</div>
-          </div>
-        </div>
-      `).join("") || `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
-
-      if (isAdminEmail(state.user?.email)){
-        $("#adminSettleList").innerHTML = state.history
+        $("#adminOpenBets").innerHTML = state.history
           .filter(h => h.status === "open")
           .map((h, i) => `
             <div class="itemRow">
               <div>
                 <strong>${esc(h.label)}</strong>
-                <div class="smallText">${esc(h.league)}</div>
+                <div class="smallText">${esc(h.league)} • ${new Date(h.date).toLocaleString("pt-BR")}</div>
               </div>
               <div class="row">
-                <button class="btn small primary" data-win="${i}">Win</button>
-                <button class="btn small danger" data-lose="${i}">Loss</button>
+                <button class="btn small" data-win="${i}">Ganhar</button>
+                <button class="btn small danger" data-lose="${i}">Perder</button>
               </div>
             </div>
-          `).join("") || `<div class="smallText">Sem apostas abertas.</div>`;
+          `).join("") || `<div class="smallText">Nenhuma aposta aberta no momento.</div>`;
 
         $$("[data-win]").forEach(btn => {
-          btn.onclick = () => {
-            const idx = Number(btn.dataset.win);
-            const h = state.history[idx];
-            if (!h) return;
-            h.status = "won";
-            persistHistory();
-            renderLeaguesView();
-            renderHistory();
-          };
+          btn.onclick = () => settleHistory(Number(btn.dataset.win), "won");
         });
 
         $$("[data-lose]").forEach(btn => {
-          btn.onclick = () => {
-            const idx = Number(btn.dataset.lose);
-            const h = state.history[idx];
-            if (!h) return;
-            h.status = "lost";
-            persistHistory();
-            renderLeaguesView();
-            renderHistory();
+          btn.onclick = () => settleHistory(Number(btn.dataset.lose), "lost");
+        });
+      }
+
+      function settleHistory(openIndex, status){
+        const openItems = state.history.filter(h => h.status === "open");
+        const target = openItems[openIndex];
+        if (!target) return;
+
+        const realIndex = state.history.findIndex(h =>
+          h.date === target.date && h.label === target.label && h.status === "open"
+        );
+        if (realIndex < 0) return;
+
+        state.history[realIndex].status = status;
+        persistHistory();
+        renderHistory();
+        renderLeaguesView();
+        showToast(status === "won" ? "Aposta marcada como ganha" : "Aposta marcada como perdida");
+      }
+
+      function openGame(matchId){
+        const match = findMatchById(matchId);
+        if (!match) return;
+
+        state.ui.currentGameId = matchId;
+        $("#gameScreen").classList.add("show");
+        document.body.style.overflow = "hidden";
+
+        const quick = [
+          { label:"Casa", odd:match.odds.home },
+          { label:"Empate", odd:match.odds.draw },
+          { label:"Fora", odd:match.odds.away }
+        ];
+
+        const marketTabs = [
+          { key:"principais", label:"Principais" },
+          { key:"gols", label:"Gols" },
+          { key:"especiais", label:"Especiais" }
+        ];
+
+        $("#gameScreenContent").innerHTML = `
+          <div class="gameHero">
+            <div class="gameHeroInner">
+              <div class="heroTeam">
+                ${teamCrestHTML(match.home, "xl")}
+                <div class="heroTeamMeta">
+                  <div class="heroTeamName">${esc(match.home)}</div>
+                  <div class="heroTeamSub">Mandante</div>
+                </div>
+              </div>
+
+              <div class="heroCenter">
+                <div class="heroLeague">${esc(match.league)}</div>
+                <div class="heroVs">VS</div>
+                <div class="heroTime">${formatTime(match.date)}</div>
+                <div class="heroVenue">${esc(match.venue)}</div>
+              </div>
+
+              <div class="heroTeam right">
+                <div class="heroTeamMeta" style="text-align:right">
+                  <div class="heroTeamName">${esc(match.away)}</div>
+                  <div class="heroTeamSub">Visitante</div>
+                </div>
+                ${teamCrestHTML(match.away, "xl")}
+              </div>
+            </div>
+          </div>
+
+          <div class="gameQuickOdds">
+            ${quick.map(q => `
+              <button class="pickBtn ${isSelectedMainOdd(match.id, q.label) ? "selected" : ""}" data-game-pick='${JSON.stringify({
+                matchId:match.id,label:q.label,odd:q.odd,matchLabel:`${match.home} x ${match.away}`,league:match.league
+              })}'>
+                <div class="lab">${esc(q.label)}</div>
+                <div class="val">${Number(q.odd).toFixed(2)}</div>
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="tabs">
+            ${marketTabs.map((t, idx) => `
+              <div class="tab ${idx === 0 ? "active" : ""}" data-tab="${t.key}">${t.label}</div>
+            `).join("")}
+          </div>
+
+          <div class="screenBody">
+            ${marketTabs.map((t, idx) => `
+              <div class="marketCard ${idx === 0 ? "open" : ""}" data-market="${t.key}">
+                <div class="marketHead">
+                  <div class="title">${t.label}</div>
+                  <div class="badge">${match.markets[t.key].length}</div>
+                </div>
+                <div class="marketBody">
+                  <div class="marketGrid">
+                    ${match.markets[t.key].map(opt => {
+                      const payload = {
+                        matchId:match.id,
+                        label:opt.label,
+                        odd:opt.odd,
+                        matchLabel:`${match.home} x ${match.away}`,
+                        league:match.league
+                      };
+                      const selected = state.slip.some(s => s.matchId === payload.matchId && s.label === payload.label);
+                      return `
+                        <button class="pickBtn ${selected ? "selected" : ""}" data-market-pick='${JSON.stringify(payload)}'>
+                          <div class="lab">${esc(opt.label)}</div>
+                          <div class="val">${Number(opt.odd).toFixed(2)}</div>
+                        </button>
+                      `;
+                    }).join("")}
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+
+        $$("[data-game-pick]").forEach(btn => {
+          btn.onclick = () => toggleSlipItem(JSON.parse(btn.dataset.gamePick));
+        });
+
+        $$("[data-market-pick]").forEach(btn => {
+          btn.onclick = () => toggleSlipItem(JSON.parse(btn.dataset.marketPick));
+        });
+
+        $$("[data-tab]").forEach(tab => {
+          tab.onclick = () => {
+            $$("[data-tab]").forEach(t => t.classList.toggle("active", t === tab));
+            const key = tab.dataset.tab;
+            $$("[data-market]").forEach(card => {
+              card.classList.toggle("open", card.dataset.market === key);
+            });
           };
         });
       }
-    }
 
-    function bindEvents(){
-      $("#btnNavFootball").onclick = () => toggleCompetitions(false);
-      $("#btnNavCompetitions").onclick = () => toggleCompetitions(true);
+      function renderGameScreenSelections(){
+        const match = findMatchById(state.ui.currentGameId);
+        if (!match || !$("#gameScreen").classList.contains("show")) return;
+        openGame(match.id);
+      }
 
-      $("#mobileCompetitionsCard").onclick = () => toggleCompetitions(true);
+      function closeGame(){
+        $("#gameScreen").classList.remove("show");
+        document.body.style.overflow = "";
+        state.ui.currentGameId = null;
+      }
 
-      $("#btnRefresh").onclick = () => {
-        renderHomeSections();
-        showToast("Atualizado");
-      };
+      async function loginUser(){
+        const email = $("#loginEmail").value.trim();
+        const password = $("#loginPass").value;
 
-      $("#navHome").onclick = showHome;
-      $("#navHistory").onclick = showHistory;
-      $("#navLeagues").onclick = showLeagues;
-      $("#navPlans").onclick = openPlans;
+        if (!email || !password) return showToast("Preencha e-mail e senha");
 
-      $("#btnClosePlans").onclick = closePlans;
+        try{
+          const res = await fetch(AUTH_API.login, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({ email, password })
+          });
 
-      $("#btnRegister").onclick = () => openAuth("register");
-      $("#btnEnter").onclick = () => openAuth("login");
-      $("#btnCloseAuth").onclick = closeAuth;
-      $("#btnSwitchAuth").onclick = () => {
-        state.ui.authMode = state.ui.authMode === "login" ? "register" : "login";
-        syncAuthMode();
-      };
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) return showToast(data.error || "Login inválido");
 
-      $("#btnBannerRegister").onclick = () => openAuth("register");
+          state.user = {
+            id:data.user?.id || uid(),
+            email:data.user?.email || email,
+            balance:Number(data.user?.balance ?? 1000),
+            plan:data.user?.plan || "Free"
+          };
 
-      $("#btnSubmitAuth").onclick = () => {
-        const email = $("#authEmail").value.trim();
-        const pass = $("#authPass").value.trim();
-        const user = state.users.find(u => u.email === email && u.pass === pass);
-        if (!user) return showToast("Login inválido");
-        state.user = user;
-        persistUser();
-        closeAuth();
-        syncAccountUI();
-      };
+          persistUser();
+          syncAccountUI();
+          closeAuth();
+          showToast("Login realizado");
+        }catch{
+          showToast("Erro ao entrar");
+        }
+      }
 
-      $("#btnSubmitRegister").onclick = () => {
+      async function startRegister(){
         const email = $("#regEmail").value.trim();
-        const pass = $("#regPass").value;
-        const pass2 = $("#regPass2").value;
+        const password = $("#regPass").value;
+        const confirmPassword = $("#regPass2").value;
+        const firstName = $("#regFirstName").value.trim();
+        const lastName = $("#regLastName").value.trim();
+        const gender = $("#regGender").value;
+        const birthDay = $("#regBirthDay").value.trim();
+        const birthMonth = $("#regBirthMonth").value.trim();
+        const birthYear = $("#regBirthYear").value.trim();
 
-        if (!email || !pass) return showToast("Preencha os campos");
-        if (pass !== pass2) return showToast("Senhas não conferem");
+        if (!email || !password || !confirmPassword || !firstName || !lastName){
+          return showToast("Preencha os campos");
+        }
 
-        const user = { id:uid(), email, pass, balance:1000 };
-        state.users.push(user);
-        state.user = user;
+        if (password !== confirmPassword){
+          return showToast("Senhas não conferem");
+        }
 
-        persistUsers();
+        state.pendingRegister = {
+          email,
+          password,
+          firstName,
+          lastName,
+          gender,
+          birthDay,
+          birthMonth,
+          birthYear
+        };
+
+        try{
+          const res = await fetch(AUTH_API.registerStart, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify(state.pendingRegister)
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) return showToast(data.error || "Não foi possível enviar o código");
+
+          $("#verifyEmailLabel").textContent = email;
+          $("#registerFormStep").classList.add("hide");
+          $("#registerVerifyStep").classList.remove("hide");
+          $$(".codeDigit").forEach(i => i.value = "");
+          $("#code1").focus();
+          showToast("Código enviado");
+        }catch{
+          showToast("Erro ao enviar código");
+        }
+      }
+
+      function getVerifyCode(){
+        return ["#code1","#code2","#code3","#code4","#code5","#code6"]
+          .map(id => $(id).value.trim())
+          .join("");
+      }
+
+      async function verifyRegisterCode(){
+        if (!state.pendingRegister?.email) return showToast("Reinicie o cadastro");
+
+        const code = getVerifyCode();
+        if (code.length !== 6) return showToast("Digite o código completo");
+
+        try{
+          const res = await fetch(AUTH_API.registerVerify, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({
+              ...state.pendingRegister,
+              code
+            })
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) return showToast(data.error || "Código inválido");
+
+          state.user = {
+            id:data.user?.id || uid(),
+            email:data.user?.email || state.pendingRegister.email,
+            balance:Number(data.user?.balance ?? 1000),
+            plan:data.user?.plan || "Free"
+          };
+
+          persistUser();
+          syncAccountUI();
+          closeAuth();
+          $("#registerVerifyStep").classList.add("hide");
+          $("#registerFormStep").classList.remove("hide");
+          state.pendingRegister = null;
+          openPlans();
+          showToast("Conta criada com sucesso");
+        }catch{
+          showToast("Erro ao confirmar código");
+        }
+      }
+
+      async function resendRegisterCode(){
+        if (!state.pendingRegister?.email) return showToast("Reinicie o cadastro");
+
+        try{
+          const res = await fetch(AUTH_API.registerStart, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify(state.pendingRegister)
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) return showToast(data.error || "Não foi possível reenviar");
+
+          $$(".codeDigit").forEach(i => i.value = "");
+          $("#code1").focus();
+          showToast("Código reenviado");
+        }catch{
+          showToast("Erro ao reenviar código");
+        }
+      }
+
+      function syncAccountUI(){
+        const logged = !!state.user;
+
+        $("#btnRegister").classList.toggle("hide", logged);
+        $("#btnEnter").classList.toggle("hide", logged);
+        $("#btnLogout").classList.toggle("hide", !logged);
+
+        const pill = $("#topAccountPill");
+
+        if (logged){
+          pill.classList.remove("hide");
+          pill.textContent = `${state.user.email} • ${fmtCP(state.user.balance || 0)} CP`;
+        } else {
+          pill.classList.add("hide");
+          pill.textContent = "";
+        }
+
+        renderSlip();
+        renderLeaguesView();
+      }
+
+      function choosePlan(plan){
+        if (!state.user){
+          openAuth("register");
+          return showToast("Crie sua conta primeiro");
+        }
+
+        state.user.plan = plan;
         persistUser();
 
-        closeAuth();
+        if (plan === "Free"){
+          closePlans();
+          syncAccountUI();
+          return showToast("Plano Free ativado");
+        }
+
+        showToast(`Plano ${plan} selecionado`);
+        closePlans();
         syncAccountUI();
-        showToast("Conta criada!");
-      };
 
-      $("#btnLogout").onclick = () => {
-        state.user = null;
-        persistUser();
-        syncAccountUI();
-      };
+        /*
+          Mantive o gancho do pagamento aqui.
+          Se você já tem teu fluxo pronto, troca só este bloco por:
+          - redirecionamento pro checkout
+          - abertura do link do provedor
+          - chamada da tua function de cobrança
+        */
+      }
 
-      $("#btnCreateLeague").onclick = () => {
-        const name = $("#newLeagueName").value.trim();
-        if (!name) return showToast("Digite um nome");
+      function bindCodeInputs(){
+        const inputs = $$(".codeDigit");
 
-        const code = Math.random().toString(36).slice(2,8).toUpperCase();
+        inputs.forEach((input, idx) => {
+          input.addEventListener("input", () => {
+            input.value = input.value.replace(/\D/g, "").slice(0,1);
+            if (input.value && inputs[idx + 1]) inputs[idx + 1].focus();
+          });
 
-        const league = { id:uid(), name, code };
-        state.myLeagues.push(league);
-        persistMyLeagues();
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && inputs[idx - 1]){
+              inputs[idx - 1].focus();
+            }
+          });
 
-        $("#newLeagueName").value = "";
-        renderLeaguesView();
-        showToast("Liga criada");
-      };
+          input.addEventListener("paste", (e) => {
+            const text = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0,6);
+            if (!text) return;
+            e.preventDefault();
+            text.split("").forEach((char, i) => {
+              if (inputs[i]) inputs[i].value = char;
+            });
+            const last = inputs[Math.min(text.length, 6) - 1];
+            if (last) last.focus();
+          });
+        });
+      }
 
-      $("#btnJoinByCode").onclick = () => {
-        const code = prompt("Digite o código da liga:");
-        if (!code) return;
+      function bindEvents(){
+        $("#btnRefresh").onclick = renderHomeSections;
 
-        const found = state.competitions.find(c => c.code === code.toUpperCase());
-        if (!found) return showToast("Código inválido");
+        $("#btnNavFootball").onclick = () => {
+          state.ui.competitionsOpen = false;
+          $("#competitionsSection").classList.add("hide");
+        };
 
-        state.myLeagues.push(found);
-        persistMyLeagues();
-        renderLeaguesView();
-      };
+        $("#btnNavCompetitions").onclick = () => {
+          state.ui.competitionsOpen = !state.ui.competitionsOpen;
+          $("#competitionsSection").classList.toggle("hide", !state.ui.competitionsOpen);
+        };
 
-      $("#btnPlaceBet").onclick = () => {
-        if (!state.slip.length) return;
+        $("#mobileCompetitionsCard").onclick = () => {
+          state.ui.competitionsOpen = !state.ui.competitionsOpen;
+          $("#competitionsSection").classList.toggle("hide", !state.ui.competitionsOpen);
+        };
 
-        const label = state.slip.map(s => s.label).join(" + ");
-        state.history.unshift({
-          label,
-          league: "Múltiplos",
-          date: nowIso(),
-          status: "open"
+        $("#navHome").onclick = showHome;
+        $("#navHistory").onclick = showHistory;
+        $("#navLeagues").onclick = showLeagues;
+        $("#navPlans").onclick = openPlans;
+
+        $("#btnClosePlans").onclick = closePlans;
+
+        $("#btnRegister").onclick = () => openAuth("register");
+        $("#btnEnter").onclick = () => openAuth("login");
+        $("#btnCloseAuth").onclick = closeAuth;
+        $("#btnBannerRegister").onclick = () => openAuth("register");
+
+        $("#tabLogin").onclick = () => syncAuthMode("login");
+        $("#tabRegister").onclick = () => syncAuthMode("register");
+
+        $("#genderM").onclick = () => {
+          $("#genderM").classList.add("active");
+          $("#genderF").classList.remove("active");
+          $("#regGender").value = "Masculino";
+        };
+
+        $("#genderF").onclick = () => {
+          $("#genderF").classList.add("active");
+          $("#genderM").classList.remove("active");
+          $("#regGender").value = "Feminino";
+        };
+
+        $("#btnSubmitLogin").onclick = loginUser;
+        $("#btnSubmitRegister").onclick = startRegister;
+        $("#btnVerifyCode").onclick = verifyRegisterCode;
+        $("#btnResendCode").onclick = resendRegisterCode;
+
+        $("#btnBackToRegister").onclick = () => {
+          $("#registerVerifyStep").classList.add("hide");
+          $("#registerFormStep").classList.remove("hide");
+        };
+
+        $("#btnLogout").onclick = () => {
+          state.user = null;
+          persistUser();
+          syncAccountUI();
+          showToast("Sessão encerrada");
+        };
+
+        $("#btnCreateLeague").onclick = () => {
+          const name = $("#newLeagueName").value.trim();
+          if (!name) return showToast("Digite um nome");
+
+          const code = Math.random().toString(36).slice(2,8).toUpperCase();
+          const league = { id:uid(), name, code };
+
+          state.myLeagues.push(league);
+          persistMyLeagues();
+
+          $("#newLeagueName").value = "";
+          renderLeaguesView();
+          showToast("Liga criada");
+        };
+
+        $("#btnJoinByCode").onclick = () => {
+          const code = prompt("Digite o código da liga:");
+          if (!code) return;
+
+          const found = state.myLeagues.find(c => c.code === code.toUpperCase());
+          if (found) return showToast("Você já entrou nessa liga");
+
+          const created = { id:uid(), name:`Liga ${code.toUpperCase()}`, code:code.toUpperCase() };
+          state.myLeagues.push(created);
+          persistMyLeagues();
+          renderLeaguesView();
+          showToast("Liga adicionada");
+        };
+
+        $("#btnRefreshAdmin").onclick = renderLeaguesView;
+
+        $("#btnPlaceBet").onclick = () => {
+          if (!state.user) return openAuth("login");
+          if (!state.slip.length) return showToast("Selecione um palpite");
+          if (!Number($("#stakeInput").value || 0)) return showToast("Digite o valor em CP");
+
+          const label = state.slip.map(s => s.label).join(" + ");
+          const league = state.multiple ? "Múltiplos" : (state.slip[0]?.league || "Aposta");
+
+          state.history.unshift({
+            label,
+            league,
+            date: nowIso(),
+            status: "open"
+          });
+
+          persistHistory();
+          clearSlip();
+          renderHistory();
+          showToast("Aposta registrada!");
+        };
+
+        $("#btnMiniSlip").onclick = () => {
+          state.slipMini = !state.slipMini;
+          renderSlip();
+        };
+
+        $("#miniSlipBar").onclick = () => {
+          state.slipMini = false;
+          renderSlip();
+        };
+
+        $("#btnClearSlip").onclick = clearSlip;
+
+        $("#toggleMultiple").onclick = () => {
+          state.multiple = !state.multiple;
+          if (!state.multiple && state.slip.length > 1){
+            state.slip = [state.slip[0]];
+          }
+          renderSlip();
+        };
+
+        $$(".stakeChip").forEach(chip => {
+          chip.onclick = () => {
+            const current = Number($("#stakeInput").value || 0);
+            $("#stakeInput").value = current + Number(chip.dataset.stake || 0);
+            renderSlip();
+          };
         });
 
-        persistHistory();
-        clearSlip();
-        showToast("Aposta registrada!");
-      };
+        $("#stakeInput").addEventListener("input", renderSlip);
 
-      $("#btnMini").onclick = () => {
-        state.slipMini = !state.slipMini;
-        persistSlipMini();
+        $("#btnBackGame").onclick = closeGame;
+        $("#goHome").onclick = showHome;
+
+        $("#searchInput").addEventListener("input", (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          if (!q){
+            renderMatches();
+            return;
+          }
+
+          const filtered = getMatchesForLeague(state.ui.leagueId).filter(m =>
+            [m.home, m.away, m.league].some(v => String(v).toLowerCase().includes(q))
+          );
+
+          const groups = groupMatchesByDate(filtered);
+
+          $("#matchesList").innerHTML = groups.map(group => `
+            <div class="dateGroup">
+              <div class="dateHeader">
+                <div>${formatDateLabel(group.dateKey)}</div>
+                <div>Jogo</div>
+                <div class="cols"><div>1</div><div>X</div><div>2</div></div>
+                <div>+</div>
+              </div>
+              ${group.items.map(m => `
+                <div class="matchRow">
+                  <div class="matchTimeCol">
+                    <div class="matchTime">${formatTime(m.date)}</div>
+                    <div class="matchLeagueMini">${esc(m.league)}</div>
+                  </div>
+                  <div class="matchTeamsCol">
+                    <div class="teamLine">${teamCrestHTML(m.home)}<div class="teamName">${esc(m.home)}</div><div class="teamTag">CASA</div></div>
+                    <div class="teamLine">${teamCrestHTML(m.away)}<div class="teamName">${esc(m.away)}</div><div class="teamTag">FORA</div></div>
+                  </div>
+                  <div class="oddsCol">
+                    <button class="oddBtn" data-pick='${JSON.stringify({matchId:m.id,label:"Casa",odd:m.odds.home,matchLabel:`${m.home} x ${m.away}`,league:m.league})}'><div class="lab">1</div><div class="val">${Number(m.odds.home).toFixed(2)}</div></button>
+                    <button class="oddBtn" data-pick='${JSON.stringify({matchId:m.id,label:"Empate",odd:m.odds.draw,matchLabel:`${m.home} x ${m.away}`,league:m.league})}'><div class="lab">X</div><div class="val">${Number(m.odds.draw).toFixed(2)}</div></button>
+                    <button class="oddBtn" data-pick='${JSON.stringify({matchId:m.id,label:"Fora",odd:m.odds.away,matchLabel:`${m.home} x ${m.away}`,league:m.league})}'><div class="lab">2</div><div class="val">${Number(m.odds.away).toFixed(2)}</div></button>
+                  </div>
+                  <div class="matchOpenCol">
+                    <button class="btn small" data-open-game="${m.id}">+ mercados</button>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          `).join("") || `<div class="panelBody"><div class="smallText">Nada encontrado.</div></div>`;
+
+          $$("[data-pick]").forEach(btn => {
+            btn.onclick = () => toggleSlipItem(JSON.parse(btn.dataset.pick));
+          });
+
+          $$("[data-open-game]").forEach(btn => {
+            btn.onclick = () => openGame(btn.dataset.openGame);
+          });
+        });
+
+        $$("[data-plan]").forEach(btn => {
+          btn.onclick = () => choosePlan(btn.dataset.plan);
+        });
+
+        document.addEventListener("click", (e) => {
+          const slip = $("#betslip");
+          if (!slip || slip.classList.contains("hide")) return;
+          if (window.innerWidth > 920) return;
+          if (!slip.contains(e.target) && !$("#gameScreen").contains(e.target) && state.slip.length){
+            state.slipMini = true;
+            renderSlip();
+          }
+        });
+      }
+
+      function init(){
+        bindCodeInputs();
+        bindEvents();
+        syncAccountUI();
+        renderHomeSections();
         renderSlip();
-      };
+        renderHistory();
+        renderLeaguesView();
 
-      $("#betslipMiniBar").onclick = () => {
-        state.slipMini = false;
-        persistSlipMini();
-        renderSlip();
-      };
-
-      $("#toggleBuilderGame").onclick = () => {
-        state.ui.builderOn = !state.ui.builderOn;
-        $("#builderSwitchGame").classList.toggle("on", state.ui.builderOn);
-        $("#builderBadge").textContent = state.ui.builderOn ? "ON" : "OFF";
-      };
-
-      $("#btnCloseGame").onclick = closeGame;
-
-      $("#goHome").onclick = showHome;
-
-      document.addEventListener("click", (e) => {
-        if (!$("#betslip").contains(e.target) && state.slipMini === false){
-          // não fecha automaticamente, só comportamento leve
+        if (state.slipMini){
+          $("#betslip").classList.add("mini");
         }
-      });
-    }
-
-    function syncAccountUI(){
-      const logged = !!state.user;
-
-      $("#btnRegister").classList.toggle("hide", logged);
-      $("#btnEnter").classList.toggle("hide", logged);
-      $("#btnLogout").classList.toggle("hide", !logged);
-
-      const pill = $("#topAccountPill");
-
-      if (logged){
-        pill.classList.remove("hide");
-        pill.textContent = `${state.user.email} • ${fmtCP(state.user.balance)} CP`;
-      } else {
-        pill.classList.add("hide");
-        pill.textContent = "";
       }
-    }
 
-    function init(){
-      seedCompetitions();
-      bindEvents();
-      syncAccountUI();
-      renderHomeSections();
-      renderSlip();
-
-      if (state.slipMini){
-        $("#betslip").classList.add("mini");
-      }
-    }
-
-    init();
-  </script>
+      init();
+    </script>
 </body>
 </html>
