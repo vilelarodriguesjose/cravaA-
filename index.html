@@ -86,6 +86,7 @@
       font-weight:900;
       letter-spacing:.2px;
       min-width:0;
+      cursor:pointer;
     }
 
     .logo{
@@ -127,6 +128,9 @@
       color:rgba(232,244,236,.92);
       font-size:13px;
       white-space:nowrap;
+      max-width:min(420px, 100%);
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .topActions{
@@ -361,11 +365,12 @@
       grid-template-columns:minmax(0,1fr) auto;
       gap:16px;
       align-items:center;
-      min-height:140px;
+      min-height:190px;
       overflow:hidden;
       background:
-        linear-gradient(rgba(7,19,11,.55), rgba(7,19,11,.72)),
-        url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?q=80&w=1600') center/cover no-repeat;
+        linear-gradient(90deg, rgba(6,18,11,.18) 0%, rgba(6,18,11,.56) 38%, rgba(6,18,11,.86) 100%),
+        radial-gradient(500px 220px at 78% 18%, rgba(22,201,95,.16), transparent 60%),
+        url('https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1600&auto=format&fit=crop') center right/cover no-repeat;
     }
 
     .heroBanner:before{
@@ -373,8 +378,8 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(transparent 0 82%, rgba(255,255,255,.05) 82% 83%, transparent 83%),
-        repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.025) 8% 8.4%, transparent 8.4% 16.8%);
+        linear-gradient(transparent 0 82%, rgba(255,255,255,.04) 82% 83%, transparent 83%),
+        repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.02) 8% 8.4%, transparent 8.4% 16.8%);
       opacity:.55;
       pointer-events:none;
     }
@@ -407,7 +412,7 @@
     }
 
     .heroBannerTitle{
-      font-size:28px;
+      font-size:30px;
       line-height:1.02;
       margin:0 0 8px 0;
       font-weight:1000;
@@ -867,8 +872,8 @@
     }
 
     .oddBtn{
-      min-height:46px;
-      padding:5px 4px;
+      min-height:44px;
+      padding:4px 3px;
       border:0;
       border-right:1px solid rgba(255,255,255,.06);
       background:var(--oddBg);
@@ -900,7 +905,7 @@
     .oddBtn:hover{background:var(--oddBgHover)}
 
     .oddBtn .lab{
-      font-size:9px;
+      font-size:8px;
       color:var(--muted);
       font-weight:1000;
       letter-spacing:.2px;
@@ -908,7 +913,7 @@
     }
 
     .oddBtn .val{
-      font-size:13px;
+      font-size:12px;
       font-weight:1000;
       line-height:1;
       color:#ffd45a;
@@ -942,7 +947,7 @@
       position:fixed;
       inset:0;
       z-index:80;
-      background:rgba(6,17,10,.90);
+      background:rgba(6,17,10,.94);
       backdrop-filter:blur(10px);
       display:none;
     }
@@ -972,12 +977,12 @@
 
     .gameHero{
       position:relative;
-      padding:18px 16px 14px;
+      padding:14px 14px 12px;
       border-bottom:1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
-        radial-gradient(600px 180px at 50% 0%, rgba(22,201,95,.12), transparent 70%),
-        linear-gradient(180deg, rgba(10,23,16,.95), rgba(8,16,12,.98));
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+        radial-gradient(520px 180px at 50% 0%, rgba(22,201,95,.10), transparent 70%),
+        linear-gradient(180deg, rgba(10,23,16,.96), rgba(8,16,12,.99));
       overflow:hidden;
     }
 
@@ -986,9 +991,9 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(transparent 0 76%, rgba(255,255,255,.04) 76% 77%, transparent 77%),
-        repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.03) 8% 8.4%, transparent 8.4% 16.8%);
-      opacity:.55;
+        linear-gradient(transparent 0 78%, rgba(255,255,255,.03) 78% 79%, transparent 79%),
+        repeating-linear-gradient(90deg, transparent 0 9%, rgba(255,255,255,.022) 9% 9.3%, transparent 9.3% 18.6%);
+      opacity:.45;
       pointer-events:none;
     }
 
@@ -998,7 +1003,7 @@
       display:grid;
       grid-template-columns:1fr auto 1fr;
       align-items:center;
-      gap:14px;
+      gap:12px;
     }
 
     @media (max-width:760px){
@@ -1026,7 +1031,7 @@
     }
 
     .heroTeamName{
-      font-size:22px;
+      font-size:19px;
       font-weight:1000;
       line-height:1.05;
       white-space:nowrap;
@@ -1035,7 +1040,7 @@
     }
 
     .heroTeamSub{
-      font-size:12px;
+      font-size:11px;
       color:var(--muted);
       font-weight:900;
       text-transform:uppercase;
@@ -1047,31 +1052,31 @@
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      min-width:180px;
+      gap:7px;
+      min-width:170px;
     }
 
     .heroVs{
-      font-size:13px;
+      font-size:12px;
       color:var(--muted);
       font-weight:1000;
-      letter-spacing:1.1px;
+      letter-spacing:1px;
     }
 
-    .heroTime{font-size:18px;font-weight:1000}
+    .heroTime{font-size:16px;font-weight:1000}
 
     .heroLeague{
       padding:7px 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.05);
-      font-size:12px;
+      font-size:11px;
       font-weight:1000;
       white-space:nowrap;
     }
 
     .heroVenue{
-      font-size:12px;
+      font-size:11px;
       color:var(--muted);
       font-weight:900;
       text-align:center;
@@ -1081,9 +1086,9 @@
       display:grid;
       grid-template-columns:repeat(3, minmax(0, 1fr));
       gap:8px;
-      padding:12px 14px;
+      padding:10px 12px;
       border-bottom:1px solid var(--line);
-      background:rgba(255,255,255,.025);
+      background:rgba(255,255,255,.022);
     }
 
     @media (max-width:520px){
@@ -1094,9 +1099,9 @@
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      padding:10px 14px;
+      padding:10px 12px;
       border-bottom:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.025);
     }
 
     .tab{
@@ -1118,11 +1123,15 @@
       color:#fff4cb;
     }
 
-    .screenBody{padding:12px 14px 120px;overflow:auto}
+    .screenBody{
+      padding:10px 12px 120px;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+    }
 
     .marketCard{
       border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
+      background:rgba(255,255,255,.035);
       border-radius:16px;
       overflow:hidden;
       margin-bottom:10px;
@@ -1130,33 +1139,29 @@
     }
 
     .marketHead{
-      padding:12px;
+      padding:11px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       cursor:pointer;
       user-select:none;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), transparent);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), transparent);
     }
 
     .marketHead .title{font-weight:1000}
-    .marketBody{padding:12px;display:none}
+    .marketBody{padding:10px;display:none}
     .marketCard.open .marketBody{display:block}
 
     .marketGrid{
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
+      grid-template-columns:repeat(2, 1fr);
       gap:8px;
     }
 
-    @media (max-width:520px){
-      .marketGrid{grid-template-columns:repeat(2,1fr)}
-    }
-
     .pickBtn{
-      min-height:60px;
-      padding:10px;
+      min-height:54px;
+      padding:10px 8px;
       border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
       background:var(--oddBg);
@@ -1173,8 +1178,8 @@
     }
 
     .pickBtn:hover{transform:translateY(-1px);background:var(--oddBgHover)}
-    .pickBtn .lab{font-size:12px;color:var(--muted);font-weight:1000}
-    .pickBtn .val{font-size:14px;font-weight:1000}
+    .pickBtn .lab{font-size:11px;color:var(--muted);font-weight:1000}
+    .pickBtn .val{font-size:14px;font-weight:1000;color:#2ea6ff}
     .pickBtn.selected{
       border-color:rgba(22,201,95,.35);
       background:linear-gradient(180deg, rgba(22,201,95,.15), rgba(22,201,95,.09));
@@ -1507,6 +1512,14 @@
       flex-direction:column;
     }
 
+    #plansModal .modalCard{
+      width:100%;
+      max-width:100%;
+      height:100vh;
+      max-height:100vh;
+      border-radius:0;
+    }
+
     .modalHead{
       padding:12px;
       border-bottom:1px solid var(--line);
@@ -1651,15 +1664,6 @@
 
     .authSubmitBtn{min-height:48px}
 
-    @media (max-width:640px){
-      .authGrid2{grid-template-columns:100px minmax(0,1fr)}
-      .birthGrid{grid-template-columns:1fr 1fr 1.2fr}
-      .authSubmitBtn{
-        width:100%;
-        border-radius:14px;
-      }
-    }
-
     .toast{
       position:fixed;
       left:50%;
@@ -1756,12 +1760,12 @@
       .teamName{font-size:12px}
 
       .oddBtn{
-        min-height:38px;
+        min-height:36px;
         padding:3px 2px;
       }
 
       .oddBtn .lab{font-size:7px}
-      .oddBtn .val{font-size:11px}
+      .oddBtn .val{font-size:10px}
 
       .bottomNavInner{
         gap:6px;
@@ -1782,15 +1786,27 @@
 
     @media (max-width:640px){
       .modal.show{
-        align-items:flex-end;
+        align-items:center;
         justify-content:center;
         padding:10px;
+      }
+
+      #plansModal.show{
+        align-items:stretch;
+        justify-content:stretch;
+        padding:0;
       }
 
       .modalCard{
         width:100%;
         max-height:92vh;
-        border-radius:18px 18px 0 0;
+        border-radius:18px;
+      }
+
+      #plansModal .modalCard{
+        border-radius:0;
+        height:100vh;
+        max-height:100vh;
       }
 
       .authShell{
@@ -1817,7 +1833,7 @@
 <body>
   <div class="topbar">
     <div class="topbarInner">
-      <div class="brand" style="cursor:pointer" id="goHome">
+      <div class="brand" id="goHome">
         <div class="logo"><span>CA</span></div>
         <div>
           <div style="line-height:1.05">CravaAí</div>
@@ -2294,33 +2310,55 @@
       </div>
 
       <div class="modalBody">
-        <div style="padding:14px">
-          <div class="list">
-            <div class="itemRow">
+        <div style="padding:18px;min-height:100%;display:flex;flex-direction:column;gap:18px">
+          <div>
+            <div style="font-size:28px;font-weight:1000;line-height:1.05;margin-bottom:8px">Escolha o plano ideal do CravaAí</div>
+            <div class="smallText" style="font-size:13px">
+              Tela inteira, visual mais forte e sem quebrar a casa quando abre e volta.
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px" id="plansGrid">
+            <div class="itemRow" style="flex-direction:column;align-items:flex-start;min-height:220px;background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03))">
               <div>
-                <strong>Free</strong>
-                <div class="smallText">Acesso básico • CP inicial • histórico</div>
+                <strong style="font-size:20px">Free</strong>
+                <div class="smallText" style="margin-top:6px">Acesso básico • CP inicial • histórico</div>
               </div>
-              <span class="badge">R$ 0</span>
+              <div class="sep" style="width:100%"></div>
+              <div class="smallText">• Bilhete básico</div>
+              <div class="smallText">• Histórico</div>
+              <div class="smallText">• Entrada nas ligas</div>
+              <div style="margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:center">
+                <span class="badge">R$ 0</span>
+                <button class="btn small">Atual</button>
+              </div>
             </div>
 
-            <div class="itemRow">
+            <div class="itemRow" style="flex-direction:column;align-items:flex-start;min-height:220px;background:linear-gradient(180deg, rgba(22,201,95,.12), rgba(22,201,95,.05));border-color:rgba(22,201,95,.22)">
               <div>
-                <strong>Pro</strong>
-                <div class="smallText">Recursos extras • ligas premium • mais filtros</div>
+                <strong style="font-size:20px">Pro</strong>
+                <div class="smallText" style="margin-top:6px">Recursos extras • ligas premium • mais filtros</div>
               </div>
-              <div class="row" style="margin-left:auto">
+              <div class="sep" style="width:100%"></div>
+              <div class="smallText">• Mais recursos</div>
+              <div class="smallText">• Melhor destaque</div>
+              <div class="smallText">• Área premium</div>
+              <div style="margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:center">
                 <span class="badge">R$ 29,90</span>
                 <button class="btn small primary" id="btnBuyPro">Assinar</button>
               </div>
             </div>
 
-            <div class="itemRow">
+            <div class="itemRow" style="flex-direction:column;align-items:flex-start;min-height:220px;background:linear-gradient(180deg, rgba(242,201,76,.12), rgba(242,201,76,.05));border-color:rgba(242,201,76,.24)">
               <div>
-                <strong>Elite</strong>
-                <div class="smallText">Tudo do Pro • destaque • rankings avançados</div>
+                <strong style="font-size:20px">Elite</strong>
+                <div class="smallText" style="margin-top:6px">Tudo do Pro • destaque • rankings avançados</div>
               </div>
-              <div class="row" style="margin-left:auto">
+              <div class="sep" style="width:100%"></div>
+              <div class="smallText">• Tudo do Pro</div>
+              <div class="smallText">• Mais visibilidade</div>
+              <div class="smallText">• Recursos avançados</div>
+              <div style="margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:center">
                 <span class="badge">R$ 49,90</span>
                 <button class="btn small yellow" id="btnBuyElite">Assinar</button>
               </div>
@@ -2346,8 +2384,7 @@
   </div>
 
   <script>
-
-        const LS = {
+    const LS = {
       DB: "cravai_db_v3",
       AUTH: "cravai_auth_v2",
       UI: "cravai_ui_v3"
@@ -2646,9 +2683,9 @@
         isoDate: baseISO,
         featured: Math.random() > .35,
         odds1x2: {
-          "1": rndOdd(1.45, 2.80),
-          "X": rndOdd(2.80, 3.90),
-          "2": rndOdd(1.60, 3.40)
+          "1": "—",
+          "X": "—",
+          "2": "—"
         }
       };
     }
@@ -2883,10 +2920,9 @@
 
       const odds = pickH2HOdds(ev);
       if(odds && odds["1"] && odds["2"]){
-        const demoX = Number(rndOdd(2.90, 3.70));
         m.odds1x2 = {
           "1": Number(odds["1"]).toFixed(2),
-          "X": Number(odds["X"] ?? demoX).toFixed(2),
+          "X": odds["X"] ? Number(odds["X"]).toFixed(2) : "—",
           "2": Number(odds["2"]).toFixed(2)
         };
       }
@@ -2904,9 +2940,7 @@
 
     async function updateLeagueReal(leagueId, { force = false } = {}){
       const sportKey = REAL_LEAGUE_MAP[leagueId];
-      if(!sportKey){
-        return;
-      }
+      if(!sportKey) return;
 
       const now = Date.now();
       const prev = realCache[leagueId];
@@ -3119,15 +3153,11 @@
       renderRegion($("#regionEurope"), europe);
     }
 
-    function marketTemplates(match){
+        function marketTemplates(match){
       const h = match.home;
       const a = match.away;
 
-      const o = match.odds1x2 || { "1":"1.90", "X":"3.20", "2":"2.20" };
-      const over25 = formatOdd(rand(1.65, 2.20));
-      const under25 = formatOdd(rand(1.65, 2.20));
-      const bttsYes = formatOdd(rand(1.70, 2.15));
-      const bttsNo = formatOdd(rand(1.70, 2.20));
+      const o = match.odds1x2 || { "1":"—", "X":"—", "2":"—" };
 
       return {
         principais: [
@@ -3141,13 +3171,11 @@
             ]
           },
           {
-            title:"Gols",
+            title:"Total de Gols",
             open:true,
             picks:[
-              { label:"Mais de 2.5", odd:over25, group:"goals25", key:"over25" },
-              { label:"Menos de 2.5", odd:under25, group:"goals25", key:"under25" },
-              { label:"Ambos marcam • Sim", odd:bttsYes, group:"btts", key:"yes" },
-              { label:"Ambos marcam • Não", odd:bttsNo, group:"btts", key:"no" }
+              { label:"Mais de 2.5", odd:"—", group:"goals25", key:"over25" },
+              { label:"Menos de 2.5", odd:"—", group:"goals25", key:"under25" }
             ]
           }
         ],
@@ -3156,10 +3184,8 @@
             title:"Cartões",
             open:true,
             picks:[
-              { label:"Mais de 3.5", odd:formatOdd(rand(1.55, 1.95)), group:"cards35", key:"over35" },
-              { label:"Mais de 4.5", odd:formatOdd(rand(1.85, 2.35)), group:"cards45", key:"over45" },
-              { label:`${h} mais cartões`, odd:formatOdd(rand(1.95, 2.70)), group:"mostcards", key:"home" },
-              { label:`${a} mais cartões`, odd:formatOdd(rand(1.95, 2.70)), group:"mostcards", key:"away" }
+              { label:"Mais de 3.5", odd:"—", group:"cards35", key:"over35" },
+              { label:"Mais de 4.5", odd:"—", group:"cards45", key:"over45" }
             ]
           }
         ],
@@ -3168,19 +3194,8 @@
             title:"Chutes no gol",
             open:true,
             picks:[
-              { label:`${h} mais chutes no gol`, odd:formatOdd(rand(1.70, 2.20)), group:"sot", key:"home" },
-              { label:`${a} mais chutes no gol`, odd:formatOdd(rand(1.70, 2.20)), group:"sot", key:"away" },
-              { label:"Mais de 8.5 no jogo", odd:formatOdd(rand(1.60, 2.10)), group:"sot85", key:"over85" }
-            ]
-          },
-          {
-            title:"Chutes totais",
-            open:false,
-            picks:[
-              { label:"Mais de 20.5", odd:formatOdd(rand(1.55, 1.95)), group:"shots205", key:"over205" },
-              { label:"Mais de 24.5", odd:formatOdd(rand(1.95, 2.60)), group:"shots245", key:"over245" },
-              { label:`${h} mais chutes`, odd:formatOdd(rand(1.65, 2.10)), group:"mostshots", key:"home" },
-              { label:`${a} mais chutes`, odd:formatOdd(rand(1.65, 2.10)), group:"mostshots", key:"away" }
+              { label:`${h} mais chutes no gol`, odd:"—", group:"sot", key:"home" },
+              { label:`${a} mais chutes no gol`, odd:"—", group:"sot", key:"away" }
             ]
           }
         ],
@@ -3189,10 +3204,8 @@
             title:"Especiais",
             open:true,
             picks:[
-              { label:`${h} vence sem sofrer gol`, odd:formatOdd(rand(2.40, 4.20)), group:"cleanwin", key:"home" },
-              { label:`${a} vence sem sofrer gol`, odd:formatOdd(rand(2.40, 4.20)), group:"cleanwin", key:"away" },
-              { label:"Gol nos dois tempos", odd:formatOdd(rand(1.80, 2.55)), group:"goalbothhalves", key:"yes" },
-              { label:"Empate no intervalo", odd:formatOdd(rand(1.90, 2.80)), group:"htdraw", key:"yes" }
+              { label:"Gol nos dois tempos", odd:"—", group:"goalbothhalves", key:"yes" },
+              { label:"Empate no intervalo", odd:"—", group:"htdraw", key:"yes" }
             ]
           }
         ]
@@ -3210,6 +3223,11 @@
     }
 
     function addPickToSlip(match, pick){
+      if(!pick || pick.odd === "—" || !pick.odd){
+        toast("Essas odds demo foram removidas. Depois ligamos na API.");
+        return;
+      }
+
       const builderOn = !!state.session.game.builder;
 
       const newPick = {
@@ -3519,8 +3537,9 @@
           const m = state.db.matches.find((x) => x.id === b.dataset.pickquick);
           if(!m) return;
           const k = b.dataset.k;
+          const oddVal = m.odds1x2[k];
           const label = k === "1" ? m.home : k === "2" ? m.away : "Empate";
-          addPickToSlip(m, { label, odd:m.odds1x2[k], group:"1x2", key:k });
+          addPickToSlip(m, { label, odd:oddVal, group:"1x2", key:k });
         };
       });
 
@@ -3558,7 +3577,11 @@
 
     function closePlans(){
       $("#plansModal").classList.remove("show");
-      if(!$("#authModal").classList.contains("show")) lockBodyScroll(false);
+      if(!$("#authModal").classList.contains("show") && !state.session.game.open) lockBodyScroll(false);
+      state.ui.nav = "home";
+      saveUI(state.ui);
+      renderNav();
+      renderAllViews();
     }
 
     function renderAllViews(){
@@ -3568,9 +3591,9 @@
 
       if(state.ui.nav === "plans"){
         openPlans();
-        state.ui.nav = "home";
-        saveUI(state.ui);
-        renderNav();
+        return;
+      }else{
+        $("#plansModal").classList.remove("show");
       }
 
       renderLeftMode();
@@ -4091,6 +4114,11 @@
         return;
       }
 
+      if(state.session.slip.some((p) => !Number.isFinite(Number(p.odd)))){
+        toast("Ainda tem seleção sem odd real.");
+        return;
+      }
+
       const totalOdds = getSlipTotalOdds();
       const entry = {
         id: uid(),
@@ -4182,7 +4210,7 @@
 
       if(u){
         pill.classList.remove("hide");
-        pill.innerHTML = `👤 <strong>${esc(u.username || "Usuário")}</strong> • ${fmtCP(Number(u.cp || 0))} CP • ${(u.plan || "free").toUpperCase()}`;
+        pill.innerHTML = `👤 <strong>${esc(u.username || "Usuário")}</strong> • ${fmtCP(Number(u.cp || 0))} CP`;
         $("#btnLogout").classList.remove("hide");
         $("#btnEnter").classList.add("hide");
         $("#btnRegister").classList.add("hide");
