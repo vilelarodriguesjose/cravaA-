@@ -1828,6 +1828,41 @@
       .navBtn{font-size:11px}
       .navBtn span{font-size:9px}
     }
+
+    @media (max-width:900px){
+  #plansGrid{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+}
+
+@media (max-width:640px){
+  #plansModal .modalHead{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:rgba(11,26,16,.98);
+  }
+
+  #plansModal .modalBody > div{
+    padding:14px !important;
+    gap:14px !important;
+  }
+
+  #plansModal .modalBody > div > div:first-child > div:first-child{
+    font-size:20px !important;
+    line-height:1.1 !important;
+  }
+
+  #plansGrid .itemRow{
+    min-height:auto !important;
+    padding:14px !important;
+  }
+
+  #plansGrid .itemRow strong{
+    font-size:18px !important;
+  }
+}
   </style>
 </head>
 <body>
@@ -4468,4 +4503,3 @@
     init();
   </script>
 </body>
-</html>
