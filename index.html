@@ -2671,7 +2671,7 @@
 
   const profilePatch = {};
   if(Object.prototype.hasOwnProperty.call(patch, "username")) profilePatch.username = patch.username;
-  if(Object.prototype.hasOwnProperty.call(patch, "fullname")) profilePatch.full_name = patch.fullname;
+  if(Object.prototype.hasOwnProperty.call(patch, "fullname")) profilePatch.fullname = patch.fullname;
   if(Object.prototype.hasOwnProperty.call(patch, "plan")) profilePatch.plan = patch.plan;
 
   if(Object.keys(profilePatch).length){
@@ -2685,7 +2685,7 @@
     state.session.profile = {
       ...state.session.profile,
       username: profilePatch.username ?? state.session.profile.username,
-      fullname: profilePatch.full_name ?? state.session.profile.fullname,
+      fullname: profilePatch.fullname ?? state.session.profile.fullname,
       plan: profilePatch.plan ?? state.session.profile.plan
     };
   }
@@ -2743,7 +2743,7 @@ async function loadSessionProfile(){
       "usuario";
 
     const fullname =
-  meta.full_name ||
+  meta.fullname ||
   meta.fullname ||
   username;
 
@@ -2816,7 +2816,7 @@ async function signUpSupabase(form){
       id: user.id,
       email,
       username,
-      full_name: fullName,
+      fullname: fullName,
       plan: "free"
     });
 
@@ -4102,7 +4102,6 @@ async function signOutSupabase(){
 
     
 
-      const code = reuseCode || makeCode();
 
       const draft = {
         id: uid(),
