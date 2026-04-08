@@ -2742,10 +2742,10 @@ async function loadSessionProfile(){
       user.email?.split("@")[0] ||
       "usuario";
 
-    const full_name =
-      meta.full_name ||
-      meta.fullname ||
-      username;
+    const fullname =
+  meta.full_name ||
+  meta.fullname ||
+  username;
 
     const { data: createdProfile, error: createProfileError } = await sb
       .from("profiles")
@@ -2753,7 +2753,7 @@ async function loadSessionProfile(){
         id: user.id,
         email: user.email,
         username,
-        full_name,
+        fullname,
         plan: "free"
       })
       .select("*")
@@ -2769,7 +2769,7 @@ async function loadSessionProfile(){
     id: user.id,
     email: user.email,
     username: profileRow.username || "Usuário",
-    fullname: profileRow.full_name || "",
+    fullname: profileRow.fullname || "",
     plan: profileRow.plan || "free",
     cp: Number(wallet.balance_cp || 0)
   };
@@ -2800,7 +2800,7 @@ async function signUpSupabase(form){
     options: {
       data: {
         username,
-        full_name: fullName
+        fullname: fullName
       }
     }
   });
@@ -3545,56 +3545,58 @@ async function signOutSupabase(){
     }
 
     function renderHistory(){
-      const list = $("#historyList");
-      const auth = getAuth();
+  const list = $("#historyList");
+  const user = getCurrentUser();
 
-      const mine = state.db.picksHistory
-        .filter((h) => auth.email && String(h.userEmail).toLowerCase() === String(auth.email).toLowerCase())
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const mine = state.db.picksHistory
+    .filter((h) => user?.email && String(h.userEmail).toLowerCase() === String(user.email).toLowerCase())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-      $("#historyCount").textContent = String(mine.length);
+  $("#historyCount").textContent = String(mine.length);
 
-      if(!mine.length){
-        list.innerHTML = `<div class="smallText">Nenhuma aposta encontrada.</div>`;
-        return;
-      }
+  if(!mine.length){
+    list.innerHTML = `<div class="smallText">Nenhuma aposta encontrada.</div>`;
+    return;
+  }
 
-      list.innerHTML = mine.map((h) => `
-        <div class="itemRow">
-          <div>
-            <strong>${h.type === "single" ? "Simples" : "Múltipla"} • ${fmtCP(h.stake)} CP</strong>
-            <div class="smallText">Odds ${formatOdd(h.totalOdds)} • retorno ${fmtCP(h.returnEst.toFixed(0))} CP</div>
-            <div class="smallText">${new Date(h.createdAt).toLocaleString("pt-BR")}</div>
-          </div>
-          <span class="status ${h.status === "OPEN" ? "open" : h.status === "WON" ? "won" : "lost"}">${h.status === "OPEN" ? "ABERTA" : h.status === "WON" ? "GANHA" : "PERDIDA"}</span>
-        </div>
-      `).join("");
-    }
+  list.innerHTML = mine.map((h) => `
+    <div class="itemRow">
+      <div>
+        <strong>${h.type === "single" ? "Simples" : "Múltipla"} • ${fmtCP(h.stake)} CP</strong>
+        <div class="smallText">Odds ${formatOdd(h.totalOdds)} • retorno ${fmtCP(h.returnEst.toFixed(0))} CP</div>
+        <div class="smallText">${new Date(h.createdAt).toLocaleString("pt-BR")}</div>
+      </div>
+      <span class="status ${h.status === "OPEN" ? "open" : h.status === "WON" ? "won" : "lost"}">${h.status === "OPEN" ? "ABERTA" : h.status === "WON" ? "GANHA" : "PERDIDA"}</span>
+    </div>
+  `).join("");
+}
 
     function renderMyLeagues(){
-      const list = $("#myLeaguesList");
-      const auth = getAuth();
+  const list = $("#myLeaguesList");
+  const user = getCurrentUser();
 
-      const mine = state.db.userLeagues.filter((lg) => (lg.members || []).some((m) => String(m).toLowerCase() === String(auth.email || "").toLowerCase()));
+  const mine = state.db.userLeagues.filter((lg) =>
+    (lg.members || []).some((m) => String(m).toLowerCase() === String(user?.email || "").toLowerCase())
+  );
 
-      $("#leagueCount").textContent = String(mine.length);
+  $("#leagueCount").textContent = String(mine.length);
 
-      if(!mine.length){
-        list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
-        return;
-      }
+  if(!mine.length){
+    list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
+    return;
+  }
 
-      list.innerHTML = mine.map((lg) => `
-        <div class="itemRow">
-          <div>
-            <strong>${esc(lg.name)}</strong>
-            <div class="smallText">Código: ${esc(lg.code)}</div>
-            <div class="smallText">Membros: ${(lg.members || []).length}</div>
-          </div>
-          <span class="badge">Liga</span>
-        </div>
-      `).join("");
-    }
+  list.innerHTML = mine.map((lg) => `
+    <div class="itemRow">
+      <div>
+        <strong>${esc(lg.name)}</strong>
+        <div class="smallText">Código: ${esc(lg.code)}</div>
+        <div class="smallText">Membros: ${(lg.members || []).length}</div>
+      </div>
+      <span class="badge">Liga</span>
+    </div>
+  `).join("");
+}
 
     function renderAdminSettle(){
       const list = $("#adminSettleList");
@@ -4506,14 +4508,18 @@ $("#btnBackRegister").onclick = () => openAuth("register");
       $("#btnRefreshAdmin").onclick = () => renderAdminSettle();
 
       $("#btnClearHistory").onclick = () => {
-        const auth = getAuth();
-        if(!auth?.email) return;
-        state.db.picksHistory = state.db.picksHistory.filter((h) => String(h.userEmail).toLowerCase() !== String(auth.email).toLowerCase());
-        saveDB(state.db);
-        renderHistory();
-        renderAdminSettle();
-        toast("Histórico limpo.");
-      };
+  const user = getCurrentUser();
+  if(!user?.email) return;
+
+  state.db.picksHistory = state.db.picksHistory.filter(
+    (h) => String(h.userEmail).toLowerCase() !== String(user.email).toLowerCase()
+  );
+
+  saveDB(state.db);
+  renderHistory();
+  renderAdminSettle();
+  toast("Histórico limpo.");
+};
 
       document.addEventListener("click", (e) => {
         const slip = $("#betslip");
