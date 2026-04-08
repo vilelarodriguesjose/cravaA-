@@ -4098,49 +4098,8 @@ async function signOutSupabase(){
   return "";
 }
 
-    
-
-    
 
 
-      const draft = {
-        id: uid(),
-        createdAt: nowIso(),
-        email: f.email,
-        payload: f,
-        code
-      };
-
-      state.db.registerDrafts = state.db.registerDrafts.filter((d) => String(d.email).toLowerCase() !== f.email);
-      state.db.registerDrafts.push(draft);
-      saveDB(state.db);
-
-      try{
-        const res = await fetch("/.netlify/functions/auth-register-start", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({
-            email: f.email,
-            code,
-            username: f.username,
-            fullname: `${f.firstName} ${f.lastName}`.trim()
-          })
-        });
-
-        const data = await res.json().catch(() => ({}));
-        if(!res.ok){
-          toast(data?.error || "Erro ao enviar código.");
-          return;
-        }
-
-        $("#verifyEmailBadge").textContent = f.email;
-        $("#regCode").value = "";
-        openAuth("verify");
-        toast("Código enviado ✅");
-      }catch{
-        toast("Erro ao enviar código.");
-      }
-    }
 
 
    async function loginSubmit(){
