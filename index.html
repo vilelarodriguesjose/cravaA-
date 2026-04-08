@@ -2300,12 +2300,11 @@
             </div>
 
             <div class="fieldHint">
-              Ao registrar, você receberá um <strong>código</strong> para confirmar seu e-mail.
-              Depois da confirmação, você volta para a tela de login e entra manualmente.
-            </div>
+  Crie sua conta para entrar nas ligas, apostar com CP e usar os recursos do CravaAí.
+</div>
 
             <div class="row authSubmitRow" style="justify-content:flex-end">
-              <button class="btn primary authSubmitBtn" id="btnSendCode">Enviar código</button>
+              <button class="btn primary authSubmitBtn" id="btnSendCode">Criar conta</button>
             </div>
           </div>
 
@@ -2417,10 +2416,24 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://wpzywlzsvtjjpcnskvia.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwenl3bHpzdnRqanBjbnNrdmlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzQ1NzAsImV4cCI6MjA4ODE1MDU3MH0.qrVc6Hd0o9DgtRvXLqKbQZQesXZ6UuU850R9wOMkHOc";
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
+</script>
+
   <script>
     const LS = {
       DB: "cravai_db_v3",
-      AUTH: "cravai_auth_v2",
       UI: "cravai_ui_v3"
     };
 
@@ -2504,13 +2517,6 @@
     function saveDB(db){ saveJSON(LS.DB, db); }
     function saveUI(ui){ saveJSON(LS.UI, ui); }
 
-    function getAuth(){
-      return loadJSON(LS.AUTH, { email:null });
-    }
-
-    function setAuthEmail(email){
-      saveJSON(LS.AUTH, { email });
-    }
 
     function rand(a, b){ return Math.random() * (b - a) + a; }
     function rndOdd(a, b){ return rand(a, b).toFixed(2); }
@@ -2640,25 +2646,192 @@
     }
 
     function getCurrentUser(){
-      const auth = getAuth();
-      if(!auth?.email) return null;
-      return state.db.users.find((u) => String(u.email).toLowerCase() === String(auth.email).toLowerCase()) || state.session.profile;
-    }
+  return state.session.profile || null;
+}
 
-    function setCurrentUserPatch(patch){
-      const auth = getAuth();
-      if(!auth?.email) return;
+    async function setCurrentUserPatch(patch){
+  const current = getCurrentUser();
+  if(!current?.id) return;
 
-      const idx = state.db.users.findIndex((u) => String(u.email).toLowerCase() === String(auth.email).toLowerCase());
-      if(idx >= 0){
-        state.db.users[idx] = { ...state.db.users[idx], ...patch };
-        saveDB(state.db);
+  if(Object.prototype.hasOwnProperty.call(patch, "cp")){
+    const cpValue = Number(patch.cp || 0);
+
+    const { error } = await sb
+      .from("wallets")
+      .update({ balance_cp: cpValue })
+      .eq("user_id", current.id);
+
+    if(error) throw error;
+
+    state.session.profile = {
+      ...state.session.profile,
+      cp: cpValue
+    };
+  }
+
+  const profilePatch = {};
+  if(Object.prototype.hasOwnProperty.call(patch, "username")) profilePatch.username = patch.username;
+  if(Object.prototype.hasOwnProperty.call(patch, "fullname")) profilePatch.full_name = patch.fullname;
+  if(Object.prototype.hasOwnProperty.call(patch, "plan")) profilePatch.plan = patch.plan;
+
+  if(Object.keys(profilePatch).length){
+    const { error } = await sb
+      .from("profiles")
+      .update(profilePatch)
+      .eq("id", current.id);
+
+    if(error) throw error;
+
+    state.session.profile = {
+      ...state.session.profile,
+      username: profilePatch.username ?? state.session.profile.username,
+      fullname: profilePatch.full_name ?? state.session.profile.fullname,
+      plan: profilePatch.plan ?? state.session.profile.plan
+    };
+  }
+}
+
+async function ensureWalletRow(userId){
+  const { data: wallet, error } = await sb
+    .from("wallets")
+    .select("*")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if(error) throw error;
+
+  if(wallet) return wallet;
+
+  const { data: created, error: createError } = await sb
+    .from("wallets")
+    .insert({
+      user_id: userId,
+      balance_cp: 1000
+    })
+    .select("*")
+    .single();
+
+  if(createError) throw createError;
+  return created;
+}
+
+async function loadSessionProfile(){
+  const { data: authData, error: authError } = await sb.auth.getUser();
+  if(authError) throw authError;
+
+  const user = authData?.user;
+  if(!user){
+    state.session.profile = null;
+    return null;
+  }
+
+  const { data: profile, error: profileError } = await sb
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if(profileError) throw profileError;
+
+  let profileRow = profile;
+
+  if(!profileRow){
+    const meta = user.user_metadata || {};
+    const username =
+      meta.username ||
+      user.email?.split("@")[0] ||
+      "usuario";
+
+    const full_name =
+      meta.full_name ||
+      meta.fullname ||
+      username;
+
+    const { data: createdProfile, error: createProfileError } = await sb
+      .from("profiles")
+      .insert({
+        id: user.id,
+        email: user.email,
+        username,
+        full_name,
+        plan: "free"
+      })
+      .select("*")
+      .single();
+
+    if(createProfileError) throw createProfileError;
+    profileRow = createdProfile;
+  }
+
+  const wallet = await ensureWalletRow(user.id);
+
+  state.session.profile = {
+    id: user.id,
+    email: user.email,
+    username: profileRow.username || "Usuário",
+    fullname: profileRow.full_name || "",
+    plan: profileRow.plan || "free",
+    cp: Number(wallet.balance_cp || 0)
+  };
+
+  return state.session.profile;
+}
+
+async function signInSupabase(email, password){
+  const { error } = await sb.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error) throw error;
+
+  await loadSessionProfile();
+}
+
+async function signUpSupabase(form){
+  const email = form.email.trim().toLowerCase();
+  const password = form.password;
+  const username = form.username.trim();
+  const fullName = `${form.firstName} ${form.lastName}`.trim();
+
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username,
+        full_name: fullName
       }
-
-      if(state.session.profile){
-        state.session.profile = { ...state.session.profile, ...patch };
-      }
     }
+  });
+
+  if(error) throw error;
+
+  const user = data?.user;
+  if(!user) return data;
+
+  const { error: profileError } = await sb
+    .from("profiles")
+    .upsert({
+      id: user.id,
+      email,
+      username,
+      full_name: fullName,
+      plan: "free"
+    });
+
+  if(profileError) throw profileError;
+
+  await ensureWalletRow(user.id);
+
+  return data;
+}
+
+async function signOutSupabase(){
+  const { error } = await sb.auth.signOut();
+  if(error) throw error;
+  state.session.profile = null;
+}
 
     function findCountry(id){
       return state.db.countries.find((c) => c.id === id) || null;
@@ -3860,22 +4033,20 @@
     }
 
     function openAuth(mode = "login"){
-      $("#authModal").classList.add("show");
-      lockBodyScroll(true);
+  $("#authModal").classList.add("show");
+  lockBodyScroll(true);
 
-      const isLogin = mode === "login";
-      $("#authTitle").textContent = isLogin ? "Entrar" : mode === "verify" ? "Confirmar e-mail" : "Registrar";
-      $("#authHint").textContent = isLogin
-        ? "Entre com email e senha."
-        : mode === "verify"
-          ? "Digite o código enviado para o seu e-mail."
-          : "Crie sua conta para entrar nas ligas e usar os recursos do CravaAí.";
+  const isLogin = mode === "login";
+  $("#authTitle").textContent = isLogin ? "Entrar" : "Registrar";
+  $("#authHint").textContent = isLogin
+    ? "Entre com email e senha."
+    : "Crie sua conta para entrar nas ligas e usar os recursos do CravaAí.";
 
-      $("#loginBox").classList.toggle("hide", !isLogin);
-      $("#registerBox").classList.toggle("hide", mode !== "register");
-      $("#verifyBox").classList.toggle("hide", mode !== "verify");
-      $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
-    }
+  $("#loginBox").classList.toggle("hide", !isLogin);
+  $("#registerBox").classList.toggle("hide", isLogin);
+  $("#verifyBox").classList.add("hide");
+  $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
+}
 
     function closeAuth(){
       $("#authModal").classList.remove("show");
@@ -3900,26 +4071,34 @@
       };
     }
 
-    function validateRegisterForm(f){
-      if(!f.email || !f.password || !f.username || !f.firstName || !f.lastName) return "Preencha nome, usuário, e-mail e senha.";
-      if(!f.phone || !f.cpf) return "Preencha celular e CPF.";
-      if(!f.birthDay || !f.birthMonth || !f.birthYear) return "Preencha sua data de nascimento.";
-      if(state.db.users.some((u) => String(u.email).toLowerCase() === f.email)) return "Esse e-mail já está cadastrado.";
-      if(state.db.users.some((u) => String(u.username).toLowerCase() === f.username.toLowerCase())) return "Esse nome de usuário já existe.";
-      return "";
-    }
+    async function validateRegisterForm(f){
+  if(!f.email || !f.password || !f.username || !f.firstName || !f.lastName){
+    return "Preencha nome, usuário, e-mail e senha.";
+  }
 
-    function makeCode(){
-      return String(Math.floor(100000 + Math.random() * 900000));
-    }
+  if(!f.phone || !f.cpf){
+    return "Preencha celular e CPF.";
+  }
 
-    async function sendRegisterCode(reuseCode = null){
-      const f = getRegisterForm();
-      const err = validateRegisterForm(f);
-      if(err){
-        toast(err);
-        return;
-      }
+  if(!f.birthDay || !f.birthMonth || !f.birthYear){
+    return "Preencha sua data de nascimento.";
+  }
+
+  const { data: usernameExists, error: usernameError } = await sb
+    .from("profiles")
+    .select("id")
+    .eq("username", f.username)
+    .maybeSingle();
+
+  if(usernameError) return "Erro ao validar username.";
+  if(usernameExists) return "Esse nome de usuário já existe.";
+
+  return "";
+}
+
+    
+
+    
 
       const code = reuseCode || makeCode();
 
@@ -3962,136 +4141,57 @@
       }
     }
 
-    async function verifyRegisterCode(){
-      const email = String($("#verifyEmailBadge").textContent || "").trim().toLowerCase();
-      const code = $("#regCode").value.trim();
-      const draft = state.db.registerDrafts.find((d) => String(d.email).toLowerCase() === email);
 
-      if(!draft){
-        toast("Cadastro não encontrado.");
-        openAuth("register");
-        return;
-      }
+   async function loginSubmit(){
+  const email = $("#authEmail").value.trim().toLowerCase();
+  const pass = $("#authPass").value;
 
-      if(!code){
-        toast("Digite o código.");
-        return;
-      }
+  try{
+    await signInSupabase(email, pass);
+    renderAccount();
+    renderHistory();
+    renderMyLeagues();
+    renderAdminSettle();
+    closeAuth();
+    toast("Entrou com sucesso ✅");
+  }catch(err){
+    toast(err.message || "Email ou senha inválidos.");
+  }
+}
 
-      try{
-        const res = await fetch("/.netlify/functions/auth-register-verify", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ email, code })
-        });
+async function registerSubmit(){
+  const f = getRegisterForm();
+  const err = await validateRegisterForm(f);
 
-        const data = await res.json().catch(() => ({}));
+  if(err){
+    toast(err);
+    return;
+  }
 
-        if(!res.ok){
-          toast(data?.error || "Código inválido.");
-          return;
-        }
+  try{
+    await signUpSupabase(f);
 
-        const p = draft.payload;
-        state.db.users.push({
-          id: uid(),
-          createdAt: nowIso(),
-          email: p.email,
-          username: p.username,
-          fullname: `${p.firstName} ${p.lastName}`.trim(),
-          password: p.password,
-          plan: "free",
-          cp: 1000,
-          country: p.country,
-          ddd: p.ddd,
-          phone: p.phone,
-          gender: p.gender,
-          birthDay: p.birthDay,
-          birthMonth: p.birthMonth,
-          birthYear: p.birthYear,
-          cpf: p.cpf
-        });
+    openAuth("login");
+    $("#authEmail").value = f.email;
+    $("#authPass").value = "";
+    toast("Conta criada ✅ Agora faça login.");
+  }catch(err){
+    toast(err.message || "Erro ao registrar.");
+  }
+}
 
-        state.db.registerDrafts = state.db.registerDrafts.filter((d) => d.id !== draft.id);
-        saveDB(state.db);
-
-        openAuth("login");
-        $("#authEmail").value = p.email;
-        $("#authPass").value = "";
-        toast("Cadastro confirmado ✅");
-      }catch{
-        toast("Erro ao confirmar código.");
-      }
-    }
-
-    async function resendRegisterCode(){
-      const email = String($("#verifyEmailBadge").textContent || "").trim().toLowerCase();
-      const draft = state.db.registerDrafts.find((d) => String(d.email).toLowerCase() === email);
-      if(!draft){
-        toast("Cadastro não encontrado.");
-        return;
-      }
-
-      try{
-        const res = await fetch("/.netlify/functions/auth-register-start", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({
-            email: draft.email,
-            code: draft.code,
-            username: draft.payload.username,
-            fullname: `${draft.payload.firstName} ${draft.payload.lastName}`.trim()
-          })
-        });
-
-        const data = await res.json().catch(() => ({}));
-        if(!res.ok){
-          toast(data?.error || "Erro ao reenviar código.");
-          return;
-        }
-
-        toast("Código reenviado ✅");
-      }catch{
-        toast("Erro ao reenviar código.");
-      }
-    }
-
-    async function loginSubmit(){
-      const email = $("#authEmail").value.trim().toLowerCase();
-      const pass = $("#authPass").value;
-      const u = state.db.users.find((x) => String(x.email).toLowerCase() === email && x.password === pass);
-
-      if(!u){
-        toast("Email ou senha inválidos.");
-        return;
-      }
-
-      setAuthEmail(u.email);
-      state.session.profile = {
-        email: u.email,
-        username: u.username,
-        fullname: u.fullname,
-        plan: u.plan || "free",
-        cp: Number(u.cp || 0)
-      };
-
-      renderAccount();
-      renderHistory();
-      renderMyLeagues();
-      renderAdminSettle();
-      closeAuth();
-      toast("Entrou com sucesso ✅");
-    }
-
-    function logout(){
-      setAuthEmail(null);
-      state.session.profile = null;
-      renderAccount();
-      renderHistory();
-      renderMyLeagues();
-      renderAdminSettle();
-      toast("Sessão encerrada.");
-    }
+    async function logout(){
+  try{
+    await signOutSupabase();
+    renderAccount();
+    renderHistory();
+    renderMyLeagues();
+    renderAdminSettle();
+    toast("Sessão encerrada.");
+  }catch(err){
+    toast(err.message || "Erro ao sair.");
+  }
+}
 
     async function startCheckout(plan){
       const u = getCurrentUser();
@@ -4170,7 +4270,7 @@
       saveDB(state.db);
 
       const newCp = Number(user.cp || 0) - stake;
-      setCurrentUserPatch({ cp:newCp });
+await setCurrentUserPatch({ cp:newCp });
 
       state.session.slip = [];
       $("#stakeInput").value = "";
@@ -4266,51 +4366,6 @@
       }catch{}
     }
 
-    async function restoreSessionFromServer(){
-      const a = getAuth();
-      if(!a?.email) return;
-
-      try{
-        const r = await fetch(`/.netlify/functions/profile-get?email=${encodeURIComponent(a.email)}`);
-        const j = await r.json().catch(() => ({}));
-
-        if(r.ok && j){
-          state.session.profile = {
-            email: a.email,
-            username: j.username || "Usuário",
-            fullname: j.fullname || "",
-            plan: j.plan || "free",
-            cp: Number(j.cp || 0)
-          };
-        }else{
-          const local = state.db.users.find((u) => String(u.email).toLowerCase() === String(a.email).toLowerCase());
-          if(local){
-            state.session.profile = {
-              email: local.email,
-              username: local.username || "Usuário",
-              fullname: local.fullname || "",
-              plan: local.plan || "free",
-              cp: Number(local.cp || 0)
-            };
-          }else{
-            setAuthEmail(null);
-          }
-        }
-      }catch{
-        const local = state.db.users.find((u) => String(u.email).toLowerCase() === String(a.email).toLowerCase());
-        if(local){
-          state.session.profile = {
-            email: local.email,
-            username: local.username || "Usuário",
-            fullname: local.fullname || "",
-            plan: local.plan || "free",
-            cp: Number(local.cp || 0)
-          };
-        }else{
-          setAuthEmail(null);
-        }
-      }
-    }
 
     function renderAll(){
       renderNav();
@@ -4424,10 +4479,12 @@
       };
 
       $("#btnSubmitAuth").onclick = () => loginSubmit();
-      $("#btnSendCode").onclick = () => sendRegisterCode();
-      $("#btnVerifyCode").onclick = () => verifyRegisterCode();
-      $("#btnResendCode").onclick = () => resendRegisterCode();
-      $("#btnBackRegister").onclick = () => openAuth("register");
+$("#btnSendCode").onclick = () => registerSubmit();
+
+$("#verifyBox").classList.add("hide");
+$("#btnVerifyCode").onclick = null;
+$("#btnResendCode").onclick = null;
+$("#btnBackRegister").onclick = () => openAuth("register");
 
       $("#genderM").onclick = () => {
         $("#regGender").value = "Masculino";
@@ -4485,19 +4542,38 @@
     }
 
     async function init(){
-      hookUI();
-      ensureDefaults();
-      ensureLeagueMatchesLoaded(state.ui.leagueId);
-      renderAll();
-      await registerSW();
-      await restoreSessionFromServer();
+  hookUI();
+  ensureDefaults();
+  ensureLeagueMatchesLoaded(state.ui.leagueId);
+  renderAll();
+  await registerSW();
 
-      if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
-        await updateLeagueReal(state.ui.leagueId, { force:true });
-      }
+  try{
+    await loadSessionProfile();
+  }catch(err){
+    console.error("Erro ao restaurar sessão:", err);
+    state.session.profile = null;
+  }
 
-      renderAll();
+  sb.auth.onAuthStateChange(async () => {
+    try{
+      await loadSessionProfile();
+      renderAccount();
+      renderHistory();
+      renderMyLeagues();
+      renderAdminSettle();
+      renderBetslip();
+    }catch(err){
+      console.error("Erro no auth state change:", err);
     }
+  });
+
+  if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
+    await updateLeagueReal(state.ui.leagueId, { force:true });
+  }
+
+  renderAll();
+}
 
     init();
   </script>
