@@ -2307,29 +2307,6 @@
               <button class="btn primary authSubmitBtn" id="btnSendCode">Criar conta</button>
             </div>
           </div>
-
-          <div id="verifyBox" class="stack hide">
-            <div class="smallText">Enviamos um código de 6 dígitos para:</div>
-            <div class="badge" id="verifyEmailBadge">—</div>
-
-            <div class="field" style="margin-top:8px">
-              <label>Código</label>
-              <input id="regCode" placeholder="123456" inputmode="numeric" maxlength="6" />
-            </div>
-
-            <div class="row" style="justify-content:flex-end">
-              <button class="btn primary" id="btnVerifyCode">Confirmar código</button>
-            </div>
-
-            <div class="row" style="justify-content:space-between">
-              <button class="btn small" id="btnBackRegister">Voltar</button>
-              <button class="btn small yellow" id="btnResendCode">Reenviar</button>
-            </div>
-
-            <div class="smallText" style="opacity:.85">
-              Depois da confirmação, você será levado para a tela de login.
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -2591,8 +2568,6 @@
           { id:"por-lp", countryId:"pt", name:"Liga Portugal", featured:false }
         ],
         matches: [],
-        userLeagues: [],
-        picksHistory: [],
         users: [],
         registerDrafts: []
       };
@@ -2635,8 +2610,6 @@
       state.db.countries = Array.isArray(state.db.countries) ? state.db.countries : freshDB.countries;
       state.db.leaguesCatalog = Array.isArray(state.db.leaguesCatalog) ? state.db.leaguesCatalog : freshDB.leaguesCatalog;
       state.db.matches = Array.isArray(state.db.matches) ? state.db.matches : [];
-      state.db.userLeagues = Array.isArray(state.db.userLeagues) ? state.db.userLeagues : [];
-      state.db.picksHistory = Array.isArray(state.db.picksHistory) ? state.db.picksHistory : [];
       state.db.users = Array.isArray(state.db.users) ? state.db.users : [];
       state.db.registerDrafts = Array.isArray(state.db.registerDrafts) ? state.db.registerDrafts : [];
       saveDB(state.db);
@@ -2652,22 +2625,6 @@
     async function setCurrentUserPatch(patch){
   const current = getCurrentUser();
   if(!current?.id) return;
-
-  if(Object.prototype.hasOwnProperty.call(patch, "cp")){
-    const cpValue = Number(patch.cp || 0);
-
-    const { error } = await sb
-      .from("wallets")
-      .update({ balance_cp: cpValue })
-      .eq("user_id", current.id);
-
-    if(error) throw error;
-
-    state.session.profile = {
-      ...state.session.profile,
-      cp: cpValue
-    };
-  }
 
   const profilePatch = {};
   if(Object.prototype.hasOwnProperty.call(patch, "username")) profilePatch.username = patch.username;
@@ -2691,7 +2648,7 @@
   }
 }
 
-async function ensureWalletRow(userId){
+async function getWallet(userId){
   const { data: wallet, error } = await sb
     .from("wallets")
     .select("*")
@@ -2699,20 +2656,7 @@ async function ensureWalletRow(userId){
     .maybeSingle();
 
   if(error) throw error;
-
-  if(wallet) return wallet;
-
-  const { data: created, error: createError } = await sb
-    .from("wallets")
-    .insert({
-      user_id: userId,
-      balance_cp: 1000
-    })
-    .select("*")
-    .single();
-
-  if(createError) throw createError;
-  return created;
+  return wallet;
 }
 
 async function loadSessionProfile(){
@@ -2737,23 +2681,20 @@ async function loadSessionProfile(){
 
   if(!profileRow){
     const meta = user.user_metadata || {};
-    const username =
-      meta.username ||
-      user.email?.split("@")[0] ||
-      "usuario";
-
-    const fullname =
-  meta.fullname ||
-  meta.fullname ||
-  username;
+    const username = meta.username || user.email?.split("@")[0] || "usuario";
+    const fullname = meta.fullname || username;
 
     const { data: createdProfile, error: createProfileError } = await sb
       .from("profiles")
       .insert({
         id: user.id,
-        email: user.email,
         username,
         fullname,
+        country: "Brasil",
+        phone: null,
+        cpf: null,
+        gender: null,
+        birth_date: null,
         plan: "free"
       })
       .select("*")
@@ -2763,7 +2704,7 @@ async function loadSessionProfile(){
     profileRow = createdProfile;
   }
 
-  const wallet = await ensureWalletRow(user.id);
+  const wallet = await getWallet(user.id);
 
   state.session.profile = {
     id: user.id,
@@ -2771,11 +2712,13 @@ async function loadSessionProfile(){
     username: profileRow.username || "Usuário",
     fullname: profileRow.fullname || "",
     plan: profileRow.plan || "free",
-    cp: Number(wallet.balance_cp || 0)
+    cp: Number(wallet?.balance_cp || 0)
   };
 
   return state.session.profile;
 }
+
+
 
 async function signInSupabase(email, password){
   const { error } = await sb.auth.signInWithPassword({
@@ -2793,6 +2736,11 @@ async function signUpSupabase(form){
   const password = form.password;
   const username = form.username.trim();
   const fullName = `${form.firstName} ${form.lastName}`.trim();
+
+  const birthDate =
+    form.birthYear && form.birthMonth && form.birthDay
+      ? `${form.birthYear}-${String(form.birthMonth).padStart(2, "0")}-${String(form.birthDay).padStart(2, "0")}`
+      : null;
 
   const { data, error } = await sb.auth.signUp({
     email,
@@ -2814,15 +2762,17 @@ async function signUpSupabase(form){
     .from("profiles")
     .upsert({
       id: user.id,
-      email,
       username,
       fullname: fullName,
+      country: form.country || "Brasil",
+      phone: form.phone || null,
+      cpf: form.cpf || null,
+      gender: form.gender || null,
+      birth_date: birthDate,
       plan: "free"
     });
 
   if(profileError) throw profileError;
-
-  await ensureWalletRow(user.id);
 
   return data;
 }
@@ -3535,109 +3485,117 @@ async function signOutSupabase(){
       }
     }
 
-    function settleHistoryPick(id, status){
-      const item = state.db.picksHistory.find((h) => h.id === id);
-      if(!item) return;
-      item.status = status;
-      saveDB(state.db);
-      renderHistory();
-      renderAdminSettle();
-    }
 
-    function renderHistory(){
+    async function renderHistory(){
   const list = $("#historyList");
   const user = getCurrentUser();
 
-  const mine = state.db.picksHistory
-    .filter((h) => user?.email && String(h.userEmail).toLowerCase() === String(user.email).toLowerCase())
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-  $("#historyCount").textContent = String(mine.length);
-
-  if(!mine.length){
+  if(!user?.id){
+    $("#historyCount").textContent = "0";
     list.innerHTML = `<div class="smallText">Nenhuma aposta encontrada.</div>`;
     return;
   }
 
-  list.innerHTML = mine.map((h) => `
+  const { data: bets, error } = await sb
+    .from("bets")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if(error){
+    $("#historyCount").textContent = "0";
+    list.innerHTML = `<div class="smallText">Erro ao carregar histórico.</div>`;
+    return;
+  }
+
+  $("#historyCount").textContent = String(bets?.length || 0);
+
+  if(!bets?.length){
+    list.innerHTML = `<div class="smallText">Nenhuma aposta encontrada.</div>`;
+    return;
+  }
+
+  list.innerHTML = bets.map((h) => `
     <div class="itemRow">
       <div>
-        <strong>${h.type === "single" ? "Simples" : "Múltipla"} • ${fmtCP(h.stake)} CP</strong>
-        <div class="smallText">Odds ${formatOdd(h.totalOdds)} • retorno ${fmtCP(h.returnEst.toFixed(0))} CP</div>
-        <div class="smallText">${new Date(h.createdAt).toLocaleString("pt-BR")}</div>
+        <strong>${h.bet_type === "single" ? "Simples" : "Múltipla"} • ${fmtCP(h.stake)} CP</strong>
+        <div class="smallText">Odds ${formatOdd(h.total_odds)} • retorno ${fmtCP(Number(h.payout || 0))} CP</div>
+        <div class="smallText">${new Date(h.created_at).toLocaleString("pt-BR")}</div>
       </div>
-      <span class="status ${h.status === "OPEN" ? "open" : h.status === "WON" ? "won" : "lost"}">${h.status === "OPEN" ? "ABERTA" : h.status === "WON" ? "GANHA" : "PERDIDA"}</span>
+      <span class="status ${
+        h.status === "OPEN" ? "open" :
+        h.status === "WON" ? "won" : "lost"
+      }">${
+        h.status === "OPEN" ? "ABERTA" :
+        h.status === "WON" ? "GANHA" :
+        h.status === "LOST" ? "PERDIDA" : h.status
+      }</span>
     </div>
   `).join("");
 }
 
-    function renderMyLeagues(){
+    async function renderMyLeagues(){
   const list = $("#myLeaguesList");
   const user = getCurrentUser();
 
-  const mine = state.db.userLeagues.filter((lg) =>
-    (lg.members || []).some((m) => String(m).toLowerCase() === String(user?.email || "").toLowerCase())
-  );
-
-  $("#leagueCount").textContent = String(mine.length);
-
-  if(!mine.length){
+  if(!user?.id){
+    $("#leagueCount").textContent = "0";
     list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
     return;
   }
 
-  list.innerHTML = mine.map((lg) => `
-    <div class="itemRow">
-      <div>
-        <strong>${esc(lg.name)}</strong>
-        <div class="smallText">Código: ${esc(lg.code)}</div>
-        <div class="smallText">Membros: ${(lg.members || []).length}</div>
+  const { data: memberships, error } = await sb
+    .from("league_members")
+    .select(`
+      league_id,
+      leagues (
+        id,
+        name,
+        code
+      )
+    `)
+    .eq("user_id", user.id);
+
+  if(error){
+    $("#leagueCount").textContent = "0";
+    list.innerHTML = `<div class="smallText">Erro ao carregar ligas.</div>`;
+    return;
+  }
+
+  $("#leagueCount").textContent = String(memberships?.length || 0);
+
+  if(!memberships?.length){
+    list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
+    return;
+  }
+
+  list.innerHTML = memberships.map((row) => {
+    const lg = Array.isArray(row.leagues) ? row.leagues[0] : row.leagues;
+    return `
+      <div class="itemRow">
+        <div>
+          <strong>${esc(lg?.name || "Liga")}</strong>
+          <div class="smallText">Código: ${esc(lg?.code || "")}</div>
+        </div>
+        <span class="badge">Liga</span>
       </div>
-      <span class="badge">Liga</span>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
     function renderAdminSettle(){
-      const list = $("#adminSettleList");
-      const u = getCurrentUser();
+  const list = $("#adminSettleList");
+  const u = getCurrentUser();
 
-      $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(u?.email));
+  $("#adminLeagueBox").classList.toggle("hide", !isAdminEmail(u?.email));
 
-      if(!isAdminEmail(u?.email)){
-        list.innerHTML = "";
-        return;
-      }
+  if(!isAdminEmail(u?.email)){
+    list.innerHTML = "";
+    return;
+  }
 
-      const openItems = state.db.picksHistory
-        .filter((h) => h.status === "OPEN")
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-      if(!openItems.length){
-        list.innerHTML = `<div class="smallText">Nenhuma aposta aberta para liquidar.</div>`;
-        return;
-      }
-
-      list.innerHTML = openItems.map((h) => `
-        <div class="itemRow">
-          <div>
-            <strong>${esc(h.userEmail)}</strong>
-            <div class="smallText">${h.type === "single" ? "Simples" : "Múltipla"} • stake ${fmtCP(h.stake)} CP • odds ${formatOdd(h.totalOdds)}</div>
-          </div>
-          <div class="row">
-            <button class="btn small primary" data-settle="${h.id}" data-status="WON">Ganhar</button>
-            <button class="btn small danger" data-settle="${h.id}" data-status="LOST">Perder</button>
-          </div>
-        </div>
-      `).join("");
-
-      $$("[data-settle]").forEach((b) => {
-        b.onclick = () => {
-          settleHistoryPick(b.dataset.settle, b.dataset.status);
-          toast("Aposta liquidada.");
-        };
-      });
-    }
+  list.innerHTML = `<div class="smallText">Liquidação admin será conectada ao Supabase na Fase 2.</div>`;
+}
 
     function renderFeatured(){
       const list = $("#featuredList");
@@ -4046,7 +4004,6 @@ async function signOutSupabase(){
 
   $("#loginBox").classList.toggle("hide", !isLogin);
   $("#registerBox").classList.toggle("hide", isLogin);
-  $("#verifyBox").classList.add("hide");
   $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
 }
 
@@ -4100,8 +4057,6 @@ async function signOutSupabase(){
 
 
 
-
-
    async function loginSubmit(){
   const email = $("#authEmail").value.trim().toLowerCase();
   const pass = $("#authPass").value;
@@ -4109,8 +4064,8 @@ async function signOutSupabase(){
   try{
     await signInSupabase(email, pass);
     renderAccount();
-    renderHistory();
-    renderMyLeagues();
+    await renderHistory();
+    await renderMyLeagues();
     renderAdminSettle();
     closeAuth();
     toast("Entrou com sucesso ✅");
@@ -4130,22 +4085,21 @@ async function registerSubmit(){
 
   try{
     await signUpSupabase(f);
-
     openAuth("login");
     $("#authEmail").value = f.email;
-    $("#authPass").value = "";
-    toast("Conta criada ✅ Agora faça login.");
+    toast("Conta criada. Verifique seu email e depois entre ✅");
   }catch(err){
-    toast(err.message || "Erro ao registrar.");
+    toast(err.message || "Erro ao criar conta.");
   }
 }
+
 
     async function logout(){
   try{
     await signOutSupabase();
     renderAccount();
-    renderHistory();
-    renderMyLeagues();
+    await renderHistory();
+    await renderMyLeagues();
     renderAdminSettle();
     toast("Sessão encerrada.");
   }catch(err){
@@ -4187,102 +4141,89 @@ async function registerSubmit(){
     }
 
     async function placeBet(){
-      const user = getCurrentUser();
-      if(!user){
-        toast("Entre para apostar.");
-        openAuth("login");
-        return;
-      }
+  const user = getCurrentUser();
+  if(!user){
+    toast("Entre para apostar.");
+    openAuth("login");
+    return;
+  }
 
-      const stake = Math.floor(getSlipStake());
-      if(!state.session.slip.length){
-        toast("Seu bilhete está vazio.");
-        return;
-      }
-      if(stake <= 0){
-        toast("Digite uma stake válida.");
-        return;
-      }
-      if(Number(user.cp || 0) < stake){
-        toast("CP insuficiente.");
-        return;
-      }
+  const stake = Math.floor(getSlipStake());
 
-      if(state.session.slip.some((p) => !Number.isFinite(Number(p.odd)))){
-        toast("Ainda tem seleção sem odd real.");
-        return;
-      }
+  if(!state.session.slip.length){
+    toast("Seu bilhete está vazio.");
+    return;
+  }
 
-      const totalOdds = getSlipTotalOdds();
-      const entry = {
-        id: uid(),
-        userEmail: user.email,
-        type: state.session.slip.length > 1 ? "multi" : "single",
-        picks: state.session.slip.map((p) => ({ ...p })),
+  if(stake <= 0){
+    toast("Digite uma stake válida.");
+    return;
+  }
+
+  if(Number(user.cp || 0) < stake){
+    toast("CP insuficiente.");
+    return;
+  }
+
+  if(state.session.slip.some((p) => !Number.isFinite(Number(p.odd)))){
+    toast("Ainda tem seleção sem odd real.");
+    return;
+  }
+
+  const totalOdds = getSlipTotalOdds();
+
+  const items = state.session.slip.map((p) => ({
+    match_id: p.matchId,
+    market: p.group,
+    selection: p.key,
+    odd: Number(p.odd)
+  }));
+
+  try{
+    const res = await fetch("/.netlify/functions/place-bet", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: user.id,
         stake,
-        totalOdds,
-        returnEst: stake * totalOdds,
-        status: "OPEN",
-        createdAt: nowIso()
-      };
+        total_odds: totalOdds,
+        bet_type: state.session.slip.length > 1 ? "multi" : "single",
+        items
+      })
+    });
 
-      state.db.picksHistory.push(entry);
-      saveDB(state.db);
+    const data = await res.json().catch(() => ({}));
 
-      const newCp = Number(user.cp || 0) - stake;
-await setCurrentUserPatch({ cp:newCp });
-
-      state.session.slip = [];
-      $("#stakeInput").value = "";
-      renderBetslip();
-      renderAccount();
-      renderHistory();
-      renderAdminSettle();
-      toast("Aposta registrada ✅");
+    if(!res.ok){
+      toast(data?.error || "Erro ao registrar aposta.");
+      return;
     }
+
+    await loadSessionProfile();
+    state.session.slip = [];
+    $("#stakeInput").value = "";
+    renderBetslip();
+    renderAccount();
+    await renderHistory();
+    renderAdminSettle();
+    toast("Aposta registrada ✅");
+  }catch(err){
+    toast("Erro ao registrar aposta.");
+  }
+}
 
     function createUserLeague(){
-      const user = getCurrentUser();
-      if(!isAdminEmail(user?.email)){
-        toast("Somente admin pode criar liga.");
-        return;
-      }
+  toast("Criação de liga será ligada ao Supabase na próxima etapa.");
+}
 
-      const name = $("#newLeagueName").value.trim();
-      if(!name){
-        toast("Digite o nome da liga.");
-        return;
-      }
 
-      const code = Math.random().toString(36).slice(2, 8).toUpperCase();
-
-      state.db.userLeagues.push({
-        id: uid(),
-        createdAt: nowIso(),
-        name,
-        code,
-        ownerEmail: user.email,
-        members: [user.email]
-      });
-
-      saveDB(state.db);
-      $("#newLeagueName").value = "";
-      renderMyLeagues();
-      toast(`Liga criada • código ${code}`);
-    }
-
-    function joinLeagueByCode(){
-      const user = getCurrentUser();
-      if(!user){
-        toast("Entre para participar de uma liga.");
-        openAuth("login");
-        return;
-      }
+function joinLeagueByCode(){
+  toast("Entrada por código será ligada ao Supabase na próxima etapa.");
+}
 
       const code = prompt("Digite o código da liga:");
       if(!code) return;
 
-      const lg = state.db.userLeagues.find((x) => String(x.code).toUpperCase() === String(code).trim().toUpperCase());
       if(!lg){
         toast("Liga não encontrada.");
         return;
@@ -4441,10 +4382,7 @@ await setCurrentUserPatch({ cp:newCp });
       $("#btnSubmitAuth").onclick = () => loginSubmit();
 $("#btnSendCode").onclick = () => registerSubmit();
 
-$("#verifyBox").classList.add("hide");
-$("#btnVerifyCode").onclick = null;
 $("#btnResendCode").onclick = null;
-$("#btnBackRegister").onclick = () => openAuth("register");
 
       $("#genderM").onclick = () => {
         $("#regGender").value = "Masculino";
@@ -4466,10 +4404,9 @@ $("#btnBackRegister").onclick = () => openAuth("register");
       $("#btnRefreshAdmin").onclick = () => renderAdminSettle();
 
       $("#btnClearHistory").onclick = () => {
-  const user = getCurrentUser();
-  if(!user?.email) return;
+  toast("Agora o histórico vem do servidor e não pode ser limpo manualmente.");
+};
 
-  state.db.picksHistory = state.db.picksHistory.filter(
     (h) => String(h.userEmail).toLowerCase() !== String(user.email).toLowerCase()
   );
 
@@ -4506,7 +4443,12 @@ $("#btnBackRegister").onclick = () => openAuth("register");
     }
 
     async function init(){
-  hookUI();
+  sb.auth.onAuthStateChange((event, session) => {
+  if(session){
+    loadSessionProfile();
+  }
+});
+      hookUI();
   ensureDefaults();
   ensureLeagueMatchesLoaded(state.ui.leagueId);
   renderAll();
@@ -4537,6 +4479,7 @@ $("#btnBackRegister").onclick = () => openAuth("register");
   }
 
   renderAll();
+  loadSessionProfile();
 }
 
     init();
