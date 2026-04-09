@@ -4221,23 +4221,6 @@ function joinLeagueByCode(){
   toast("Entrada por código será ligada ao Supabase na próxima etapa.");
 }
 
-      const code = prompt("Digite o código da liga:");
-      if(!code) return;
-
-      if(!lg){
-        toast("Liga não encontrada.");
-        return;
-      }
-
-      lg.members = Array.isArray(lg.members) ? lg.members : [];
-      if(!lg.members.some((m) => String(m).toLowerCase() === String(user.email).toLowerCase())){
-        lg.members.push(user.email);
-        saveDB(state.db);
-      }
-
-      renderMyLeagues();
-      toast("Você entrou na liga ✅");
-    }
 
     function renderAccount(){
       const u = getCurrentUser();
