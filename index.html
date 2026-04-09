@@ -2660,11 +2660,8 @@ async function getWallet(userId){
 }
 
 async function loadSessionProfile(){
-  const { data: authData, error: authError } = await sb.auth.getUser();
-  if(authError) throw authError;
-
-  const user = authData?.user;
-  if(!user){
+  const { data: { user }, error } = await sb.auth.getUser();
+  if (error || !user) {
     state.session.profile = null;
     return null;
   }
@@ -2673,46 +2670,26 @@ async function loadSessionProfile(){
     .from("profiles")
     .select("*")
     .eq("id", user.id)
-    .maybeSingle();
+    .single();
 
-  if(profileError) throw profileError;
-
-  let profileRow = profile;
-
-  if(!profileRow){
-    const meta = user.user_metadata || {};
-    const username = meta.username || user.email?.split("@")[0] || "usuario";
-    const fullname = meta.fullname || username;
-
-    const { data: createdProfile, error: createProfileError } = await sb
-      .from("profiles")
-      .insert({
-        id: user.id,
-        username,
-        fullname,
-        country: "Brasil",
-        phone: null,
-        cpf: null,
-        gender: null,
-        birth_date: null,
-        plan: "free"
-      })
-      .select("*")
-      .single();
-
-    if(createProfileError) throw createProfileError;
-    profileRow = createdProfile;
+  if (profileError) {
+    console.error("Erro ao carregar perfil:", profileError);
+    return null;
   }
 
-  const wallet = await getWallet(user.id);
+  const { data: wallet } = await sb
+    .from("wallets")
+    .select("balance_cp")
+    .eq("user_id", user.id)
+    .single();
 
   state.session.profile = {
     id: user.id,
     email: user.email,
-    username: profileRow.username || "Usuário",
-    fullname: profileRow.fullname || "",
-    plan: profileRow.plan || "free",
-    cp: Number(wallet?.balance_cp || 0)
+    username: profile.username,
+    fullname: profile.fullname,
+    plan: profile.plan,
+    cp: wallet?.balance_cp || 0
   };
 
   return state.session.profile;
@@ -2732,47 +2709,22 @@ async function signInSupabase(email, password){
 }
 
 async function signUpSupabase(form){
-  const email = form.email.trim().toLowerCase();
-  const password = form.password;
-  const username = form.username.trim();
-  const fullName = `${form.firstName} ${form.lastName}`.trim();
-
-  const birthDate =
-    form.birthYear && form.birthMonth && form.birthDay
-      ? `${form.birthYear}-${String(form.birthMonth).padStart(2, "0")}-${String(form.birthDay).padStart(2, "0")}`
-      : null;
+  const { email, password, username, firstName, lastName } = form;
 
   const { data, error } = await sb.auth.signUp({
-    email,
+    email: email.trim().toLowerCase(),
     password,
     options: {
       data: {
-        username,
-        fullname: fullName
+        username: username.trim(),
+        fullname: `${firstName} ${lastName}`.trim()
       }
     }
   });
 
-  if(error) throw error;
-
-  const user = data?.user;
-  if(!user) return data;
-
-  const { error: profileError } = await sb
-    .from("profiles")
-    .upsert({
-      id: user.id,
-      username,
-      fullname: fullName,
-      country: form.country || "Brasil",
-      phone: form.phone || null,
-      cpf: form.cpf || null,
-      gender: form.gender || null,
-      birth_date: birthDate,
-      plan: "free"
-    });
-
-  if(profileError) throw profileError;
+  if (error) {
+    throw error;
+  }
 
   return data;
 }
@@ -4365,7 +4317,6 @@ function joinLeagueByCode(){
       $("#btnSubmitAuth").onclick = () => loginSubmit();
 $("#btnSendCode").onclick = () => registerSubmit();
 
-$("#btnResendCode").onclick = null;
 
    $("#genderM").onclick = () => {
   $("#regGender").value = "Masculino";
@@ -4418,12 +4369,7 @@ window.addEventListener("resize", () => {
 }
 
     async function init(){
-  sb.auth.onAuthStateChange((event, session) => {
-  if(session){
-    loadSessionProfile();
-  }
-});
-      hookUI();
+  hookUI();
   ensureDefaults();
   ensureLeagueMatchesLoaded(state.ui.leagueId);
   renderAll();
@@ -4436,16 +4382,23 @@ window.addEventListener("resize", () => {
     state.session.profile = null;
   }
 
+  renderAccount();
+  await renderHistory();
+  await renderMyLeagues();
+  renderAdminSettle();
+  renderBetslip();
+
   sb.auth.onAuthStateChange(async () => {
     try{
       await loadSessionProfile();
       renderAccount();
-      renderHistory();
-      renderMyLeagues();
+      await renderHistory();
+      await renderMyLeagues();
       renderAdminSettle();
       renderBetslip();
     }catch(err){
       console.error("Erro no auth state change:", err);
+      state.session.profile = null;
     }
   });
 
@@ -4454,8 +4407,9 @@ window.addEventListener("resize", () => {
   }
 
   renderAll();
-  loadSessionProfile();
 }
+
+init();
 
     init();
   </script>
