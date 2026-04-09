@@ -4367,63 +4367,55 @@ $("#btnSendCode").onclick = () => registerSubmit();
 
 $("#btnResendCode").onclick = null;
 
-      $("#genderM").onclick = () => {
-        $("#regGender").value = "Masculino";
-        $("#genderM").classList.add("active");
-        $("#genderF").classList.remove("active");
-      };
-      $("#genderF").onclick = () => {
-        $("#regGender").value = "Feminino";
-        $("#genderF").classList.add("active");
-        $("#genderM").classList.remove("active");
-      };
+   $("#genderM").onclick = () => {
+  $("#regGender").value = "Masculino";
+  $("#genderM").classList.add("active");
+  $("#genderF").classList.remove("active");
+};
 
-      $("#btnClosePlans").onclick = () => closePlans();
-      $("#btnBuyPro").onclick = () => startCheckout("pro");
-      $("#btnBuyElite").onclick = () => startCheckout("elite");
+$("#genderF").onclick = () => {
+  $("#regGender").value = "Feminino";
+  $("#genderF").classList.add("active");
+  $("#genderM").classList.remove("active");
+};
 
-      $("#btnCreateLeague").onclick = () => createUserLeague();
-      $("#btnJoinByCode").onclick = () => joinLeagueByCode();
-      $("#btnRefreshAdmin").onclick = () => renderAdminSettle();
+$("#btnClosePlans").onclick = () => closePlans();
+$("#btnBuyPro").onclick = () => startCheckout("pro");
+$("#btnBuyElite").onclick = () => startCheckout("elite");
 
-      $("#btnClearHistory").onclick = () => {
+$("#btnCreateLeague").onclick = () => createUserLeague();
+$("#btnJoinByCode").onclick = () => joinLeagueByCode();
+$("#btnRefreshAdmin").onclick = () => renderAdminSettle();
+
+$("#btnClearHistory").onclick = () => {
   toast("Agora o histórico vem do servidor e não pode ser limpo manualmente.");
 };
 
-    (h) => String(h.userEmail).toLowerCase() !== String(user.email).toLowerCase()
-  );
+document.addEventListener("click", (e) => {
+  const slip = $("#betslip");
+  if(!slip || slip.classList.contains("hide") || state.ui.slipMini) return;
+  const inside = slip.contains(e.target);
+  if(!inside && state.session.slip.length){
+    state.ui.slipMini = true;
+    saveUI(state.ui);
+    renderBetslip();
+  }
+});
 
-  saveDB(state.db);
-  renderHistory();
-  renderAdminSettle();
-  toast("Histórico limpo.");
-};
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape"){
+    if($("#authModal").classList.contains("show")) closeAuth();
+    else if($("#plansModal").classList.contains("show")) closePlans();
+    else if(state.session.game.open) closeGame();
+  }
+});
 
-      document.addEventListener("click", (e) => {
-        const slip = $("#betslip");
-        if(!slip || slip.classList.contains("hide") || state.ui.slipMini) return;
-        const inside = slip.contains(e.target);
-        if(!inside && state.session.slip.length){
-          state.ui.slipMini = true;
-          saveUI(state.ui);
-          renderBetslip();
-        }
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if(e.key === "Escape"){
-          if($("#authModal").classList.contains("show")) closeAuth();
-          else if($("#plansModal").classList.contains("show")) closePlans();
-          else if(state.session.game.open) closeGame();
-        }
-      });
-
-      window.addEventListener("resize", () => {
-        if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
-          renderLeftMode();
-        }
-      }, { passive:true });
-    }
+window.addEventListener("resize", () => {
+  if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
+    renderLeftMode();
+  }
+}, { passive:true });
+}
 
     async function init(){
   sb.auth.onAuthStateChange((event, session) => {
