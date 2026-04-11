@@ -2695,17 +2695,88 @@ async function loadSessionProfile(){
   return state.session.profile;
 }
 
+function maskPhone(value){
+  return value
+    .replace(/\D/g, "")
+    .replace(/^(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2")
+    .slice(0, 15);
+}
 
+$("#authPhone").addEventListener("input", (e) => {
+  e.target.value = maskPhone(e.target.value);
+});
 
-async function signInSupabase(email, password){
-  const { error } = await sb.auth.signInWithPassword({
-    email,
-    password
+function maskCPF(value){
+  return value
+    .replace(/\D/g, "")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+    .slice(0, 14);
+}
+
+$("#authCPF").addEventListener("input", (e) => {
+  e.target.value = maskCPF(e.target.value);
+});
+
+function autoNext(current, nextId){
+  current.addEventListener("input", () => {
+    if(current.value.length === current.maxLength){
+      document.getElementById(nextId).focus();
+    }
   });
+}
 
-  if(error) throw error;
+autoNext($("#birthDay"), "birthMonth");
+autoNext($("#birthMonth"), "birthYear");
 
-  await loadSessionProfile();
+function validateCPF(cpf){
+  cpf = cpf.replace(/\D/g, "");
+  if(cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  let sum = 0;
+  for(let i = 0; i < 9; i++){
+    sum += cpf[i] * (10 - i);
+  }
+  let firstDigit = (sum * 10) % 11;
+  if(firstDigit === 10) firstDigit = 0;
+  if(firstDigit != cpf[9]) return false;
+
+  sum = 0;
+  for(let i = 0; i < 10; i++){
+    sum += cpf[i] * (11 - i);
+  }
+  let secondDigit = (sum * 10) % 11;
+  if(secondDigit === 10) secondDigit = 0;
+
+  return secondDigit == cpf[10];
+}
+
+async function validateRegisterForm(form){
+  if(!validateCPF(form.cpf)){
+    throw new Error("CPF inválido.");
+  }
+
+  const { data: usernameExists } = await sb
+    .from("profiles")
+    .select("id")
+    .eq("username", form.username)
+    .maybeSingle();
+
+  if(usernameExists){
+    throw new Error("Nome de usuário já está em uso.");
+  }
+
+  const { data: cpfExists } = await sb
+    .from("profiles")
+    .select("id")
+    .eq("cpf", form.cpf.replace(/\D/g, ""))
+    .maybeSingle();
+
+  if(cpfExists){
+    throw new Error("CPF já cadastrado.");
+  }
 }
 
 async function signUpSupabase(form){
@@ -2715,6 +2786,7 @@ async function signUpSupabase(form){
     email: email.trim().toLowerCase(),
     password,
     options: {
+      emailRedirectTo: "https://cravaai.com",
       data: {
         username: username.trim(),
         fullname: `${firstName} ${lastName}`.trim()
@@ -2723,6 +2795,9 @@ async function signUpSupabase(form){
   });
 
   if (error) {
+    if (error.message.includes("User already registered")) {
+      throw new Error("Este e-mail já está cadastrado.");
+    }
     throw error;
   }
 
@@ -4015,33 +4090,34 @@ async function signOutSupabase(){
 
   try{
     await signInSupabase(email, pass);
-    renderAccount();
-    await renderHistory();
-    await renderMyLeagues();
-    renderAdminSettle();
     closeAuth();
     toast("Entrou com sucesso ✅");
   }catch(err){
-    toast(err.message || "Email ou senha inválidos.");
+    if(err.message.includes("Email not confirmed")){
+      toast("Confirme seu e-mail antes de entrar 📩");
+    }else{
+      toast(err.message || "Email ou senha inválidos.");
+    }
   }
 }
 
 async function registerSubmit(){
-  const f = getRegisterForm();
-  const err = await validateRegisterForm(f);
-
-  if(err){
-    toast(err);
-    return;
-  }
+  const btn = document.getElementById("btnSendCode");
+  btn.disabled = true;
+  btn.textContent = "Criando conta...";
 
   try{
-    await signUpSupabase(f);
+    const form = getRegisterForm(); // função que coleta os dados
+    await validateRegisterForm(form);
+    await signUpSupabase(form);
+
+    toast("Conta criada! Verifique seu e-mail 📩");
     openAuth("login");
-    $("#authEmail").value = f.email;
-    toast("Conta criada. Verifique seu email e depois entre ✅");
   }catch(err){
     toast(err.message || "Erro ao criar conta.");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Criar conta";
   }
 }
 
@@ -4175,25 +4251,25 @@ function joinLeagueByCode(){
 
 
     function renderAccount(){
-      const u = getCurrentUser();
-      const pill = $("#topAccountPill");
+  const pill = document.getElementById("topAccountPill");
+  const btnRegister = document.getElementById("btnRegister");
+  const btnEnter = document.getElementById("btnEnter");
+  const btnLogout = document.getElementById("btnLogout");
 
-      if(u){
-        pill.classList.remove("hide");
-        pill.innerHTML = `👤 <strong>${esc(u.username || "Usuário")}</strong> • ${fmtCP(Number(u.cp || 0))} CP`;
-        $("#btnLogout").classList.remove("hide");
-        $("#btnEnter").classList.add("hide");
-        $("#btnRegister").classList.add("hide");
-      }else{
-        pill.classList.add("hide");
-        pill.innerHTML = "";
-        $("#btnLogout").classList.add("hide");
-        $("#btnEnter").classList.remove("hide");
-        $("#btnRegister").classList.remove("hide");
-      }
+  if(state.session.profile){
+    pill.classList.remove("hide");
+    pill.textContent = `${state.session.profile.username} • ${state.session.profile.cp} CP`;
 
-      renderAdminSettle();
-    }
+    btnRegister.classList.add("hide");
+    btnEnter.classList.add("hide");
+    btnLogout.classList.remove("hide");
+  }else{
+    pill.classList.add("hide");
+    btnRegister.classList.remove("hide");
+    btnEnter.classList.remove("hide");
+    btnLogout.classList.add("hide");
+  }
+}
 
     async function registerSW(){
       if(!("serviceWorker" in navigator)) return;
@@ -4370,47 +4446,46 @@ window.addEventListener("resize", () => {
 
     async function init(){
   hookUI();
-  ensureDefaults();
-  ensureLeagueMatchesLoaded(state.ui.leagueId);
   renderAll();
-  await registerSW();
 
-  try{
+  // 1. Tenta restaurar a sessão ao carregar o site
+  try {
     await loadSessionProfile();
-  }catch(err){
+  } catch (err) {
     console.error("Erro ao restaurar sessão:", err);
     state.session.profile = null;
   }
 
+  // Atualiza a interface com base na sessão
   renderAccount();
-  await renderHistory();
-  await renderMyLeagues();
-  renderAdminSettle();
-  renderBetslip();
 
-  sb.auth.onAuthStateChange(async () => {
-    try{
-      await loadSessionProfile();
-      renderAccount();
-      await renderHistory();
-      await renderMyLeagues();
+  // 2. Escuta mudanças de autenticação (login, logout e confirmação de e-mail)
+  sb.auth.onAuthStateChange(async (event, session) => {
+    console.log("Auth event:", event);
+
+    if (session?.user) {
+      try {
+        await loadSessionProfile();   // Carrega perfil e CPs
+      } catch (err) {
+        console.error("Erro ao carregar perfil:", err);
+        state.session.profile = null;
+      }
+
+      renderAccount();                // Atualiza o topo do site
+      renderHistory();
+      renderMyLeagues();
       renderAdminSettle();
       renderBetslip();
-    }catch(err){
-      console.error("Erro no auth state change:", err);
+      closeAuth();                    // Fecha o modal de login
+    } else {
       state.session.profile = null;
+      renderAccount();
     }
   });
-
-  if(state.ui.leagueId && REAL_LEAGUE_MAP[state.ui.leagueId]){
-    await updateLeagueReal(state.ui.leagueId, { force:true });
-  }
-
-  renderAll();
 }
 
+// Inicializa o site
 init();
 
-    init();
   </script>
 </body>
