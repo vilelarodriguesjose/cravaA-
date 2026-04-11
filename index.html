@@ -2703,7 +2703,7 @@ function maskPhone(value){
     .slice(0, 15);
 }
 
-$("#authPhone").addEventListener("input", (e) => {
+$("#regPhone").addEventListener("input", (e) => {
   e.target.value = maskPhone(e.target.value);
 });
 
@@ -2716,20 +2716,23 @@ function maskCPF(value){
     .slice(0, 14);
 }
 
-$("#authCPF").addEventListener("input", (e) => {
+$("#regCPF").addEventListener("input", (e) => {
   e.target.value = maskCPF(e.target.value);
 });
 
 function autoNext(current, nextId){
+  if(!current) return;
+
   current.addEventListener("input", () => {
     if(current.value.length === current.maxLength){
-      document.getElementById(nextId).focus();
+      const next = document.getElementById(nextId);
+      if(next) next.focus();
     }
   });
 }
 
-autoNext($("#birthDay"), "birthMonth");
-autoNext($("#birthMonth"), "birthYear");
+autoNext($("#regBirthDay"), "regBirthMonth");
+autoNext($("#regBirthMonth"), "regBirthYear");
 
 function validateCPF(cpf){
   cpf = cpf.replace(/\D/g, "");
@@ -2753,31 +2756,44 @@ function validateCPF(cpf){
   return secondDigit == cpf[10];
 }
 
-async function validateRegisterForm(form){
-  if(!validateCPF(form.cpf)){
-    throw new Error("CPF inválido.");
+async function validateRegisterForm(f){
+  if(!f.email || !f.password || !f.username || !f.firstName || !f.lastName){
+    return "Preencha nome, usuário, e-mail e senha.";
   }
 
-  const { data: usernameExists } = await sb
+  if(!f.phone || !f.cpf){
+    return "Preencha celular e CPF.";
+  }
+
+  if(!f.birthDay || !f.birthMonth || !f.birthYear){
+    return "Preencha sua data de nascimento.";
+  }
+
+  if(!validateCPF(f.cpf)){
+    return "CPF inválido.";
+  }
+
+  const { data: usernameExists, error: usernameError } = await sb
     .from("profiles")
     .select("id")
-    .eq("username", form.username)
+    .eq("username", f.username)
     .maybeSingle();
 
-  if(usernameExists){
-    throw new Error("Nome de usuário já está em uso.");
-  }
+  if(usernameError) return "Erro ao validar username.";
+  if(usernameExists) return "Esse nome de usuário já existe.";
 
-  const { data: cpfExists } = await sb
+  const { data: cpfExists, error: cpfError } = await sb
     .from("profiles")
     .select("id")
-    .eq("cpf", form.cpf.replace(/\D/g, ""))
+    .eq("cpf", f.cpf.replace(/\D/g, ""))
     .maybeSingle();
 
-  if(cpfExists){
-    throw new Error("CPF já cadastrado.");
-  }
+  if(cpfError) return "Erro ao validar CPF.";
+  if(cpfExists) return "CPF já cadastrado.";
+
+  return "";
 }
+
 
 async function signUpSupabase(form){
   const { email, password, username, firstName, lastName } = form;
@@ -2788,9 +2804,13 @@ async function signUpSupabase(form){
     options: {
       emailRedirectTo: "https://cravaai.com",
       data: {
-        username: username.trim(),
-        fullname: `${firstName} ${lastName}`.trim()
-      }
+  username: username.trim(),
+  fullname: `${firstName} ${lastName}`.trim(),
+  cpf: form.cpf.replace(/\D/g, ""),
+  phone: form.phone,
+  gender: form.gender,
+  country: form.country
+}
     }
   });
 
@@ -3133,7 +3153,7 @@ async function signOutSupabase(){
         renderFeaturedLeagueList();
         renderMobileLeagueRail();
         await renderMatches();
-        await renderFeatured();
+        renderFeatured();
         if(state.session.game.open) await renderGameScreen();
         return;
       }
@@ -3164,7 +3184,7 @@ async function signOutSupabase(){
         renderMobileLeagueRail();
         renderCompetitions();
         await renderMatches();
-        await renderFeatured();
+        renderFeatured();
 
         if(state.session.game.open){
           const exists = state.db.matches.some((m) => m.id === state.session.game.matchId);
@@ -3243,7 +3263,7 @@ async function signOutSupabase(){
           renderMobileLeagueRail();
           renderCompetitions();
           await renderMatches();
-          await renderFeatured();
+          renderFeatured();
           if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
         };
 
@@ -3279,7 +3299,7 @@ async function signOutSupabase(){
           renderMobileLeagueRail();
           renderCompetitions();
           await renderMatches();
-          await renderFeatured();
+          renderFeatured();
           if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
         };
 
@@ -3322,7 +3342,7 @@ async function signOutSupabase(){
               renderMobileLeagueRail();
               renderCompetitions();
               await renderMatches();
-              await renderFeatured();
+              renderFeatured();
               if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
             };
 
@@ -4057,32 +4077,16 @@ async function signOutSupabase(){
       };
     }
 
-    async function validateRegisterForm(f){
-  if(!f.email || !f.password || !f.username || !f.firstName || !f.lastName){
-    return "Preencha nome, usuário, e-mail e senha.";
-  }
 
-  if(!f.phone || !f.cpf){
-    return "Preencha celular e CPF.";
-  }
+async function signInSupabase(email, password){
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: email.trim().toLowerCase(),
+    password
+  });
 
-  if(!f.birthDay || !f.birthMonth || !f.birthYear){
-    return "Preencha sua data de nascimento.";
-  }
-
-  const { data: usernameExists, error: usernameError } = await sb
-    .from("profiles")
-    .select("id")
-    .eq("username", f.username)
-    .maybeSingle();
-
-  if(usernameError) return "Erro ao validar username.";
-  if(usernameExists) return "Esse nome de usuário já existe.";
-
-  return "";
+  if(error) throw error;
+  return data;
 }
-
-
 
    async function loginSubmit(){
   const email = $("#authEmail").value.trim().toLowerCase();
@@ -4102,22 +4106,21 @@ async function signOutSupabase(){
 }
 
 async function registerSubmit(){
-  const btn = document.getElementById("btnSendCode");
-  btn.disabled = true;
-  btn.textContent = "Criando conta...";
-
   try{
-    const form = getRegisterForm(); // função que coleta os dados
-    await validateRegisterForm(form);
+    const form = getRegisterForm();
+
+    const validationError = await validateRegisterForm(form);
+    if(validationError){
+      throw new Error(validationError);
+    }
+
     await signUpSupabase(form);
 
-    toast("Conta criada! Verifique seu e-mail 📩");
-    openAuth("login");
+    $("#authEmail").value = form.email;
+    closeAuth();
+    toast("Verifique seu email 📩");
   }catch(err){
-    toast(err.message || "Erro ao criar conta.");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = "Criar conta";
+    toast(err.message || "Não foi possível criar a conta.");
   }
 }
 
@@ -4279,19 +4282,19 @@ function joinLeagueByCode(){
     }
 
 
-    function renderAll(){
-      renderNav();
-      renderAllViews();
-      renderFeaturedLeagueList();
-      renderMobileLeagueRail();
-      renderCompetitions();
-      renderMatches();
-      renderFeatured();
-      renderHistory();
-      renderMyLeagues();
-      renderAccount();
-      renderBetslip();
-    }
+    async function renderAll(){
+  renderNav();
+  renderAllViews();
+  renderFeaturedLeagueList();
+  renderMobileLeagueRail();
+  renderCompetitions();
+  await renderMatches();
+  renderFeatured();
+  await renderHistory();
+  await renderMyLeagues();
+  renderAccount();
+  renderBetslip();
+}
 
     function hookUI(){
       $("#goHome").onclick = () => setNav("home");
@@ -4445,10 +4448,12 @@ window.addEventListener("resize", () => {
 }
 
     async function init(){
-  hookUI();
-  renderAll();
+  ensureDefaults();
+  ensureLeagueMatchesLoaded(state.ui.leagueId);
 
-  // 1. Tenta restaurar a sessão ao carregar o site
+  hookUI();
+await renderAll();
+
   try {
     await loadSessionProfile();
   } catch (err) {
@@ -4456,27 +4461,29 @@ window.addEventListener("resize", () => {
     state.session.profile = null;
   }
 
-  // Atualiza a interface com base na sessão
   renderAccount();
 
-  // 2. Escuta mudanças de autenticação (login, logout e confirmação de e-mail)
+  if(REAL_LEAGUE_MAP[state.ui.leagueId]){
+    await updateLeagueReal(state.ui.leagueId);
+  }
+
   sb.auth.onAuthStateChange(async (event, session) => {
     console.log("Auth event:", event);
 
     if (session?.user) {
       try {
-        await loadSessionProfile();   // Carrega perfil e CPs
+        await loadSessionProfile();
       } catch (err) {
         console.error("Erro ao carregar perfil:", err);
         state.session.profile = null;
       }
 
-      renderAccount();                // Atualiza o topo do site
-      renderHistory();
-      renderMyLeagues();
+      renderAccount();
+      await renderHistory();
+      await renderMyLeagues();
       renderAdminSettle();
       renderBetslip();
-      closeAuth();                    // Fecha o modal de login
+      closeAuth();
     } else {
       state.session.profile = null;
       renderAccount();
