@@ -2307,6 +2307,35 @@
               <button class="btn primary authSubmitBtn" id="btnSendCode">Criar conta</button>
             </div>
           </div>
+
+          <div id="verifyBox" class="stack hide">
+  <div class="panel" style="border-radius:16px">
+    <div class="panelBody" style="padding:18px; text-align:center">
+      <div style="font-size:22px;font-weight:700;margin-bottom:10px">
+        📩 Confirme seu e-mail
+      </div>
+
+      <div class="smallText" style="margin-bottom:14px">
+        Enviamos um link de confirmação para:
+      </div>
+
+      <div class="badge" id="verifyEmailBadge"
+           style="font-size:14px;padding:10px 12px;margin-bottom:14px;display:inline-block">
+        email@exemplo.com
+      </div>
+
+      <div class="smallText" style="margin-bottom:20px">
+        Abra sua caixa de entrada e também verifique as pastas de spam ou promoções.
+      </div>
+
+      <div class="row" style="gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn primary" id="btnResendConfirm">Reenviar e-mail</button>
+        <button class="btn" id="btnBackToRegister">Trocar e-mail</button>
+        <button class="btn small" id="btnGoToLogin">Ir para entrar</button>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </div>
@@ -4044,14 +4073,32 @@ async function signOutSupabase(){
   lockBodyScroll(true);
 
   const isLogin = mode === "login";
-  $("#authTitle").textContent = isLogin ? "Entrar" : "Registrar";
-  $("#authHint").textContent = isLogin
-    ? "Entre com email e senha."
-    : "Crie sua conta para entrar nas ligas e usar os recursos do CravaAí.";
+  const isRegister = mode === "register";
+  const isVerify = mode === "verify";
 
   $("#loginBox").classList.toggle("hide", !isLogin);
-  $("#registerBox").classList.toggle("hide", isLogin);
-  $("#btnSwitchAuth").textContent = isLogin ? "Ir para Registrar" : "Ir para Entrar";
+  $("#registerBox").classList.toggle("hide", !isRegister);
+  $("#verifyBox").classList.toggle("hide", !isVerify);
+
+  if(isLogin){
+    $("#authTitle").textContent = "Entrar";
+    $("#authHint").textContent = "Entre com email e senha.";
+    $("#btnSwitchAuth").textContent = "Ir para Registrar";
+    $("#btnSwitchAuth").classList.remove("hide");
+  }
+
+  if(isRegister){
+    $("#authTitle").textContent = "Criar conta";
+    $("#authHint").textContent = "Preencha seus dados para começar.";
+    $("#btnSwitchAuth").textContent = "Ir para Entrar";
+    $("#btnSwitchAuth").classList.remove("hide");
+  }
+
+  if(isVerify){
+    $("#authTitle").textContent = "Verificação de e-mail";
+    $("#authHint").textContent = "Falta só confirmar seu e-mail para ativar a conta.";
+    $("#btnSwitchAuth").classList.add("hide");
+  }
 }
 
     function closeAuth(){
@@ -4117,8 +4164,10 @@ async function registerSubmit(){
     await signUpSupabase(form);
 
     $("#authEmail").value = form.email;
-    closeAuth();
-    toast("Verifique seu email 📩");
+    $("#verifyEmailBadge").textContent = form.email;
+
+    openAuth("verify");
+    toast("Conta criada. Confirme seu e-mail 📩");
   }catch(err){
     toast(err.message || "Não foi possível criar a conta.");
   }
@@ -4297,154 +4346,162 @@ function joinLeagueByCode(){
 }
 
     function hookUI(){
-      $("#goHome").onclick = () => setNav("home");
+  $("#goHome").onclick = () => setNav("home");
 
-      $$(".navBtn").forEach((b) => {
-        b.onclick = () => setNav(b.dataset.nav);
-      });
+  $$(".navBtn").forEach((b) => {
+    b.onclick = () => setNav(b.dataset.nav);
+  });
 
-      $("#btnNavFootball").onclick = () => {
-        state.ui.leftMode = "football";
-        saveUI(state.ui);
-        renderLeftMode();
-        updateHeroBannerByLeague();
-      };
+  $("#btnNavFootball").onclick = () => {
+    state.ui.leftMode = "football";
+    saveUI(state.ui);
+    renderLeftMode();
+    updateHeroBannerByLeague();
+  };
 
-      $("#btnNavCompetitions").onclick = () => {
-        state.ui.leftMode = "competitions";
-        saveUI(state.ui);
-        renderLeftMode();
-        updateHeroBannerByLeague();
-      };
+  $("#btnNavCompetitions").onclick = () => {
+    state.ui.leftMode = "competitions";
+    saveUI(state.ui);
+    renderLeftMode();
+    updateHeroBannerByLeague();
+  };
 
-      $("#mobileCompetitionsCard").onclick = () => {
-        state.ui.leftMode = "competitions";
-        saveUI(state.ui);
-        renderLeftMode();
-        updateHeroBannerByLeague();
-      };
+  $("#mobileCompetitionsCard").onclick = () => {
+    state.ui.leftMode = "competitions";
+    saveUI(state.ui);
+    renderLeftMode();
+    updateHeroBannerByLeague();
+  };
 
-      $("#searchInput").value = state.ui.search || "";
-      $("#searchInput").addEventListener("input", (e) => {
-        state.ui.search = e.target.value;
-        saveUI(state.ui);
-        renderMatches();
-      });
+  $("#searchInput").value = state.ui.search || "";
+  $("#searchInput").addEventListener("input", (e) => {
+    state.ui.search = e.target.value;
+    saveUI(state.ui);
+    renderMatches();
+  });
 
-      $("#btnRefresh").onclick = async () => {
-        ensureLeagueMatchesLoaded(state.ui.leagueId);
-        if(REAL_LEAGUE_MAP[state.ui.leagueId]) await updateLeagueReal(state.ui.leagueId, { force:true });
-        else{
-          renderMatches();
-          renderFeatured();
-          toast("Jogos atualizados.");
-        }
-      };
+  $("#btnRefresh").onclick = async () => {
+    ensureLeagueMatchesLoaded(state.ui.leagueId);
+    if(REAL_LEAGUE_MAP[state.ui.leagueId]) {
+      await updateLeagueReal(state.ui.leagueId, { force:true });
+    } else {
+      renderMatches();
+      renderFeatured();
+      toast("Jogos atualizados.");
+    }
+  };
 
-      $("#btnCloseGame").onclick = () => closeGame();
+  $("#btnCloseGame").onclick = () => closeGame();
 
-      $("#toggleBuilderGame").onclick = () => {
-        state.session.game.builder = !state.session.game.builder;
-        renderGameScreen();
-        renderBetslip();
-      };
+  $("#toggleBuilderGame").onclick = () => {
+    state.session.game.builder = !state.session.game.builder;
+    renderGameScreen();
+    renderBetslip();
+  };
 
-      $("#btnMini").onclick = () => {
-        state.ui.slipMini = !state.ui.slipMini;
-        saveUI(state.ui);
-        renderBetslip();
-      };
-
-      $("#betslipMiniBar").onclick = () => {
-        state.ui.slipMini = false;
-        saveUI(state.ui);
-        renderBetslip();
-      };
-
-      $("#btnEditSlip").onclick = () => {
-        state.ui.slipMini = false;
-        saveUI(state.ui);
-        renderBetslip();
-      };
-
-      $("#btnCombos").onclick = () => {
-        toast("Combinações em breve.");
-      };
-
-      $$("[data-stakeadd]").forEach((b) => {
-        b.onclick = () => {
-          const cur = Number($("#stakeInput").value || 0);
-          $("#stakeInput").value = String(cur + Number(b.dataset.stakeadd || 0));
-          renderBetslip();
-        };
-      });
-
-      $("#stakeInput").addEventListener("input", () => renderBetslip());
-      $("#btnPlaceBet").onclick = () => placeBet();
-
-      $("#btnEnter").onclick = () => openAuth("login");
-      $("#btnRegister").onclick = () => openAuth("register");
-      $("#btnBannerRegister").onclick = () => openAuth("register");
-      $("#btnLogout").onclick = () => logout();
-
-      $("#btnCloseAuth").onclick = () => closeAuth();
-      $("#btnSwitchAuth").onclick = () => {
-        const loginVisible = !$("#loginBox").classList.contains("hide");
-        openAuth(loginVisible ? "register" : "login");
-      };
-
-      $("#btnSubmitAuth").onclick = () => loginSubmit();
-$("#btnSendCode").onclick = () => registerSubmit();
-
-
-   $("#genderM").onclick = () => {
-  $("#regGender").value = "Masculino";
-  $("#genderM").classList.add("active");
-  $("#genderF").classList.remove("active");
-};
-
-$("#genderF").onclick = () => {
-  $("#regGender").value = "Feminino";
-  $("#genderF").classList.add("active");
-  $("#genderM").classList.remove("active");
-};
-
-$("#btnClosePlans").onclick = () => closePlans();
-$("#btnBuyPro").onclick = () => startCheckout("pro");
-$("#btnBuyElite").onclick = () => startCheckout("elite");
-
-$("#btnCreateLeague").onclick = () => createUserLeague();
-$("#btnJoinByCode").onclick = () => joinLeagueByCode();
-$("#btnRefreshAdmin").onclick = () => renderAdminSettle();
-
-$("#btnClearHistory").onclick = () => {
-  toast("Agora o histórico vem do servidor e não pode ser limpo manualmente.");
-};
-
-document.addEventListener("click", (e) => {
-  const slip = $("#betslip");
-  if(!slip || slip.classList.contains("hide") || state.ui.slipMini) return;
-  const inside = slip.contains(e.target);
-  if(!inside && state.session.slip.length){
-    state.ui.slipMini = true;
+  $("#btnMini").onclick = () => {
+    state.ui.slipMini = !state.ui.slipMini;
     saveUI(state.ui);
     renderBetslip();
-  }
-});
+  };
 
-document.addEventListener("keydown", (e) => {
-  if(e.key === "Escape"){
-    if($("#authModal").classList.contains("show")) closeAuth();
-    else if($("#plansModal").classList.contains("show")) closePlans();
-    else if(state.session.game.open) closeGame();
-  }
-});
+  $("#betslipMiniBar").onclick = () => {
+    state.ui.slipMini = false;
+    saveUI(state.ui);
+    renderBetslip();
+  };
 
-window.addEventListener("resize", () => {
-  if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
-    renderLeftMode();
-  }
-}, { passive:true });
+  $("#btnEditSlip").onclick = () => {
+    state.ui.slipMini = false;
+    saveUI(state.ui);
+    renderBetslip();
+  };
+
+  $("#btnCombos").onclick = () => {
+    toast("Combinações em breve.");
+  };
+
+  $$("[data-stakeadd]").forEach((b) => {
+    b.onclick = () => {
+      const cur = Number($("#stakeInput").value || 0);
+      $("#stakeInput").value = String(cur + Number(b.dataset.stakeadd || 0));
+      renderBetslip();
+    };
+  });
+
+  $("#stakeInput").addEventListener("input", () => renderBetslip());
+  $("#btnPlaceBet").onclick = () => placeBet();
+
+  $("#btnEnter").onclick = () => openAuth("login");
+  $("#btnRegister").onclick = () => openAuth("register");
+  $("#btnBannerRegister").onclick = () => openAuth("register");
+  $("#btnLogout").onclick = () => logout();
+
+  $("#btnCloseAuth").onclick = () => closeAuth();
+  $("#btnSwitchAuth").onclick = () => {
+    const loginVisible = !$("#loginBox").classList.contains("hide");
+    openAuth(loginVisible ? "register" : "login");
+  };
+
+  $("#btnSubmitAuth").onclick = () => loginSubmit();
+  $("#btnSendCode").onclick = () => registerSubmit();
+
+  $("#btnBackToRegister").onclick = () => openAuth("register");
+  $("#btnGoToLogin").onclick = () => openAuth("login");
+
+  $("#btnResendConfirm").onclick = () => {
+    toast("Se não recebeu o e-mail, verifique o spam ou tente cadastrar novamente.");
+  };
+
+  $("#genderM").onclick = () => {
+    $("#regGender").value = "M";
+    $("#genderM").classList.add("active");
+    $("#genderF").classList.remove("active");
+  };
+
+  $("#genderF").onclick = () => {
+    $("#regGender").value = "F";
+    $("#genderF").classList.add("active");
+    $("#genderM").classList.remove("active");
+  };
+
+  $("#btnClosePlans").onclick = () => closePlans();
+  $("#btnBuyPro").onclick = () => startCheckout("pro");
+  $("#btnBuyElite").onclick = () => startCheckout("elite");
+
+  $("#btnCreateLeague").onclick = () => createUserLeague();
+  $("#btnJoinByCode").onclick = () => joinLeagueByCode();
+  $("#btnRefreshAdmin").onclick = () => renderAdminSettle();
+
+  $("#btnClearHistory").onclick = () => {
+    toast("Agora o histórico vem do servidor e não pode ser limpo manualmente.");
+  };
+
+  document.addEventListener("click", (e) => {
+    const slip = $("#betslip");
+    if(!slip || slip.classList.contains("hide") || state.ui.slipMini) return;
+
+    const inside = slip.contains(e.target);
+    if(!inside && state.session.slip.length){
+      state.ui.slipMini = true;
+      saveUI(state.ui);
+      renderBetslip();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape"){
+      if($("#authModal").classList.contains("show")) closeAuth();
+      else if($("#plansModal").classList.contains("show")) closePlans();
+      else if(state.session.game.open) closeGame();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
+      renderLeftMode();
+    }
+  }, { passive:true });
 }
 
     async function init(){
