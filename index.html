@@ -2617,15 +2617,16 @@
       db: loadJSON(LS.DB, defaultDB()),
       ui: loadJSON(LS.UI, defaultUI()),
       session: {
-        profile: null,
-        slip: [],
-        game: {
-          open: false,
-          matchId: null,
-          tab: "principais",
-          builder: false
-        }
-      },
+  profile: null,
+  slip: [],
+  pendingAction: null,
+  game: {
+    open: false,
+    matchId: null,
+    tab: "principais",
+    builder: false
+  }
+},
       assets: loadJSON(TEAM_ASSET_CACHE_KEY, {}),
       toastTimer: null
     };
@@ -2649,6 +2650,20 @@
 
     function getCurrentUser(){
   return state.session.profile || null;
+}
+
+function requireLoginBeforeBet(action){
+  const user = getCurrentUser();
+
+  if(user){
+    action();
+    return true;
+  }
+
+  state.session.pendingAction = action;
+  toast("Entre para apostar.");
+  openAuth("login");
+  return false;
 }
 
     async function setCurrentUserPatch(patch){
@@ -2819,6 +2834,15 @@ async function validateRegisterForm(f){
 
   if(cpfError) return "Erro ao validar CPF.";
   if(cpfExists) return "CPF já cadastrado.";
+
+  const { data: emailExists, error: emailError } = await sb
+    .from("profiles")
+    .select("id")
+    .eq("email", f.email.trim().toLowerCase())
+    .maybeSingle();
+
+  if(emailError) return "Erro ao validar e-mail.";
+  if(emailExists) return "Este e-mail já está cadastrado.";
 
   return "";
 }
@@ -3776,15 +3800,19 @@ async function signOutSupabase(){
       `).join("");
 
       $$("[data-pickquick]").forEach((b) => {
-        b.onclick = () => {
-          const m = state.db.matches.find((x) => x.id === b.dataset.pickquick);
-          if(!m) return;
-          const k = b.dataset.k;
-          const oddVal = m.odds1x2[k];
-          const label = k === "1" ? m.home : k === "2" ? m.away : "Empate";
-          addPickToSlip(m, { label, odd:oddVal, group:"1x2", key:k });
-        };
-      });
+  b.onclick = () => {
+    const m = state.db.matches.find((x) => x.id === b.dataset.pickquick);
+    if(!m) return;
+
+    const k = b.dataset.k;
+    const oddVal = m.odds1x2[k];
+    const label = k === "1" ? m.home : k === "2" ? m.away : "Empate";
+
+    requireLoginBeforeBet(() => {
+      addPickToSlip(m, { label, odd:oddVal, group:"1x2", key:k });
+    });
+  };
+});
 
       $$("[data-openmatch]").forEach((b) => {
         b.onclick = () => openGame(b.dataset.openmatch);
@@ -3991,13 +4019,16 @@ async function signOutSupabase(){
       }).join("");
 
       $$("[data-gamequick]").forEach((b) => {
-        b.onclick = () => {
-          const k = b.dataset.gamequick;
-          const label = k === "1" ? match.home : k === "2" ? match.away : "Empate";
-          addPickToSlip(match, { label, odd:match.odds1x2[k], group:"1x2", key:k });
-          renderGameScreen();
-        };
-      });
+  b.onclick = () => {
+    const k = b.dataset.gamequick;
+    const label = k === "1" ? match.home : k === "2" ? match.away : "Empate";
+
+    requireLoginBeforeBet(() => {
+      addPickToSlip(match, { label, odd:match.odds1x2[k], group:"1x2", key:k });
+      renderGameScreen();
+    });
+  };
+});
     }
 
     async function renderGameScreen(){
@@ -4058,14 +4089,17 @@ async function signOutSupabase(){
       });
 
       $$("[data-marketpick]").forEach((b) => {
-        b.onclick = () => {
-          try{
-            const p = JSON.parse(b.dataset.marketpick);
-            addPickToSlip(match, p);
-            renderGameScreen();
-          }catch{}
-        };
+  b.onclick = () => {
+    try{
+      const p = JSON.parse(b.dataset.marketpick);
+
+      requireLoginBeforeBet(() => {
+        addPickToSlip(match, p);
+        renderGameScreen();
       });
+    }catch{}
+  };
+});
     }
 
     function openAuth(mode = "login"){
@@ -4141,6 +4175,20 @@ async function signInSupabase(email, password){
 
   try{
     await signInSupabase(email, pass);
+
+    await loadSessionProfile();
+    renderAccount();
+    await renderHistory();
+    await renderMyLeagues();
+    renderAdminSettle();
+    renderBetslip();
+
+    if(state.session.pendingAction){
+      const action = state.session.pendingAction;
+      state.session.pendingAction = null;
+      action();
+    }
+
     closeAuth();
     toast("Entrou com sucesso ✅");
   }catch(err){
@@ -4309,14 +4357,19 @@ function joinLeagueByCode(){
   const btnLogout = document.getElementById("btnLogout");
 
   if(state.session.profile){
+    const username = state.session.profile.username || state.session.profile.fullname || "Usuário";
+    const cp = Number(state.session.profile.cp || 0);
+
     pill.classList.remove("hide");
-    pill.textContent = `${state.session.profile.username} • ${state.session.profile.cp} CP`;
+    pill.textContent = `${username} • ${fmtCP(cp)} CP`;
 
     btnRegister.classList.add("hide");
     btnEnter.classList.add("hide");
     btnLogout.classList.remove("hide");
   }else{
     pill.classList.add("hide");
+    pill.textContent = "";
+
     btnRegister.classList.remove("hide");
     btnEnter.classList.remove("hide");
     btnLogout.classList.add("hide");
