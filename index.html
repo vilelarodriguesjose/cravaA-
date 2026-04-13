@@ -2714,26 +2714,31 @@ async function loadSessionProfile(){
     .from("profiles")
     .select("*")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (profileError) {
+  if (profileError || !profile) {
     console.error("Erro ao carregar perfil:", profileError);
+    state.session.profile = null;
     return null;
   }
 
-  const { data: wallet } = await sb
+  const { data: wallet, error: walletError } = await sb
     .from("wallets")
     .select("balance_cp")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
+
+  if (walletError) {
+    console.error("Erro ao carregar wallet:", walletError);
+  }
 
   state.session.profile = {
     id: user.id,
     email: user.email,
-    username: profile.username,
-    fullname: profile.fullname,
-    plan: profile.plan,
-    cp: wallet?.balance_cp || 0
+    username: profile.username || "Usuário",
+    fullname: profile.fullname || "",
+    plan: profile.plan || "free",
+    cp: wallet?.balance_cp ?? 0
   };
 
   return state.session.profile;
@@ -4201,23 +4206,36 @@ async function signInSupabase(email, password){
 }
 
 async function registerSubmit(){
+  const btn = document.getElementById("btnSendCode");
+  btn.disabled = true;
+  btn.textContent = "Criando conta...";
+
   try{
     const form = getRegisterForm();
 
-    const validationError = await validateRegisterForm(form);
-    if(validationError){
-      throw new Error(validationError);
+    const err = await validateRegisterForm(form);
+    if(err){
+      toast(err);
+      return;
     }
 
     await signUpSupabase(form);
-
+    toast("Conta criada! Verifique seu e-mail 📩");
+    openAuth("login");
     $("#authEmail").value = form.email;
-    $("#verifyEmailBadge").textContent = form.email;
-
-    openAuth("verify");
-    toast("Conta criada. Confirme seu e-mail 📩");
   }catch(err){
-    toast(err.message || "Não foi possível criar a conta.");
+    const msg = String(err?.message || "");
+
+    if(msg.includes("User already registered")){
+      toast("Este e-mail já está em uso.");
+    }else if(msg.includes("Email not confirmed")){
+      toast("Confirme seu e-mail antes de entrar 📩");
+    }else{
+      toast(err.message || "Erro ao criar conta.");
+    }
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Criar conta";
   }
 }
 
@@ -4562,7 +4580,6 @@ function joinLeagueByCode(){
   ensureLeagueMatchesLoaded(state.ui.leagueId);
 
   hookUI();
-await renderAll();
 
   try {
     await loadSessionProfile();
@@ -4571,7 +4588,7 @@ await renderAll();
     state.session.profile = null;
   }
 
-  renderAccount();
+  await renderAll();
 
   if(REAL_LEAGUE_MAP[state.ui.leagueId]){
     await updateLeagueReal(state.ui.leagueId);
@@ -4601,7 +4618,6 @@ await renderAll();
   });
 }
 
-// Inicializa o site
 init();
 
   </script>
