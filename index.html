@@ -2614,22 +2614,26 @@
     }
 
     const state = {
-      db: loadJSON(LS.DB, defaultDB()),
-      ui: loadJSON(LS.UI, defaultUI()),
-      session: {
-  profile: null,
-  slip: [],
-  pendingAction: null,
-  game: {
-    open: false,
-    matchId: null,
-    tab: "principais",
-    builder: false
-  }
-},
-      assets: loadJSON(TEAM_ASSET_CACHE_KEY, {}),
-      toastTimer: null
-    };
+  db: loadJSON(LS.DB, defaultDB()),
+  ui: loadJSON(LS.UI, defaultUI()),
+  session: {
+    profile: null,
+    slip: [],
+    pendingAction: null,
+    game: {
+      open: false,
+      matchId: null,
+      tab: "principais",
+      builder: false
+    }
+  },
+  server: {
+    matches: [],
+    oddsMap: {}
+  },
+  assets: loadJSON(TEAM_ASSET_CACHE_KEY, {}),
+  toastTimer: null
+};
 
     function persistAssets(){
       saveJSON(TEAM_ASSET_CACHE_KEY, state.assets);
@@ -2742,6 +2746,53 @@ async function loadSessionProfile(){
   };
 
   return state.session.profile;
+}
+
+async function fetchMatchesAndOddsFromSupabase(){
+  const { data: matches, error: matchesError } = await sb
+    .from("matches")
+    .select("*")
+    .order("start_time", { ascending: true });
+
+  if(matchesError) throw matchesError;
+
+  const { data: oddsRows, error: oddsError } = await sb
+    .from("odds")
+    .select("*");
+
+  if(oddsError) throw oddsError;
+
+  const oddsMap = {};
+  (oddsRows || []).forEach((row) => {
+    if(!oddsMap[row.match_id]) oddsMap[row.match_id] = {};
+    oddsMap[row.match_id][row.market] = row;
+  });
+
+  state.server.matches = (matches || []).map((m) => {
+    const matchOdds = oddsMap[m.id] || {};
+    const h2h = matchOdds["1x2"]?.outcomes || {};
+
+    return {
+      id: m.id,
+      leagueId: m.league_key,
+      home: m.home_team,
+      away: m.away_team,
+      whenTxt: fmtWhenFromISO(m.start_time),
+      stadium: m.venue || "—",
+      isoDate: m.start_time,
+      featured: true,
+      status: m.status,
+      home_score: m.home_score,
+      away_score: m.away_score,
+      odds1x2: {
+        "1": h2h["1"] ?? "—",
+        "X": h2h["X"] ?? "—",
+        "2": h2h["2"] ?? "—"
+      }
+    };
+  });
+
+  state.server.oddsMap = oddsMap;
 }
 
 function maskPhone(value){
@@ -3245,7 +3296,7 @@ async function signOutSupabase(){
         renderFeatured();
 
         if(state.session.game.open){
-          const exists = state.db.matches.some((m) => m.id === state.session.game.matchId);
+          const exists = state.server.matches.some((m) => m.id === state.session.game.matchId);
           if(!exists && realMatches[0]) state.session.game.matchId = realMatches[0].id;
           await renderGameScreen();
         }
@@ -3258,30 +3309,30 @@ async function signOutSupabase(){
     }
 
     function getMatchesFiltered(){
-      const q = (state.ui.search || "").trim().toLowerCase();
+  const q = (state.ui.search || "").trim().toLowerCase();
 
-      let items = state.db.matches.slice();
+  let items = state.server.matches.slice();
 
-      if(q){
-        items = items.filter((m) => {
-          const league = findLeague(m.leagueId);
-          const country = findCountryByLeague(m.leagueId);
-          const hay = [
-            m.home,
-            m.away,
-            m.whenTxt,
-            league?.name,
-            country?.name
-          ].filter(Boolean).join(" ").toLowerCase();
+  if(q){
+    items = items.filter((m) => {
+      const league = findLeague(m.leagueId);
+      const country = findCountryByLeague(m.leagueId);
+      const hay = [
+        m.home,
+        m.away,
+        m.whenTxt,
+        league?.name,
+        country?.name
+      ].filter(Boolean).join(" ").toLowerCase();
 
-          return hay.includes(q);
-        });
-      }else if(state.ui.leagueId){
-        items = items.filter((m) => m.leagueId === state.ui.leagueId);
-      }
+      return hay.includes(q);
+    });
+  }else if(state.ui.leagueId){
+    items = items.filter((m) => m.leagueId === state.ui.leagueId);
+  }
 
-      return items.sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime());
-    }
+  return items.sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime());
+}
 
     function groupMatchesByDate(matches){
       const groups = new Map();
@@ -3308,22 +3359,27 @@ async function signOutSupabase(){
             <div class="leagueName">${esc(l.name)}</div>
             <div class="smallText">${esc(l.flag || "")} ${esc(l.countryName || "")}</div>
           </div>
-          <span class="badge">${state.db.matches.filter((m) => m.leagueId === l.id).length}</span>
+          <span class="badge">${state.server.matches.filter((m) => m.leagueId === l.id).length}</span>
         `;
 
         el.onclick = async () => {
-          state.ui.countryId = l.countryId;
-          state.ui.leagueId = l.id;
-          state.ui.leftMode = "football";
-          saveUI(state.ui);
-          ensureLeagueMatchesLoaded(state.ui.leagueId);
-          renderFeaturedLeagueList();
-          renderMobileLeagueRail();
-          renderCompetitions();
-          await renderMatches();
-          renderFeatured();
-          if(REAL_LEAGUE_MAP[l.id]) await updateLeagueReal(l.id);
-        };
+  state.ui.countryId = l.countryId;
+  state.ui.leagueId = l.id;
+  state.ui.leftMode = "football";
+  saveUI(state.ui);
+
+  if (REAL_LEAGUE_MAP[l.id]) {
+    await updateLeagueReal(l.id);
+  } else {
+    ensureLeagueMatchesLoaded(l.id);
+  }
+
+  renderFeaturedLeagueList();
+  renderMobileLeagueRail();
+  renderCompetitions();
+  await renderMatches();
+  renderFeatured();
+};
 
         wrap.appendChild(el);
       });
@@ -3382,7 +3438,7 @@ async function signOutSupabase(){
           const grid = block.querySelector(".regionLeagueGrid");
 
           c.leagues.forEach((l) => {
-            const count = state.db.matches.filter((m) => m.leagueId === l.id).length;
+            const count = state.server.matches.filter((m) => m.leagueId === l.id).length;
             const btn = document.createElement("div");
             btn.className = "regionLeagueBtn" + (state.ui.leagueId === l.id ? " active" : "");
             btn.innerHTML = `
@@ -3416,63 +3472,55 @@ async function signOutSupabase(){
     }
 
         function marketTemplates(match){
-      const h = match.home;
-      const a = match.away;
+  const matchOdds = state.server.oddsMap[match.id] || {};
 
-      const o = match.odds1x2 || { "1":"—", "X":"—", "2":"—" };
+  const market1x2 = matchOdds["1x2"]?.outcomes || {};
+  const marketDC = matchOdds["double_chance"]?.outcomes || {};
+  const marketBTTS = matchOdds["btts"]?.outcomes || {};
+  const marketOU25 = matchOdds["over_under_25"]?.outcomes || {};
 
-      return {
-        principais: [
-          {
-            title:"Resultado Final",
-            open:true,
-            picks:[
-              { label:`${h}`, odd:o["1"], group:"1x2", key:"1" },
-              { label:"Empate", odd:o["X"], group:"1x2", key:"X" },
-              { label:`${a}`, odd:o["2"], group:"1x2", key:"2" }
-            ]
-          },
-          {
-            title:"Total de Gols",
-            open:true,
-            picks:[
-              { label:"Mais de 2.5", odd:"—", group:"goals25", key:"over25" },
-              { label:"Menos de 2.5", odd:"—", group:"goals25", key:"under25" }
-            ]
-          }
-        ],
-        cartoes: [
-          {
-            title:"Cartões",
-            open:true,
-            picks:[
-              { label:"Mais de 3.5", odd:"—", group:"cards35", key:"over35" },
-              { label:"Mais de 4.5", odd:"—", group:"cards45", key:"over45" }
-            ]
-          }
-        ],
-        chutes: [
-          {
-            title:"Chutes no gol",
-            open:true,
-            picks:[
-              { label:`${h} mais chutes no gol`, odd:"—", group:"sot", key:"home" },
-              { label:`${a} mais chutes no gol`, odd:"—", group:"sot", key:"away" }
-            ]
-          }
-        ],
-        especiais: [
-          {
-            title:"Especiais",
-            open:true,
-            picks:[
-              { label:"Gol nos dois tempos", odd:"—", group:"goalbothhalves", key:"yes" },
-              { label:"Empate no intervalo", odd:"—", group:"htdraw", key:"yes" }
-            ]
-          }
+  return {
+    principais: [
+      {
+        title: "Resultado Final",
+        open: true,
+        picks: [
+          { label: match.home, odd: market1x2["1"] ?? "—", group: "1x2", key: "1" },
+          { label: "Empate", odd: market1x2["X"] ?? "—", group: "1x2", key: "X" },
+          { label: match.away, odd: market1x2["2"] ?? "—", group: "1x2", key: "2" }
         ]
-      };
-    }
+      },
+      {
+        title: "Dupla Chance",
+        open: true,
+        picks: [
+          { label: "1X", odd: marketDC["1X"] ?? "—", group: "double_chance", key: "1X" },
+          { label: "12", odd: marketDC["12"] ?? "—", group: "double_chance", key: "12" },
+          { label: "X2", odd: marketDC["X2"] ?? "—", group: "double_chance", key: "X2" }
+        ]
+      },
+      {
+        title: "Ambas Marcam",
+        open: true,
+        picks: [
+          { label: "Sim", odd: marketBTTS["yes"] ?? "—", group: "btts", key: "yes" },
+          { label: "Não", odd: marketBTTS["no"] ?? "—", group: "btts", key: "no" }
+        ]
+      },
+      {
+        title: "Total de Gols 2.5",
+        open: true,
+        picks: [
+          { label: "Mais de 2.5", odd: marketOU25["over"] ?? "—", group: "over_under_25", key: "over" },
+          { label: "Menos de 2.5", odd: marketOU25["under"] ?? "—", group: "over_under_25", key: "under" }
+        ]
+      }
+    ],
+    cartoes: [],
+    chutes: [],
+    especiais: []
+  };
+}
 
     function isSameGameConflict(newPick, existing, builderOn){
       if(newPick.matchId !== existing.matchId) return false;
@@ -3643,49 +3691,71 @@ async function signOutSupabase(){
   const list = $("#myLeaguesList");
   const user = getCurrentUser();
 
-  if(!user?.id){
-    $("#leagueCount").textContent = "0";
-    list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
-    return;
-  }
+  if(!list) return;
 
-  const { data: memberships, error } = await sb
-    .from("league_members")
-    .select(`
-      league_id,
-      leagues (
-        id,
-        name,
-        code
-      )
-    `)
-    .eq("user_id", user.id);
+  const { data: leagues, error: leaguesError } = await sb
+    .from("leagues")
+    .select("*")
+    .order("created_at", { ascending:false });
 
-  if(error){
+  if(leaguesError){
     $("#leagueCount").textContent = "0";
     list.innerHTML = `<div class="smallText">Erro ao carregar ligas.</div>`;
     return;
   }
 
-  $("#leagueCount").textContent = String(memberships?.length || 0);
+  let memberships = [];
 
-  if(!memberships?.length){
-    list.innerHTML = `<div class="smallText">Você ainda não entrou em nenhuma liga.</div>`;
+  if(user?.id){
+    const { data, error } = await sb
+      .from("league_members")
+      .select("league_id,balance")
+      .eq("user_id", user.id);
+
+    if(!error) memberships = data || [];
+  }
+
+  const joinedMap = {};
+  memberships.forEach(m => {
+    joinedMap[m.league_id] = m;
+  });
+
+  $("#leagueCount").textContent = String(leagues?.length || 0);
+
+  if(!leagues?.length){
+    list.innerHTML = `<div class="smallText">Nenhuma liga disponível agora.</div>`;
     return;
   }
 
-  list.innerHTML = memberships.map((row) => {
-    const lg = Array.isArray(row.leagues) ? row.leagues[0] : row.leagues;
+  list.innerHTML = leagues.map((lg) => {
+    const joined = joinedMap[lg.id];
+    const isWaiting = lg.status === "waiting";
+
     return `
       <div class="itemRow">
         <div>
-          <strong>${esc(lg?.name || "Liga")}</strong>
-          <div class="smallText">Código: ${esc(lg?.code || "")}</div>
+          <strong>${esc(lg.name)}</strong>
+          <div class="smallText">${esc(lg.competition_name)} • ${esc(lg.status)}</div>
+          <div class="smallText">Stack: ${fmtCP(lg.initial_stack)} CP • Máx: ${lg.max_players} jogadores</div>
+          ${
+            joined
+              ? `<div class="smallText">Seu saldo na liga: <strong>${fmtCP(joined.balance)} CP</strong></div>`
+              : `<div class="smallText">Entrada premium • consome 1 entrada mensal</div>`
+          }
         </div>
-        <span class="badge">Liga</span>
+
+        ${
+          joined
+            ? `<span class="badge">Participando</span>`
+            : `<button class="btn small primary" data-joinpremium="${esc(lg.id)}" ${!isWaiting ? "disabled" : ""}>Entrar</button>`
+        }
       </div>
     `;
   }).join("");
+
+  $$("[data-joinpremium]").forEach((btn) => {
+    btn.onclick = () => joinPremiumLeague(btn.dataset.joinpremium);
+  });
 }
 
     function renderAdminSettle(){
@@ -3704,7 +3774,7 @@ async function signOutSupabase(){
 
     function renderFeatured(){
       const list = $("#featuredList");
-      const featured = state.db.matches
+      const featured = state.server.matches
         .filter((m) => m.featured)
         .sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime())
         .slice(0, 6);
@@ -3806,7 +3876,7 @@ async function signOutSupabase(){
 
       $$("[data-pickquick]").forEach((b) => {
   b.onclick = () => {
-    const m = state.db.matches.find((x) => x.id === b.dataset.pickquick);
+    const m = state.server.matches.find((x) => x.id === b.dataset.pickquick);
     if(!m) return;
 
     const k = b.dataset.k;
@@ -3951,24 +4021,26 @@ async function signOutSupabase(){
     }
 
     function renderGameTabs(){
-      const tabs = [
-        ["principais", "Principais"],
-        ["cartoes", "Cartões"],
-        ["chutes", "Chutes"],
-        ["especiais", "Especiais"]
-      ];
+  const match = state.server.matches.find((m) => m.id === state.session.game.matchId);
+  if(!match) return;
 
-      $("#gameTabs").innerHTML = tabs.map(([key, label]) => `
-        <div class="tab ${state.session.game.tab === key ? "active" : ""}" data-gametab="${key}">${label}</div>
-      `).join("");
+  const templates = marketTemplates(match);
 
-      $$("[data-gametab]").forEach((el) => {
-        el.onclick = () => {
-          state.session.game.tab = el.dataset.gametab;
-          renderGameScreen();
-        };
-      });
-    }
+  const tabs = [
+    ["principais", "Principais"]
+  ].filter(([key]) => (templates[key] || []).length > 0);
+
+  $("#gameTabs").innerHTML = tabs.map(([key, label]) => `
+    <div class="tab ${state.session.game.tab === key ? "active" : ""}" data-gametab="${key}">${label}</div>
+  `).join("");
+
+  $$("[data-gametab]").forEach((el) => {
+    el.onclick = () => {
+      state.session.game.tab = el.dataset.gametab;
+      renderGameScreen();
+    };
+  });
+}
 
     function renderGameHero(match){
       const league = findLeague(match.leagueId);
@@ -4039,7 +4111,7 @@ async function signOutSupabase(){
     async function renderGameScreen(){
       if(!state.session.game.open) return;
 
-      const match = state.db.matches.find((m) => m.id === state.session.game.matchId);
+      const match = state.server.matches.find((m) => m.id === state.session.game.matchId);
       if(!match){
         closeGame();
         return;
@@ -4358,13 +4430,42 @@ async function registerSubmit(){
   }
 }
 
-    function createUserLeague(){
-  toast("Criação de liga será ligada ao Supabase na próxima etapa.");
+    async function joinPremiumLeague(leagueId){
+  const user = getCurrentUser();
+
+  if(!user){
+    toast("Entre para entrar na liga.");
+    openAuth("login");
+    return;
+  }
+
+  try{
+    const { data, error } = await sb.rpc("join_league", {
+      p_league_id: leagueId
+    });
+
+    if(error) throw error;
+
+    if(!data?.ok){
+      toast(data?.message || "Não foi possível entrar na liga.");
+      return;
+    }
+
+    toast(data.message || "Você entrou na liga 🏆");
+    await renderMyLeagues();
+
+  }catch(err){
+    console.error(err);
+    toast("Erro ao entrar na liga.");
+  }
 }
 
+function createUserLeague(){
+  toast("Criação manual pelo admin fica para o próximo passo.");
+}
 
 function joinLeagueByCode(){
-  toast("Entrada por código será ligada ao Supabase na próxima etapa.");
+  toast("Agora a entrada será pelo botão da liga disponível.");
 }
 
 
@@ -4403,6 +4504,7 @@ function joinLeagueByCode(){
 
 
     async function renderAll(){
+  await fetchMatchesAndOddsFromSupabase();
   renderNav();
   renderAllViews();
   renderFeaturedLeagueList();
@@ -4452,15 +4554,27 @@ function joinLeagueByCode(){
   });
 
   $("#btnRefresh").onclick = async () => {
-    ensureLeagueMatchesLoaded(state.ui.leagueId);
-    if(REAL_LEAGUE_MAP[state.ui.leagueId]) {
-      await updateLeagueReal(state.ui.leagueId, { force:true });
-    } else {
-      renderMatches();
-      renderFeatured();
-      toast("Jogos atualizados.");
-    }
-  };
+  try{
+    await fetchMatchesAndOddsFromSupabase();
+    await renderMatches();
+    renderFeatured();
+    renderFeaturedLeagueList();
+    renderMobileLeagueRail();
+    renderCompetitions();
+    if(state.session.game.open) await renderGameScreen();
+    toast("Jogos atualizados.");
+  }catch(err){
+    toast("Erro ao atualizar jogos.");
+  }
+};
+
+  await renderMatches();
+  renderFeatured();
+  renderFeaturedLeagueList();
+  renderMobileLeagueRail();
+  renderCompetitions();
+  toast("Jogos atualizados.");
+};
 
   $("#btnCloseGame").onclick = () => closeGame();
 
@@ -4577,7 +4691,6 @@ function joinLeagueByCode(){
 
     async function init(){
   ensureDefaults();
-  ensureLeagueMatchesLoaded(state.ui.leagueId);
 
   hookUI();
 
@@ -4588,11 +4701,18 @@ function joinLeagueByCode(){
     state.session.profile = null;
   }
 
-  await renderAll();
+  try {
+    await fetchMatchesAndOddsFromSupabase();
 
-  if(REAL_LEAGUE_MAP[state.ui.leagueId]){
-    await updateLeagueReal(state.ui.leagueId);
+    if(!state.server.matches.length){
+      ensureLeagueMatchesLoaded(state.ui.leagueId);
+    }
+  } catch (err) {
+    console.error("Erro ao carregar matches/odds do Supabase:", err);
+    ensureLeagueMatchesLoaded(state.ui.leagueId);
   }
+
+  await renderAll();
 
   sb.auth.onAuthStateChange(async (event, session) => {
     console.log("Auth event:", event);
