@@ -4253,7 +4253,14 @@ async function signInSupabase(email, password){
   try{
     await signInSupabase(email, pass);
 
-    await loadSessionProfile();
+    const profile = await loadSessionProfile();
+
+    if(!profile){
+      toast("Login feito, mas perfil não carregou. Verifique profiles/wallets.");
+      console.error("Perfil não carregou após login");
+      return;
+    }
+
     renderAccount();
     await renderHistory();
     await renderMyLeagues();
@@ -4269,7 +4276,9 @@ async function signInSupabase(email, password){
     closeAuth();
     toast("Entrou com sucesso ✅");
   }catch(err){
-    if(err.message.includes("Email not confirmed")){
+    console.error("Erro login:", err);
+
+    if(String(err.message).includes("Email not confirmed")){
       toast("Confirme seu e-mail antes de entrar 📩");
     }else{
       toast(err.message || "Email ou senha inválidos.");
