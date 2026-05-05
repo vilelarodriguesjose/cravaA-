@@ -4517,6 +4517,48 @@ async function createUserLeague(){
   }
 }
 
+async function joinLeagueByCode(){
+  const user = getCurrentUser();
+
+  if(!user){
+    toast("Entre para acessar uma liga.");
+    openAuth("login");
+    return;
+  }
+
+  const code = prompt("Digite o código da liga:");
+
+  if(!code) return;
+
+  try{
+    const { data: league, error } = await sb
+      .from("leagues")
+      .select("*")
+      .eq("code", code.trim().toUpperCase())
+      .maybeSingle();
+
+    if(error) throw error;
+    if(!league){
+      toast("Liga não encontrada.");
+      return;
+    }
+
+    const { error: joinError } = await sb.rpc("join_league", {
+      p_user_id: user.id,
+      p_league_id: league.id
+    });
+
+    if(joinError) throw joinError;
+
+    toast("Entrou na liga com sucesso ✅");
+    await renderMyLeagues();
+
+  }catch(err){
+    console.error(err);
+    toast(err.message || "Erro ao entrar na liga.");
+  }
+}
+
 
     function renderAccount(){
   const pill = document.getElementById("topAccountPill");
