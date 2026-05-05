@@ -4469,12 +4469,52 @@ async function registerSubmit(){
   }
 }
 
-function createUserLeague(){
-  toast("Criação manual pelo admin fica para o próximo passo.");
-}
+async function createUserLeague(){
+  const user = getCurrentUser();
 
-function joinLeagueByCode(){
-  toast("Agora a entrada será pelo botão da liga disponível.");
+  if(!isAdminEmail(user?.email)){
+    toast("Apenas admin pode criar ligas.");
+    return;
+  }
+
+  const name = $("#newLeagueName").value.trim();
+
+  if(!name){
+    toast("Digite o nome da liga.");
+    return;
+  }
+
+  const code = "CA" + Math.random().toString(36).slice(2, 8).toUpperCase();
+
+  try{
+    const { error } = await sb
+      .from("leagues")
+      .insert({
+        name,
+        code,
+        competition_key: "brasileirao",
+        competition_name: "Brasileirão",
+        status: "waiting",
+        min_players: 2,
+        max_players: 20,
+        initial_stack: 1000,
+        starts_at: new Date().toISOString(),
+        ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        reward_1: 1000,
+        reward_2: 500,
+        reward_3: 250
+      });
+
+    if(error) throw error;
+
+    $("#newLeagueName").value = "";
+    toast(`Liga criada: ${code}`);
+    await renderMyLeagues();
+
+  }catch(err){
+    console.error(err);
+    toast("Erro ao criar liga.");
+  }
 }
 
 
