@@ -2425,6 +2425,26 @@
     </div>
   </div>
 
+  <div id="leagueModal" class="modal">
+  <div class="modalCard">
+    <div class="modalHead">
+      <h3 id="leagueModalTitle">Liga</h3>
+      <button class="btn small" id="btnCloseLeagueModal">✕</button>
+    </div>
+
+    <div class="modalBody">
+      <div class="authShell">
+        <div id="leagueModalInfo" class="smallText"></div>
+
+        <div class="sep"></div>
+
+        <div class="h2">Ranking da liga</div>
+        <div class="list" id="leagueModalRanking"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
   <div id="toast" class="toast"></div>
 
   <div class="bottomNav">
@@ -3767,9 +3787,13 @@ async function signOutSupabase(){
                   <strong>${fmtCP(joined.balance)} CP</strong>
                 </div>
 
-                <div class="leagueRankingBox" id="ranking-${lg.id}">
-                  Carregando ranking...
-                </div>
+                <button
+                  class="btn small primary"
+                  data-openleague="${esc(lg.id)}"
+                  style="margin-top:8px"
+                >
+                  Abrir liga
+                </button>
               `
               : `
                 <div class="smallText">
@@ -3798,14 +3822,12 @@ async function signOutSupabase(){
 
   list.innerHTML = cards.join("");
 
-  leagues.forEach((lg) => {
-    if(joinedMap[lg.id]){
-      renderLeagueRankingBox(lg.id);
-    }
-  });
-
   $$("[data-joinpremium]").forEach((btn) => {
     btn.onclick = () => joinPremiumLeague(btn.dataset.joinpremium);
+  });
+
+  $$("[data-openleague]").forEach((btn) => {
+    btn.onclick = () => openLeagueModal(btn.dataset.openleague);
   });
 }
 
@@ -3842,6 +3864,56 @@ async function renderLeagueRankingBox(leagueId){
       <strong>${fmtCP(Number(s.points_cp || 0))} CP</strong>
     </div>
   `).join("");
+}
+
+async function openLeagueModal(leagueId){
+  const { data: league, error } = await sb
+    .from("leagues")
+    .select("*")
+    .eq("id", leagueId)
+    .maybeSingle();
+
+  if(error || !league){
+    toast("Erro ao abrir liga.");
+    return;
+  }
+
+  const standings = await loadLeagueStandings(leagueId);
+
+  $("#leagueModalTitle").textContent = league.name;
+
+  $("#leagueModalInfo").innerHTML = `
+    <strong>${esc(league.competition_name)}</strong> • ${esc(league.status)}
+    <br>
+    Stack inicial: ${fmtCP(league.initial_stack)} CP • Máx: ${league.max_players} jogadores
+  `;
+
+  $("#leagueModalRanking").innerHTML = standings.length
+    ? standings.map((s, idx) => `
+      <div class="itemRow">
+        <div>
+          <strong>${idx + 1}º • ${esc(s.username || "Usuário")}</strong>
+          <div class="smallText">Saldo competitivo</div>
+        </div>
+        <span class="badge">${fmtCP(Number(s.points_cp || 0))} CP</span>
+      </div>
+    `).join("")
+    : `<div class="smallText">Sem ranking ainda.</div>`;
+
+  $("#leagueModal").classList.add("show");
+  lockBodyScroll(true);
+}
+
+function closeLeagueModal(){
+  $("#leagueModal").classList.remove("show");
+
+  if(
+    !$("#authModal").classList.contains("show") &&
+    !$("#plansModal").classList.contains("show") &&
+    !state.session.game.open
+  ){
+    lockBodyScroll(false);
+  }
 }
 
     function renderAdminSettle(){
@@ -4851,6 +4923,8 @@ async function joinLeagueByCode(){
       else if(state.session.game.open) closeGame();
     }
   });
+
+  $("#btnCloseLeagueModal").onclick = () => closeLeagueModal();
 
   window.addEventListener("resize", () => {
     if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
