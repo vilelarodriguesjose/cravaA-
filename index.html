@@ -3785,7 +3785,9 @@ async function signOutSupabase(){
                           <strong>${fmtCP(Number(s.points_cp || 0))} CP</strong>
                         </div>
                       `).join("")
-                      : `<div class="smallText">Sem ranking ainda.</div>`
+                      : <div class="leagueRankingBox" id="ranking-${lg.id}">
+  Carregando ranking...
+</div>
                   }
                 </div>
               `
