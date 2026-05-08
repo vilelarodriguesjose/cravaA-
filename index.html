@@ -3799,6 +3799,11 @@ async function signOutSupabase(){
   );
 
   list.innerHTML = cards.join("");
+  leagues.forEach((lg) => {
+  if(joinedMap[lg.id]){
+    renderLeagueRankingBox(lg.id);
+  }
+});
 
   $$("[data-joinpremium]").forEach((btn) => {
     btn.onclick = () => joinPremiumLeague(btn.dataset.joinpremium);
@@ -3819,6 +3824,25 @@ async function loadLeagueStandings(leagueId){
     console.error(err);
     return [];
   }
+}
+
+async function renderLeagueRankingBox(leagueId){
+  const box = document.getElementById(`ranking-${leagueId}`);
+  if(!box) return;
+
+  const standings = await loadLeagueStandings(leagueId);
+
+  if(!standings.length){
+    box.innerHTML = `<div class="smallText">Sem ranking ainda.</div>`;
+    return;
+  }
+
+  box.innerHTML = standings.map((s, idx) => `
+    <div class="standingRow">
+      <div>${idx + 1}º • ${esc(s.username || "Usuário")}</div>
+      <strong>${fmtCP(Number(s.points_cp || 0))} CP</strong>
+    </div>
+  `).join("");
 }
 
     function renderAdminSettle(){
