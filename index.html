@@ -3730,7 +3730,8 @@ async function signOutSupabase(){
   }
 
   const joinedMap = {};
-  memberships.forEach(m => {
+
+  memberships.forEach((m) => {
     joinedMap[m.league_id] = m;
   });
 
@@ -3741,69 +3742,67 @@ async function signOutSupabase(){
     return;
   }
 
-  const cards = await Promise.all(
-    leagues.map(async (lg) => {
-      const joined = joinedMap[lg.id];
-      const isWaiting = lg.status === "waiting";
+  const cards = leagues.map((lg) => {
+    const joined = joinedMap[lg.id];
+    const isWaiting = lg.status === "waiting";
 
-      let standings = [];
-      if(joined){
-        standings = await loadLeagueStandings(lg.id);
-      }
+    return `
+      <div class="itemRow">
+        <div>
+          <strong>${esc(lg.name)}</strong>
 
-      return `
-        <div class="itemRow" style="display:block">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-            <div>
-              <strong>${esc(lg.name)}</strong>
-              <div class="smallText">${esc(lg.competition_name)} • ${esc(lg.status)}</div>
-              <div class="smallText">Stack: ${fmtCP(lg.initial_stack)} CP • Máx: ${lg.max_players} jogadores</div>
+          <div class="smallText">
+            ${esc(lg.competition_name)} • ${esc(lg.status)}
+          </div>
 
-              ${
-                joined
-                  ? `<div class="smallText">Seu saldo na liga: <strong>${fmtCP(joined.balance)} CP</strong></div>`
-                  : `<div class="smallText">Entrada premium • consome 1 entrada mensal</div>`
-              }
-            </div>
-
-            ${
-              joined
-                ? `<span class="badge">Participando</span>`
-                : `<button class="btn small primary" data-joinpremium="${esc(lg.id)}" ${!isWaiting ? "disabled" : ""}>Entrar</button>`
-            }
+          <div class="smallText">
+            Stack: ${fmtCP(lg.initial_stack)} CP • Máx: ${lg.max_players} jogadores
           </div>
 
           ${
             joined
               ? `
-                <div class="leagueStanding">
-                  ${
-                    standings.length
-                      ? standings.map((s, idx) => `
-                        <div class="standingRow">
-                          <div>${idx + 1}º • ${esc(s.username || "Usuário")}</div>
-                          <strong>${fmtCP(Number(s.points_cp || 0))} CP</strong>
-                        </div>
-                      `).join("")
-                      : <div class="leagueRankingBox" id="ranking-${lg.id}">
-  Carregando ranking...
-</div>
-                  }
+                <div class="smallText">
+                  Seu saldo na liga:
+                  <strong>${fmtCP(joined.balance)} CP</strong>
+                </div>
+
+                <div class="leagueRankingBox" id="ranking-${lg.id}">
+                  Carregando ranking...
                 </div>
               `
-              : ""
+              : `
+                <div class="smallText">
+                  Entrada premium • consome 1 entrada mensal
+                </div>
+              `
           }
         </div>
-      `;
-    })
-  );
+
+        ${
+          joined
+            ? `<span class="badge">Participando</span>`
+            : `
+              <button
+                class="btn small primary"
+                data-joinpremium="${esc(lg.id)}"
+                ${!isWaiting ? "disabled" : ""}
+              >
+                Entrar
+              </button>
+            `
+        }
+      </div>
+    `;
+  });
 
   list.innerHTML = cards.join("");
+
   leagues.forEach((lg) => {
-  if(joinedMap[lg.id]){
-    renderLeagueRankingBox(lg.id);
-  }
-});
+    if(joinedMap[lg.id]){
+      renderLeagueRankingBox(lg.id);
+    }
+  });
 
   $$("[data-joinpremium]").forEach((btn) => {
     btn.onclick = () => joinPremiumLeague(btn.dataset.joinpremium);
