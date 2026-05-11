@@ -1875,6 +1875,63 @@
   padding:6px 0;
   font-size:13px;
   }
+
+  .leagueHeroBox{
+  padding:16px;
+  border-radius:18px;
+  background:
+    radial-gradient(500px 180px at 80% 0%, rgba(22,201,95,.18), transparent 60%),
+    linear-gradient(135deg, rgba(22,201,95,.14), rgba(242,201,76,.06));
+  border:1px solid rgba(255,255,255,.10);
+  margin-bottom:14px;
+}
+
+.leagueHeroTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.leagueHeroTitle{
+  font-size:22px;
+  font-weight:1000;
+  line-height:1.05;
+}
+
+.leaguePrizeBox{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.leaguePrizeItem{
+  padding:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.09);
+  text-align:center;
+}
+
+.leaguePrizeItem strong{
+  display:block;
+  font-size:15px;
+}
+
+.leagueModalActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.leagueRankingTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
 }
   </style>
 </head>
@@ -3867,6 +3924,7 @@ async function renderLeagueRankingBox(leagueId){
 }
 
 async function openLeagueModal(leagueId){
+
   const { data: league, error } = await sb
     .from("leagues")
     .select("*")
@@ -3880,28 +3938,134 @@ async function openLeagueModal(leagueId){
 
   const standings = await loadLeagueStandings(leagueId);
 
+  const user = getCurrentUser();
+
+  const myStanding = standings.find(s => s.user_id === user?.id);
+
   $("#leagueModalTitle").textContent = league.name;
 
   $("#leagueModalInfo").innerHTML = `
-    <strong>${esc(league.competition_name)}</strong> • ${esc(league.status)}
-    <br>
-    Stack inicial: ${fmtCP(league.initial_stack)} CP • Máx: ${league.max_players} jogadores
+    <div class="leagueHeroBox">
+
+      <div class="leagueHeroTop">
+        <div>
+          <div class="leagueHeroTitle">${esc(league.name)}</div>
+
+          <div class="smallText" style="margin-top:6px">
+            ${esc(league.competition_name)} • ${esc(league.status)}
+          </div>
+        </div>
+
+        <div class="badge">
+          ${league.max_players} vagas
+        </div>
+      </div>
+
+      <div class="leaguePrizeBox">
+
+        <div class="leaguePrizeItem">
+          <strong>🥇</strong>
+          1º Lugar
+        </div>
+
+        <div class="leaguePrizeItem">
+          <strong>🔥</strong>
+          Ranking mensal
+        </div>
+
+        <div class="leaguePrizeItem">
+          <strong>🏆</strong>
+          Liga premium
+        </div>
+
+      </div>
+
+      <div class="leagueModalActions">
+
+        <button class="btn primary">
+          Apostar pela liga
+        </button>
+
+        ${
+          isAdmin()
+            ? `
+              <button
+                class="btn ghost"
+                id="btnDeleteLeague"
+              >
+                Excluir liga
+              </button>
+            `
+            : ``
+        }
+
+      </div>
+
+      ${
+        myStanding
+          ? `
+            <div class="smallText" style="margin-top:12px">
+              Sua posição:
+              <strong>
+                #${standings.findIndex(s => s.user_id === user.id) + 1}
+              </strong>
+              •
+              ${fmtCP(Number(myStanding.points_cp || 0))} CP
+            </div>
+          `
+          : ``
+      }
+
+    </div>
   `;
 
   $("#leagueModalRanking").innerHTML = standings.length
     ? standings.map((s, idx) => `
       <div class="itemRow">
         <div>
-          <strong>${idx + 1}º • ${esc(s.username || "Usuário")}</strong>
-          <div class="smallText">Saldo competitivo</div>
+          <strong>
+            ${idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `${idx + 1}º`}
+            •
+            ${esc(s.username || "Usuário")}
+          </strong>
+
+          <div class="smallText">
+            Competidor da liga
+          </div>
         </div>
-        <span class="badge">${fmtCP(Number(s.points_cp || 0))} CP</span>
+
+        <span class="badge">
+          ${fmtCP(Number(s.points_cp || 0))} CP
+        </span>
       </div>
     `).join("")
     : `<div class="smallText">Sem ranking ainda.</div>`;
 
   $("#leagueModal").classList.add("show");
+
   lockBodyScroll(true);
+
+  const deleteBtn = $("#btnDeleteLeague");
+
+  if(deleteBtn){
+    deleteBtn.onclick = async () => {
+
+      const confirmDelete = confirm("Excluir liga?");
+
+      if(!confirmDelete) return;
+
+      await sb
+        .from("leagues")
+        .delete()
+        .eq("id", leagueId);
+
+      closeLeagueModal();
+
+      renderMyLeagues();
+
+      toast("Liga excluída.");
+    };
+  }
 }
 
 function closeLeagueModal(){
