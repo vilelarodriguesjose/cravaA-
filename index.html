@@ -3987,7 +3987,7 @@ async function openLeagueModal(leagueId){
         </button>
 
         ${
-          isAdmin()
+          isAdminEmail(user?.email)
             ? `
               <button
                 class="btn ghost"
@@ -5088,7 +5088,10 @@ async function joinLeagueByCode(){
     }
   });
 
-  $("#btnCloseLeagueModal").onclick = () => closeLeagueModal();
+  const btnCloseLeagueModal = $("#btnCloseLeagueModal");
+if(btnCloseLeagueModal){
+  btnCloseLeagueModal.onclick = () => closeLeagueModal();
+}
 
   window.addEventListener("resize", () => {
     if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
