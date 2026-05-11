@@ -2709,6 +2709,7 @@
   ui: loadJSON(LS.UI, defaultUI()),
   session: {
     profile: null,
+    activeLeagueId: null,
     slip: [],
     pendingAction: null,
     game: {
@@ -3674,60 +3675,76 @@ async function signOutSupabase(){
     }
 
     function renderBetslip(){
-      const wrap = $("#betslip");
-      const body = $("#slipItems");
-      const count = state.session.slip.length;
+  const wrap = $("#betslip");
+  const body = $("#slipItems");
+  const count = state.session.slip.length;
 
-      $("#slipCount").textContent = String(count);
+  $("#slipCount").textContent = String(count);
 
-      if(!count){
-        body.innerHTML = `<div class="smallText">Seu bilhete está vazio.</div>`;
-      }else{
-        body.innerHTML = state.session.slip.map((p) => `
-          <div class="slipItem">
-            <div class="slipTop">
-              <div>
-                <div class="slipPick">${esc(p.label)}</div>
-                <div class="slipMeta">${esc(p.home)} x ${esc(p.away)} • ${esc(p.whenTxt)}</div>
-              </div>
-              <div class="slipActions">
-                <div class="ticketOdd">${formatOdd(p.odd)}</div>
-                <button class="btn small danger" data-removeslip="${esc(p.id)}">✕</button>
-              </div>
-            </div>
+  if(!count){
+    body.innerHTML = `<div class="smallText">Seu bilhete está vazio.</div>`;
+  }else{
+    body.innerHTML = state.session.slip.map((p) => `
+      <div class="slipItem">
+        <div class="slipTop">
+          <div>
+            <div class="slipPick">${esc(p.label)}</div>
+            <div class="slipMeta">${esc(p.home)} x ${esc(p.away)} • ${esc(p.whenTxt)}</div>
           </div>
-        `).join("");
-      }
+          <div class="slipActions">
+            <div class="ticketOdd">${formatOdd(p.odd)}</div>
+            <button class="btn small danger" data-removeslip="${esc(p.id)}">✕</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
 
-      const totalOdds = getSlipTotalOdds();
-      const stake = getSlipStake();
-      const user = getCurrentUser();
-      const balance = Number(user?.cp || 0);
-      const est = stake > 0 ? totalOdds * stake : 0;
+  const totalOdds = getSlipTotalOdds();
+  const stake = getSlipStake();
+  const user = getCurrentUser();
+  const balance = Number(user?.cp || 0);
+  const est = stake > 0 ? totalOdds * stake : 0;
 
-      $("#modeLabel").textContent = count > 1 ? "Múltipla" : "Simples";
-      $("#modeHint").textContent = state.session.game.builder
-        ? "bet builder ON para o mesmo jogo"
-        : "1 seleção por jogo quando OFF";
-      $("#totalOdds").textContent = formatOdd(totalOdds);
-      $("#estReturn").textContent = `${fmtCP(est.toFixed(0))} CP`;
-      $("#slipBalance").textContent = `${fmtCP(balance)} CP`;
+  const activeLeague = state.db.leagues?.find(
+    l => l.id === state.session.activeLeagueId
+  );
 
-      wrap.classList.toggle("mini", !!state.ui.slipMini);
-      $("#miniSlipTitle").textContent = count ? `Bilhete • ${count}` : "Bilhete";
-      $("#miniSlipSub").textContent = count ? `${count} seleção(ões)` : "Sem seleções";
-      $("#miniSlipOdds").textContent = formatOdd(totalOdds);
+  $("#modeLabel").textContent =
+    activeLeague
+      ? `Liga • ${activeLeague.name}`
+      : (count > 1 ? "Múltipla" : "Simples");
 
-      $$("[data-removeslip]").forEach((b) => {
-        b.onclick = () => removeSlipPick(b.dataset.removeslip);
-      });
+  $("#modeHint").textContent = state.session.game.builder
+    ? "bet builder ON para o mesmo jogo"
+    : "1 seleção por jogo quando OFF";
 
-      if(!count && !state.ui.slipMini){
-        wrap.classList.add("hide");
-      }else{
-        wrap.classList.remove("hide");
-      }
-    }
+  $("#totalOdds").textContent = formatOdd(totalOdds);
+  $("#estReturn").textContent = `${fmtCP(est.toFixed(0))} CP`;
+  $("#slipBalance").textContent = `${fmtCP(balance)} CP`;
+
+  wrap.classList.toggle("mini", !!state.ui.slipMini);
+
+  $("#miniSlipTitle").textContent = count
+    ? `Bilhete • ${count}`
+    : "Bilhete";
+
+  $("#miniSlipSub").textContent = count
+    ? `${count} seleção(ões)`
+    : "Sem seleções";
+
+  $("#miniSlipOdds").textContent = formatOdd(totalOdds);
+
+  $$("[data-removeslip]").forEach((b) => {
+    b.onclick = () => removeSlipPick(b.dataset.removeslip);
+  });
+
+  if(!count && !state.ui.slipMini){
+    wrap.classList.add("hide");
+  }else{
+    wrap.classList.remove("hide");
+  }
+}
 
 
     async function renderHistory(){
@@ -3982,7 +3999,10 @@ async function openLeagueModal(leagueId){
 
       <div class="leagueModalActions">
 
-        <button class="btn primary">
+        <button
+          class="btn primary"
+          id="btnBetLeague"
+        >
           Apostar pela liga
         </button>
 
@@ -4064,6 +4084,21 @@ async function openLeagueModal(leagueId){
       renderMyLeagues();
 
       toast("Liga excluída.");
+    };
+  }
+
+  const btnBetLeague = $("#btnBetLeague");
+
+  if(btnBetLeague){
+    btnBetLeague.onclick = () => {
+
+      state.session.activeLeagueId = leagueId;
+
+      closeLeagueModal();
+
+      toast(`Modo liga ativado • ${league.name}`);
+
+      renderBetslip();
     };
   }
 }
