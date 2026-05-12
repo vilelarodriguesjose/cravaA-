@@ -2710,6 +2710,7 @@
   session: {
     profile: null,
     activeLeagueId: null,
+    leagueMemberships: [],
     slip: [],
     pendingAction: null,
     game: {
@@ -2746,6 +2747,12 @@
 
     function getCurrentUser(){
   return state.session.profile || null;
+}
+
+function getActiveLeague(){
+  return state.db.leagues?.find(
+    l => l.id === state.session.activeLeagueId
+  ) || null;
 }
 
 function requireLoginBeforeBet(action){
@@ -3703,21 +3710,34 @@ async function signOutSupabase(){
   const totalOdds = getSlipTotalOdds();
   const stake = getSlipStake();
   const user = getCurrentUser();
-  const balance = Number(user?.cp || 0);
-  const est = stake > 0 ? totalOdds * stake : 0;
+  const activeLeague = getActiveLeague();
 
-  const activeLeague = state.db.leagues?.find(
-    l => l.id === state.session.activeLeagueId
-  );
+  let balance = Number(user?.cp || 0);
+
+  if(activeLeague && user?.id){
+    const membership = state.session.leagueMemberships?.find(
+      m => m.league_id === activeLeague.id
+    );
+
+    if(membership){
+      balance = Number(membership.balance || 0);
+    }
+  }
+
+  const est = stake > 0 ? totalOdds * stake : 0;
 
   $("#modeLabel").textContent =
     activeLeague
       ? `Liga • ${activeLeague.name}`
       : (count > 1 ? "Múltipla" : "Simples");
 
-  $("#modeHint").textContent = state.session.game.builder
-    ? "bet builder ON para o mesmo jogo"
-    : "1 seleção por jogo quando OFF";
+  $("#modeHint").textContent = activeLeague
+    ? "saldo separado da liga"
+    : (
+      state.session.game.builder
+        ? "bet builder ON para o mesmo jogo"
+        : "1 seleção por jogo quando OFF"
+    );
 
   $("#totalOdds").textContent = formatOdd(totalOdds);
   $("#estReturn").textContent = `${fmtCP(est.toFixed(0))} CP`;
@@ -3822,6 +3842,8 @@ async function signOutSupabase(){
 
     if(!error) memberships = data || [];
   }
+
+  state.session.leagueMemberships = memberships;
 
   const joinedMap = {};
 
