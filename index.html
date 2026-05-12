@@ -4604,8 +4604,19 @@ async function signInSupabase(email, password){
 }
 
    async function loginSubmit(){
+  const btn = $("#btnSubmitAuth");
   const email = $("#authEmail").value.trim().toLowerCase();
   const pass = $("#authPass").value;
+
+  if(!email || !pass){
+    toast("Preencha e-mail e senha.");
+    return;
+  }
+
+  if(btn.disabled) return;
+
+  btn.disabled = true;
+  btn.textContent = "Entrando...";
 
   try{
     await signInSupabase(email, pass);
@@ -4613,7 +4624,7 @@ async function signInSupabase(email, password){
     const profile = await loadSessionProfile();
 
     if(!profile){
-      toast("Login feito, mas perfil não carregou. Verifique profiles/wallets.");
+      toast("Login feito, mas seu perfil não carregou. Tente novamente.");
       console.error("Perfil não carregou após login");
       return;
     }
@@ -4632,14 +4643,23 @@ async function signInSupabase(email, password){
 
     closeAuth();
     toast("Entrou com sucesso ✅");
+
   }catch(err){
     console.error("Erro login:", err);
 
-    if(String(err.message).includes("Email not confirmed")){
+    const msg = String(err?.message || "").toLowerCase();
+
+    if(msg.includes("email not confirmed")){
       toast("Confirme seu e-mail antes de entrar 📩");
+    }else if(msg.includes("invalid login credentials")){
+      toast("E-mail ou senha inválidos.");
     }else{
-      toast(err.message || "Email ou senha inválidos.");
+      toast("Erro ao entrar. Tente novamente.");
     }
+
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Entrar";
   }
 }
 
@@ -4967,6 +4987,7 @@ async function joinLeagueByCode(){
 }
 
     function hookUI(){
+
   $("#goHome").onclick = () => setNav("home");
 
   $$(".navBtn").forEach((b) => {
@@ -4995,6 +5016,7 @@ async function joinLeagueByCode(){
   };
 
   $("#searchInput").value = state.ui.search || "";
+
   $("#searchInput").addEventListener("input", (e) => {
     state.ui.search = e.target.value;
     saveUI(state.ui);
@@ -5002,20 +5024,26 @@ async function joinLeagueByCode(){
   });
 
   $("#btnRefresh").onclick = async () => {
-  try{
-    await fetchMatchesAndOddsFromSupabase();
-    await renderMatches();
-    renderFeatured();
-    renderFeaturedLeagueList();
-    renderMobileLeagueRail();
-    renderCompetitions();
-    if(state.session.game.open) await renderGameScreen();
-    toast("Jogos atualizados.");
-  }catch(err){
-    toast("Erro ao atualizar jogos.");
-  }
-};
+    try{
+      await fetchMatchesAndOddsFromSupabase();
 
+      await renderMatches();
+
+      renderFeatured();
+      renderFeaturedLeagueList();
+      renderMobileLeagueRail();
+      renderCompetitions();
+
+      if(state.session.game.open){
+        await renderGameScreen();
+      }
+
+      toast("Jogos atualizados.");
+
+    }catch(err){
+      toast("Erro ao atualizar jogos.");
+    }
+  };
 
   $("#btnCloseGame").onclick = () => closeGame();
 
@@ -5050,29 +5078,55 @@ async function joinLeagueByCode(){
   $$("[data-stakeadd]").forEach((b) => {
     b.onclick = () => {
       const cur = Number($("#stakeInput").value || 0);
-      $("#stakeInput").value = String(cur + Number(b.dataset.stakeadd || 0));
+
+      $("#stakeInput").value = String(
+        cur + Number(b.dataset.stakeadd || 0)
+      );
+
       renderBetslip();
     };
   });
 
   $("#stakeInput").addEventListener("input", () => renderBetslip());
+
   $("#btnPlaceBet").onclick = () => placeBet();
 
   $("#btnEnter").onclick = () => openAuth("login");
+
   $("#btnRegister").onclick = () => openAuth("register");
+
   $("#btnBannerRegister").onclick = () => openAuth("register");
+
   $("#btnLogout").onclick = () => logout();
 
   $("#btnCloseAuth").onclick = () => closeAuth();
+
+  const btnCloseLeagueModal = $("#btnCloseLeagueModal");
+
+  if(btnCloseLeagueModal){
+    btnCloseLeagueModal.onclick = () => closeLeagueModal();
+  }
+
   $("#btnSwitchAuth").onclick = () => {
     const loginVisible = !$("#loginBox").classList.contains("hide");
+
     openAuth(loginVisible ? "register" : "login");
   };
 
   $("#btnSubmitAuth").onclick = () => loginSubmit();
+
+  $("#authPass").addEventListener("keydown", (e) => {
+    if(e.key === "Enter") loginSubmit();
+  });
+
+  $("#authEmail").addEventListener("keydown", (e) => {
+    if(e.key === "Enter") loginSubmit();
+  });
+
   $("#btnSendCode").onclick = () => registerSubmit();
 
   $("#btnBackToRegister").onclick = () => openAuth("register");
+
   $("#btnGoToLogin").onclick = () => openAuth("login");
 
   $("#btnResendConfirm").onclick = () => {
@@ -5081,22 +5135,30 @@ async function joinLeagueByCode(){
 
   $("#genderM").onclick = () => {
     $("#regGender").value = "M";
+
     $("#genderM").classList.add("active");
+
     $("#genderF").classList.remove("active");
   };
 
   $("#genderF").onclick = () => {
     $("#regGender").value = "F";
+
     $("#genderF").classList.add("active");
+
     $("#genderM").classList.remove("active");
   };
 
   $("#btnClosePlans").onclick = () => closePlans();
+
   $("#btnBuyPro").onclick = () => startCheckout("pro");
+
   $("#btnBuyElite").onclick = () => startCheckout("elite");
 
   $("#btnCreateLeague").onclick = () => createUserLeague();
+
   $("#btnJoinByCode").onclick = () => joinLeagueByCode();
+
   $("#btnRefreshAdmin").onclick = () => renderAdminSettle();
 
   $("#btnClearHistory").onclick = () => {
@@ -5104,34 +5166,52 @@ async function joinLeagueByCode(){
   };
 
   document.addEventListener("click", (e) => {
+
     const slip = $("#betslip");
-    if(!slip || slip.classList.contains("hide") || state.ui.slipMini) return;
+
+    if(!slip || slip.classList.contains("hide") || state.ui.slipMini){
+      return;
+    }
 
     const inside = slip.contains(e.target);
+
     if(!inside && state.session.slip.length){
       state.ui.slipMini = true;
+
       saveUI(state.ui);
+
       renderBetslip();
     }
   });
 
   document.addEventListener("keydown", (e) => {
+
     if(e.key === "Escape"){
-      if($("#authModal").classList.contains("show")) closeAuth();
-      else if($("#plansModal").classList.contains("show")) closePlans();
-      else if(state.session.game.open) closeGame();
+
+      if($("#authModal").classList.contains("show")){
+        closeAuth();
+      }
+
+      else if($("#leagueModal").classList.contains("show")){
+        closeLeagueModal();
+      }
+
+      else if($("#plansModal").classList.contains("show")){
+        closePlans();
+      }
+
+      else if(state.session.game.open){
+        closeGame();
+      }
     }
   });
 
-  const btnCloseLeagueModal = $("#btnCloseLeagueModal");
-if(btnCloseLeagueModal){
-  btnCloseLeagueModal.onclick = () => closeLeagueModal();
-}
-
   window.addEventListener("resize", () => {
+
     if(window.innerWidth > 980 && state.ui.leftMode === "competitions"){
       renderLeftMode();
     }
+
   }, { passive:true });
 }
 
