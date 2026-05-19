@@ -4834,9 +4834,11 @@ async function registerSubmit(){
         .insert({
           league_id: activeLeague.id,
           user_id: user.id,
-          stake,
-          total_odds: totalOdds,
-          selections: items
+          stake: Number(stake),
+          total_odds: Number(totalOdds),
+          status: "OPEN",
+          payout: 0,
+          selections: JSON.parse(JSON.stringify(items))
         });
 
       if(error){
@@ -4851,8 +4853,7 @@ async function registerSubmit(){
 
       if(membership){
 
-        const newBalance =
-          Number(membership.balance || 0) - stake;
+        const newBalance = Number(membership.balance || 0) - stake;
 
         const { error:updateError } = await sb
           .from("league_members")
@@ -4864,6 +4865,8 @@ async function registerSubmit(){
 
         if(updateError){
           console.error(updateError);
+          toast("Aposta criada, mas erro ao atualizar saldo da liga.");
+          return;
         }
 
         membership.balance = newBalance;
