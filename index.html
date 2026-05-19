@@ -2710,6 +2710,7 @@
   session: {
     profile: null,
     activeLeagueId: null,
+    activeLeague: null,
     leagueMemberships: [],
     slip: [],
     pendingAction: null,
@@ -2750,9 +2751,7 @@
 }
 
 function getActiveLeague(){
-  return state.db.leagues?.find(
-    l => l.id === state.session.activeLeagueId
-  ) || null;
+  return state.session.activeLeague || null;
 }
 
 function requireLoginBeforeBet(action){
@@ -4090,6 +4089,7 @@ async function openLeagueModal(leagueId){
   const deleteBtn = $("#btnDeleteLeague");
 
   if(deleteBtn){
+
     deleteBtn.onclick = async () => {
 
       const confirmDelete = confirm("Excluir liga?");
@@ -4112,9 +4112,12 @@ async function openLeagueModal(leagueId){
   const btnBetLeague = $("#btnBetLeague");
 
   if(btnBetLeague){
+
     btnBetLeague.onclick = () => {
 
       state.session.activeLeagueId = leagueId;
+
+      state.session.activeLeague = league;
 
       closeLeagueModal();
 
@@ -4767,7 +4770,9 @@ async function registerSubmit(){
     }
 
     async function placeBet(){
+
   const user = getCurrentUser();
+
   if(!user){
     toast("Entre para apostar.");
     openAuth("login");
@@ -4786,8 +4791,23 @@ async function registerSubmit(){
     return;
   }
 
-  if(Number(user.cp || 0) < stake){
-    toast("CP insuficiente.");
+  const activeLeague = getActiveLeague();
+
+  let balance = Number(user?.cp || 0);
+
+  if(activeLeague){
+
+    const membership = state.session.leagueMemberships?.find(
+      m => m.league_id === activeLeague.id
+    );
+
+    if(membership){
+      balance = Number(membership.balance || 0);
+    }
+  }
+
+  if(balance < stake){
+    toast("Saldo insuficiente.");
     return;
   }
 
@@ -4806,34 +4826,95 @@ async function registerSubmit(){
   }));
 
   try{
-    const res = await fetch("/.netlify/functions/place-bet", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: user.id,
-        stake,
-        total_odds: totalOdds,
-        bet_type: state.session.slip.length > 1 ? "multi" : "single",
-        items
-      })
-    });
 
-    const data = await res.json().catch(() => ({}));
+    if(activeLeague){
 
-    if(!res.ok){
-      toast(data?.error || "Erro ao registrar aposta.");
-      return;
+      const { error } = await sb
+        .from("league_bets")
+        .insert({
+          league_id: activeLeague.id,
+          user_id: user.id,
+          stake,
+          total_odds: totalOdds,
+          selections: items
+        });
+
+      if(error){
+        console.error(error);
+        toast("Erro ao registrar aposta da liga.");
+        return;
+      }
+
+      const membership = state.session.leagueMemberships?.find(
+        m => m.league_id === activeLeague.id
+      );
+
+      if(membership){
+
+        const newBalance =
+          Number(membership.balance || 0) - stake;
+
+        const { error:updateError } = await sb
+          .from("league_members")
+          .update({
+            balance: newBalance
+          })
+          .eq("league_id", activeLeague.id)
+          .eq("user_id", user.id);
+
+        if(updateError){
+          console.error(updateError);
+        }
+
+        membership.balance = newBalance;
+      }
+
+      toast("Aposta registrada na liga ✅");
+
+    }else{
+
+      const res = await fetch("/.netlify/functions/place-bet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          stake,
+          total_odds: totalOdds,
+          bet_type: state.session.slip.length > 1 ? "multi" : "single",
+          items
+        })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if(!res.ok){
+        toast(data?.error || "Erro ao registrar aposta.");
+        return;
+      }
+
+      await loadSessionProfile();
+
+      toast("Aposta registrada ✅");
     }
 
-    await loadSessionProfile();
     state.session.slip = [];
+
     $("#stakeInput").value = "";
+
     renderBetslip();
+
     renderAccount();
+
     await renderHistory();
+
+    await renderMyLeagues();
+
     renderAdminSettle();
-    toast("Aposta registrada ✅");
+
   }catch(err){
+
+    console.error(err);
+
     toast("Erro ao registrar aposta.");
   }
 }
