@@ -2497,6 +2497,10 @@
 
         <div class="h2">Ranking da liga</div>
         <div class="list" id="leagueModalRanking"></div>
+        <div class="sep"></div>
+
+<div class="h2">Minhas apostas na liga</div>
+<div class="list" id="leagueModalBets"></div>
       </div>
     </div>
   </div>
@@ -3942,6 +3946,27 @@ async function loadLeagueStandings(leagueId){
   }
 }
 
+async function loadLeagueBets(leagueId){
+
+  const user = getCurrentUser();
+
+  if(!user?.id) return [];
+
+  const { data, error } = await sb
+    .from("league_bets")
+    .select("*")
+    .eq("league_id", leagueId)
+    .eq("user_id", user.id)
+    .order("created_at", { ascending:false });
+
+  if(error){
+    console.error(error);
+    return [];
+  }
+
+  return data || [];
+}
+
 async function renderLeagueRankingBox(leagueId){
   const box = document.getElementById(`ranking-${leagueId}`);
   if(!box) return;
@@ -3975,71 +4000,39 @@ async function openLeagueModal(leagueId){
   }
 
   const standings = await loadLeagueStandings(leagueId);
+  const bets = await loadLeagueBets(leagueId);
 
   const user = getCurrentUser();
-
   const myStanding = standings.find(s => s.user_id === user?.id);
 
   $("#leagueModalTitle").textContent = league.name;
 
   $("#leagueModalInfo").innerHTML = `
     <div class="leagueHeroBox">
-
       <div class="leagueHeroTop">
         <div>
           <div class="leagueHeroTitle">${esc(league.name)}</div>
-
           <div class="smallText" style="margin-top:6px">
             ${esc(league.competition_name)} • ${esc(league.status)}
           </div>
         </div>
-
-        <div class="badge">
-          ${league.max_players} vagas
-        </div>
+        <div class="badge">${league.max_players} vagas</div>
       </div>
 
       <div class="leaguePrizeBox">
-
-        <div class="leaguePrizeItem">
-          <strong>🥇</strong>
-          1º Lugar
-        </div>
-
-        <div class="leaguePrizeItem">
-          <strong>🔥</strong>
-          Ranking mensal
-        </div>
-
-        <div class="leaguePrizeItem">
-          <strong>🏆</strong>
-          Liga premium
-        </div>
-
+        <div class="leaguePrizeItem"><strong>🥇</strong>1º Lugar</div>
+        <div class="leaguePrizeItem"><strong>🔥</strong>Ranking mensal</div>
+        <div class="leaguePrizeItem"><strong>🏆</strong>Liga premium</div>
       </div>
 
       <div class="leagueModalActions">
-
-        <button
-          class="btn primary"
-          id="btnBetLeague"
-        >
-          Apostar pela liga
-        </button>
+        <button class="btn primary" id="btnBetLeague">Apostar pela liga</button>
 
         ${
           isAdminEmail(user?.email)
-            ? `
-              <button
-                class="btn ghost"
-                id="btnDeleteLeague"
-              >
-                Excluir liga
-              </button>
-            `
+            ? `<button class="btn ghost" id="btnDeleteLeague">Excluir liga</button>`
             : ``
         }
-
       </div>
 
       ${
@@ -4047,16 +4040,12 @@ async function openLeagueModal(leagueId){
           ? `
             <div class="smallText" style="margin-top:12px">
               Sua posição:
-              <strong>
-                #${standings.findIndex(s => s.user_id === user.id) + 1}
-              </strong>
-              •
-              ${fmtCP(Number(myStanding.points_cp || 0))} CP
+              <strong>#${standings.findIndex(s => s.user_id === user.id) + 1}</strong>
+              • ${fmtCP(Number(myStanding.points_cp || 0))} CP
             </div>
           `
           : ``
       }
-
     </div>
   `;
 
@@ -4066,34 +4055,50 @@ async function openLeagueModal(leagueId){
         <div>
           <strong>
             ${idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `${idx + 1}º`}
-            •
-            ${esc(s.username || "Usuário")}
+            • ${esc(s.username || "Usuário")}
           </strong>
-
-          <div class="smallText">
-            Competidor da liga
-          </div>
+          <div class="smallText">Competidor da liga</div>
         </div>
-
-        <span class="badge">
-          ${fmtCP(Number(s.points_cp || 0))} CP
-        </span>
+        <span class="badge">${fmtCP(Number(s.points_cp || 0))} CP</span>
       </div>
     `).join("")
     : `<div class="smallText">Sem ranking ainda.</div>`;
 
-  $("#leagueModal").classList.add("show");
+  $("#leagueModalBets").innerHTML = bets.length
+    ? bets.map((b) => `
+      <div class="itemRow">
+        <div>
+          <strong>${fmtCP(b.stake)} CP • Odds ${formatOdd(b.total_odds)}</strong>
+          <div class="smallText">
+            Retorno possível: ${fmtCP(Math.round(Number(b.stake || 0) * Number(b.total_odds || 1)))} CP
+          </div>
+          <div class="smallText">
+            ${new Date(b.created_at).toLocaleString("pt-BR")}
+          </div>
+        </div>
 
+        <span class="status ${
+          b.status === "OPEN" ? "open" :
+          b.status === "WON" ? "won" : "lost"
+        }">
+          ${
+            b.status === "OPEN" ? "ABERTA" :
+            b.status === "WON" ? "GANHA" :
+            b.status === "LOST" ? "PERDIDA" : b.status
+          }
+        </span>
+      </div>
+    `).join("")
+    : `<div class="smallText">Nenhuma aposta feita nesta liga ainda.</div>`;
+
+  $("#leagueModal").classList.add("show");
   lockBodyScroll(true);
 
   const deleteBtn = $("#btnDeleteLeague");
 
   if(deleteBtn){
-
     deleteBtn.onclick = async () => {
-
       const confirmDelete = confirm("Excluir liga?");
-
       if(!confirmDelete) return;
 
       await sb
@@ -4102,9 +4107,7 @@ async function openLeagueModal(leagueId){
         .eq("id", leagueId);
 
       closeLeagueModal();
-
       renderMyLeagues();
-
       toast("Liga excluída.");
     };
   }
@@ -4112,17 +4115,12 @@ async function openLeagueModal(leagueId){
   const btnBetLeague = $("#btnBetLeague");
 
   if(btnBetLeague){
-
     btnBetLeague.onclick = () => {
-
       state.session.activeLeagueId = leagueId;
-
       state.session.activeLeague = league;
 
       closeLeagueModal();
-
       toast(`Modo liga ativado • ${league.name}`);
-
       renderBetslip();
     };
   }
