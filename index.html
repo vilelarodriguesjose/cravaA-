@@ -2758,6 +2758,15 @@ function getActiveLeague(){
   return state.session.activeLeague || null;
 }
 
+function exitLeagueMode(){
+  state.session.activeLeagueId = null;
+  state.session.activeLeague = null;
+
+  toast("Modo normal ativado");
+
+  renderBetslip();
+}
+
 function requireLoginBeforeBet(action){
   const user = getCurrentUser();
 
@@ -3741,6 +3750,41 @@ async function signOutSupabase(){
         ? "bet builder ON para o mesmo jogo"
         : "1 seleção por jogo quando OFF"
     );
+
+  // Remove botão antigo para não duplicar
+  const oldExitBtn = $("#btnExitLeagueMode");
+
+  if(oldExitBtn){
+    oldExitBtn.remove();
+  }
+
+  // Mostra "Sair da liga" somente quando o modo liga estiver ativo
+  if(activeLeague){
+
+    const modeLabel = $("#modeLabel");
+
+    if(modeLabel && modeLabel.parentElement){
+
+      const btn = document.createElement("button");
+
+      btn.id = "btnExitLeagueMode";
+      btn.className = "btn small danger";
+      btn.textContent = "Sair da liga";
+
+      btn.style.marginTop = "8px";
+
+      btn.onclick = () => {
+        state.session.activeLeagueId = null;
+        state.session.activeLeague = null;
+
+        toast("Modo liga desativado • apostas usando saldo normal");
+
+        renderBetslip();
+      };
+
+      modeLabel.parentElement.appendChild(btn);
+    }
+  }
 
   $("#totalOdds").textContent = formatOdd(totalOdds);
   $("#estReturn").textContent = `${fmtCP(est.toFixed(0))} CP`;
