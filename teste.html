@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CravaAí — V3 Mobile First</title>
+<style>
+:root{
+  --bg:#07090a;--panel:#0d1112;--panel2:#13191b;--panel3:#1a2123;--line:#253033;
+  --text:#f4f6f5;--muted:#8f999c;--green:#19c86a;--green2:#0d6f3e;--gold:#f1d44a;--odd:#202729;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer}
+.top{height:74px;position:sticky;top:0;z-index:50;display:flex;align-items:center;padding:0 20px;background:#080b0c;border-bottom:1px solid #1f292c}
+.logo{font-size:29px;font-weight:950;font-style:italic;letter-spacing:-1.6px}.logo b{color:var(--green)}
+.topnav{display:flex;gap:14px;margin-left:34px}.topnav button{background:none;border:0;color:#d4dbd8;font-weight:800;padding:10px 12px;border-radius:11px}.topnav button.active{background:#101819;box-shadow:inset 0 -2px 0 var(--green)}
+.wallet{margin-left:auto;display:flex;gap:9px;align-items:center}.walletbox{background:#0d2117;border:1px solid #15442e;border-radius:13px;padding:9px 13px;font-weight:900}.walletbox span{color:#8be7af}.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid #273135;background:#101516;color:#fff}
+.shell{display:grid;grid-template-columns:235px minmax(0,1fr) 325px;min-height:calc(100vh - 74px)}
+.left,.slip{position:sticky;top:74px;height:calc(100vh - 74px);overflow:auto;background:#090d0e}.left{border-right:1px solid #20282b;padding:14px 10px}.slip{border-left:1px solid #20282b;padding:14px}
+.side{display:flex;gap:11px;align-items:center;padding:11px 13px;border-radius:11px;font-weight:750;color:#d7ddda}.side:hover,.side.active{background:#10261b;color:#98efb8}.group{padding:14px 13px 6px;color:#737d80;font-size:11px;font-weight:900}.divider{height:1px;background:#1d2628;margin:12px}
+.main{padding:14px 18px 90px;min-width:0}
+.page{display:none}.page.active{display:block}
+.quick{display:flex;gap:8px;overflow:auto;scrollbar-width:none}.quick button{white-space:nowrap;background:#101516;color:#e0e5e3;border:1px solid #263033;border-radius:999px;padding:9px 13px;font-weight:800}.quick button.active{background:#0e2519;border-color:#1fc86b;color:#92efb5}
+.title{font-size:22px;font-weight:950;margin:18px 0 11px}.filters{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.filter{white-space:nowrap;border:0;border-radius:8px;background:#111718;color:#c7cecb;padding:9px 14px;font-weight:800}.filter.active{background:#0f4a2d;color:#9ef2bf}
+.league{background:#0c1112;border:1px solid #20292b;border-radius:14px;overflow:hidden;margin-bottom:12px}.leaguehead{display:grid;grid-template-columns:1fr 72px 72px 72px 40px;align-items:center;padding:11px 12px;border-bottom:1px solid #222c2f;font-size:13px;font-weight:900}.game{display:grid;grid-template-columns:minmax(0,1fr) 72px 72px 72px 40px;gap:7px;align-items:center;padding:12px;border-bottom:1px solid #20292b}.game:last-child{border-bottom:0}.gameinfo{display:grid;grid-template-columns:62px 1fr auto;gap:10px;align-items:center}.time{background:#101719;border-radius:9px;padding:8px;text-align:center;color:#b8c0bd;font-size:12px}.teams{font-weight:800;line-height:1.48}.markets{color:#86e8ad;font-weight:850;font-size:12px}.odd{border:1px solid #2b3538;background:var(--odd);color:white;border-radius:8px;padding:11px 6px;font-weight:900}.odd.selected{background:#0d582f;border-color:#24cf73;color:#a7f6c4}.star{border:0;background:none;color:#7f898c;font-size:19px}
+.slip h3{margin:0 0 12px}.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid #263033;border-radius:10px;overflow:hidden;margin-bottom:13px}.tabs button{border:0;background:#101516;color:#aeb7b4;padding:10px;font-weight:850}.tabs button.active{background:#103721;color:#9df0ba;box-shadow:inset 0 -2px 0 #2bd678}.empty{text-align:center;color:#90999c;padding:65px 12px}.empty .ico{font-size:55px}.pick{background:#111718;border:1px solid #273134;border-radius:12px;padding:11px;margin-bottom:9px}.pick small{color:#8f999c}.pick strong{display:block;margin:5px 0}.remove{float:right;background:none;border:0;color:#929b9e}.summary{display:flex;justify-content:space-between;margin:9px 0;font-size:13px}.stake{display:flex;gap:8px}.stake input{min-width:0;flex:1;background:#111718;border:1px solid #2b3639;color:white;border-radius:10px;padding:11px}.chips{display:flex;gap:7px;margin-top:8px}.chips button{flex:1;background:#141b1d;border:1px solid #293336;color:#dce2df;border-radius:9px;padding:8px}.place{width:100%;border:0;background:linear-gradient(#24c86c,#16934f);color:white;font-weight:950;border-radius:10px;padding:13px;margin-top:10px}
+.cardgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:#111718;border:1px solid #273033;border-radius:14px;padding:15px}.card h3{margin:0 0 7px}.card p{margin:0;color:#a2aca8;font-size:13px}.price{font-size:22px;font-weight:950;color:#87edaf;margin:13px 0}.rankrow{display:grid;grid-template-columns:42px 1fr 110px;background:#111718;border-bottom:1px solid #242e30;padding:12px}
+.mobilebar,.mobiletop,.mobiletabs,.mobileslip{display:none}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);z-index:200;background:#fff;color:#111;border-radius:999px;padding:10px 15px;font-weight:900}
+@media(max-width:1080px){.shell{grid-template-columns:190px minmax(0,1fr)}.slip{display:none}.cardgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){
+body{padding-bottom:68px}
+.top{display:none}.shell{display:block}.left{display:none}.main{padding:0 0 84px}
+.mobiletop{display:block;position:sticky;top:0;z-index:60;background:linear-gradient(#0a1410,#080c0b);border-bottom:1px solid #1f292c;padding:10px 12px 8px}
+.mobiletoprow{display:flex;align-items:center;gap:10px}.mobilelogo{font-size:23px;font-weight:950;font-style:italic;letter-spacing:-1px}.mobilelogo b{color:var(--green)}.mobilewallet{margin-left:auto;background:#0c2117;border:1px solid #15442e;border-radius:12px;padding:8px 10px;font-weight:900;font-size:12px}.mobilewallet span{color:#86e8ad}.mobicon{width:34px;height:34px;border-radius:50%;border:1px solid #263033;background:#101516;color:white}
+.mobilehero{padding:12px 12px 4px}.mobilehero h1{font-size:27px;margin:0 0 4px}.mobilehero p{margin:0;color:#96a09c;font-size:13px}
+.mobiletabs{display:flex;gap:8px;overflow:auto;padding:10px 12px;scrollbar-width:none;background:#090d0e}.mobiletabs button{white-space:nowrap;border:0;background:#111718;color:#c7cecb;border-radius:999px;padding:9px 13px;font-weight:800}.mobiletabs button.active{background:#eff3f1;color:#101413}
+.page{padding:0 10px}.quick{padding:8px 0 4px}.title{font-size:18px;margin:14px 0 10px}.filters{margin-bottom:11px}
+.league{border-radius:12px}.leaguehead{display:flex;padding:10px 11px}.leaguehead span:not(:first-child){display:none}
+.game{display:block;padding:10px 10px 12px}.gameinfo{grid-template-columns:50px 1fr auto;gap:8px}.time{padding:7px 5px}.teams{font-size:13px}.markets{font-size:10px}.game>.odd,.game>.star{display:none}.oddsrow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.oddsrow .odd{padding:10px 7px;font-size:13px}
+.cardgrid{grid-template-columns:1fr}.rankrow{grid-template-columns:34px 1fr 88px;font-size:13px}
+.mobilebar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:#0e1314;border-top:1px solid #263033;padding:7px 2px calc(7px + env(safe-area-inset-bottom))}.mobilebar button{background:none;border:0;color:#8f999c;font-size:10px;font-weight:800}.mobilebar b{display:block;color:#d9dfdc;font-size:19px}.mobilebar button.active,.mobilebar button.active b{color:#38d67b}
+.mobileslip.show{display:block;position:fixed;inset:0 0 58px;background:#090d0e;z-index:75;overflow:auto}.mobileSlipHead{position:sticky;top:0;background:#0c1112;border-bottom:1px solid #263033;padding:13px;display:flex;align-items:center}.mobileSlipHead h3{margin:0}.mobileSlipHead button{margin-left:auto;background:none;border:0;color:#fff;font-size:22px}.mobileslip .slip{display:block;position:static;height:auto;border:0;padding:14px;background:#090d0e}
+}
+
+.mobilebanners{display:none}
+@media(max-width:720px){
+.mobilebanners{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:10px 12px 5px;background:#090d0e}
+.mobilebanners::-webkit-scrollbar{display:none}
+.mobilebanner{position:relative;flex:0 0 88%;height:132px;border-radius:16px;overflow:hidden;padding:16px;scroll-snap-align:start;border:1px solid #24503b;background:radial-gradient(circle at 88% 20%,#1f8457 0,#0d3827 40%,#111719 78%)}
+.mobilebanner.store{border-color:#4c4023;background:radial-gradient(circle at 88% 20%,#756028 0,#352b15 40%,#151719 78%)}
+.mobilebanner.matchday{border-color:#293c4b;background:radial-gradient(circle at 88% 20%,#285b75 0,#152b38 40%,#111719 78%)}
+.mobilebanner h3{font-size:20px;line-height:1.02;margin:0 0 6px;max-width:68%;font-style:italic}
+.mobilebanner p{font-size:11px;line-height:1.35;color:#d3d9d6;margin:0;max-width:67%}
+.mobilebanner button{position:absolute;left:16px;bottom:13px;border:0;border-radius:999px;background:#f3f5f4;color:#111;padding:7px 12px;font-size:11px;font-weight:900}
+.mobilebanner .art{position:absolute;right:14px;bottom:-8px;font-size:70px;filter:drop-shadow(0 10px 20px #0007)}
+.bannerdots{display:flex;justify-content:center;gap:5px;padding:5px 0 2px;background:#090d0e}
+.bannerdots i{display:block;width:5px;height:5px;border-radius:50%;background:#3a4548}.bannerdots i:first-child{width:17px;border-radius:99px;background:#36d47c}
+}
+
+
+.matchhero{background:linear-gradient(135deg,#0f1917,#0b1112);border:1px solid #263235;border-radius:16px;padding:18px;margin-bottom:12px}
+.matchback{border:0;background:none;color:#91eeb5;font-weight:900;padding:0 0 12px}
+.matchmeta{text-align:center;color:#8f999c;font-size:12px}.matchteams{display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;text-align:center;margin:18px 0}.clubbadge{width:62px;height:62px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#171e20;border:1px solid #303b3e;font-size:30px}.versus{font-weight:950;font-size:22px}.matchteams h2{font-size:18px;margin:0}
+.markettabs{display:flex;gap:8px;overflow:auto;scrollbar-width:none;margin:12px 0}.markettabs button{white-space:nowrap;border:0;border-radius:999px;padding:9px 13px;background:#141b1d;color:#c7cecb;font-weight:850}.markettabs button.active{background:#eef2f0;color:#101413}
+.marketsection{background:#0c1112;border:1px solid #222c2f;border-radius:14px;margin-bottom:10px;overflow:hidden}.markettitle{padding:12px 13px;font-weight:900;border-bottom:1px solid #222c2f}.marketoptions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px}.marketoption{border:1px solid #2b3538;background:#202729;color:#fff;border-radius:9px;padding:11px;display:flex;justify-content:space-between;text-align:left;font-weight:850}.marketoption span{color:#aeb6b3}.marketoption.selected{background:#0d582f;border-color:#24cf73}
+@media(max-width:720px){.matchhero{border-radius:0;border-left:0;border-right:0;margin:0 -10px 10px;padding:14px 12px}.matchteams{grid-template-columns:1fr 54px 1fr}.clubbadge{width:54px;height:54px;font-size:25px}.versus{font-size:17px}.matchteams h2{font-size:15px}.markettabs{margin-left:-2px;margin-right:-2px}.marketoptions{grid-template-columns:1fr}.marketoption{padding:12px}}
+
+</style>
+</head>
+<body>
+<header class="top">
+<div class="logo">CRAVA<b>AÍ</b></div>
+<nav class="topnav">
+<button class="active" onclick="showPage('home',this)">Futebol</button>
+<button onclick="showPage('live',this)">Ao Vivo</button>
+<button onclick="showPage('competitions',this)">Competições</button>
+<button onclick="showPage('highlights',this)">Destaques</button>
+</nav>
+<div class="wallet"><div class="walletbox"><span>CP</span> 10.250</div><button class="iconbtn">⌕</button><button class="iconbtn">👤</button></div>
+</header>
+
+<div class="mobiletop">
+  <div class="mobiletoprow">
+    <div class="mobilelogo">CRAVA<b>AÍ</b></div>
+    <div class="mobilewallet"><span>CP</span> 10.250</div>
+    <button class="mobicon">⌕</button><button class="mobicon">👤</button>
+  </div>
+  <div class="mobilehero"><h1>Futebol</h1><p>Jogos, mercados e competições em destaque.</p></div>
+</div>
+<div class="mobiletabs">
+<button class="active">Destaques</button><button>Calendário</button><button>Competições</button><button>Favoritos</button>
+</div>
+
+<div class="mobilebanners" id="mobileBanners">
+  <article class="mobilebanner">
+    <h3>LIGAS CRAVAÍ</h3>
+    <p>Entre em uma liga, desafie seus amigos e dispute o topo do ranking.</p>
+    <button onclick="showPage('leagues')">Ver ligas</button>
+    <div class="art">🏆</div>
+  </article>
+  <article class="mobilebanner store">
+    <h3>LOJA CRAVAÍ</h3>
+    <p>Junte Crava Points e troque por recompensas e itens especiais.</p>
+    <button onclick="showPage('store')">Ir para Loja</button>
+    <div class="art">🛍️</div>
+  </article>
+  <article class="mobilebanner matchday">
+    <h3>RODADA EM DESTAQUE</h3>
+    <p>Confira os principais confrontos e faça seus palpites.</p>
+    <button onclick="showPage('home');document.getElementById('games').scrollIntoView({behavior:'smooth'})">Ver jogos</button>
+    <div class="art">⚽</div>
+  </article>
+</div>
+<div class="bannerdots"><i></i><i></i><i></i></div>
+
+<div class="shell">
+<aside class="left">
+<div class="side active" onclick="showPage('home')">⌂ Início</div><div class="side" onclick="showPage('live')">◉ Ao Vivo</div><div class="side" onclick="showPage('competitions')">🏆 Competições</div><div class="side">☆ Favoritos</div>
+<div class="group">PRINCIPAIS COMPETIÇÕES</div>
+<div class="side">🇧🇷 Brasileirão Série A</div><div class="side">🏴 Premier League</div><div class="side">🇪🇸 LaLiga</div><div class="side">🇮🇹 Serie A</div><div class="side">🇩🇪 Bundesliga</div><div class="side">🇫🇷 Ligue 1</div><div class="side">⚽ Champions League</div><div class="side">🏆 Libertadores</div>
+<div class="divider"></div>
+<div class="side" onclick="showPage('leagues')">🛡️ Ligas CravaAí</div><div class="side" onclick="showPage('store')">🛍️ Loja</div><div class="side" onclick="showPage('ranking')">▥ Ranking</div><div class="side" onclick="showPage('mybets')">▣ Minhas Apostas</div>
+</aside>
+
+<main class="main">
+<section class="page active" id="home">
+<div class="quick"><button class="active">⭐ Destaques</button><button>🇧🇷 Brasileirão</button><button>🏴 Premier League</button><button>🇪🇸 LaLiga</button><button>⚽ Champions</button><button>🏆 Libertadores</button></div>
+<div class="title">🔥 Jogos em destaque</div>
+<div class="filters"><button class="filter active">Hoje</button><button class="filter">Amanhã</button><button class="filter">Sáb, 31/05</button><button class="filter">Dom, 01/06</button></div>
+<div id="games"></div>
+</section>
+
+
+<section class="page" id="match">
+  <div class="matchhero">
+    <button class="matchback" onclick="showPage('home')">‹ Voltar para Futebol</button>
+    <div class="matchmeta">Hoje · 19:00 · Futebol</div>
+    <div class="matchteams">
+      <div><div class="clubbadge">⚽</div><h2 id="homeTeam">Palmeiras</h2></div>
+      <div class="versus">X</div>
+      <div><div class="clubbadge">⚽</div><h2 id="awayTeam">Flamengo</h2></div>
+    </div>
+  </div>
+  <div class="markettabs">
+    <button class="active" onclick="marketTab(this,'all')">Principais</button>
+    <button onclick="marketTab(this,'goals')">Gols</button>
+    <button onclick="marketTab(this,'handicap')">Handicap</button>
+    <button onclick="marketTab(this,'cards')">Cartões</button>
+    <button onclick="marketTab(this,'corners')">Escanteios</button>
+  </div>
+  <div id="fullMarkets"></div>
+</section>
+
+<section class="page" id="live"><div class="title">◉ Ao Vivo</div><div class="league"><div class="leaguehead"><span>PARTIDAS EM ANDAMENTO</span></div><div class="game"><div class="gameinfo"><div class="time">67'</div><div class="teams">Corinthians 1<br>Santos 1</div><div class="markets">+63</div></div><div class="oddsrow"><button class="odd">2.80</button><button class="odd">2.05</button><button class="odd">4.90</button></div></div></div></section>
+
+<section class="page" id="competitions"><div class="title">🏆 Competições</div><div class="cardgrid"><div class="card"><h3>Brasileirão Série A</h3><p>Jogos, mercados e classificação.</p></div><div class="card"><h3>Premier League</h3><p>Jogos e mercados.</p></div><div class="card"><h3>LaLiga</h3><p>Jogos e mercados.</p></div></div></section>
+
+<section class="page" id="highlights"><div class="title">⭐ Destaques</div><div class="card"><h3>Principais jogos do dia</h3><p>Seleção demonstrativa.</p></div></section>
+
+<section class="page" id="leagues"><div class="title">🛡️ Ligas CravaAí</div><div class="cardgrid"><div class="card"><h3>Elite Brasileirão</h3><p>20 jogadores · 5.000 CP iniciais</p><div class="price">3 vagas</div><button class="place" onclick="toast('Entrada simulada')">Entrar</button></div><div class="card"><h3>Premier Amigos</h3><p>12 jogadores · 3.000 CP iniciais</p><div class="price">8 vagas</div><button class="place" onclick="toast('Entrada simulada')">Entrar</button></div></div></section>
+
+<section class="page" id="store"><div class="title">🛍️ Loja CravaAí</div><div class="cardgrid"><div class="card"><h3>Camisa CravaAí</h3><p>Item demonstrativo.</p><div class="price">12.000 CP</div><button class="place" onclick="toast('Resgate simulado')">Resgatar</button></div><div class="card"><h3>Gift Card Gamer</h3><p>Recompensa fictícia.</p><div class="price">18.000 CP</div><button class="place" onclick="toast('Resgate simulado')">Resgatar</button></div><div class="card"><h3>Boné CravaAí</h3><p>Item demonstrativo.</p><div class="price">7.500 CP</div><button class="place" onclick="toast('Resgate simulado')">Resgatar</button></div></div></section>
+
+<section class="page" id="ranking"><div class="title">▥ Ranking</div><div class="rankrow"><b>1</b><span>JoãoCrava</span><b>18.420 CP</b></div><div class="rankrow"><b>2</b><span>Vilela10</span><b>16.980 CP</b></div><div class="rankrow"><b>3</b><span>GuiBets</span><b>15.760 CP</b></div></section>
+
+<section class="page" id="mybets"><div class="title">▣ Minhas Apostas</div><div class="filters"><button class="filter active">Abertas</button><button class="filter">Ganhas</button><button class="filter">Perdidas</button></div><div class="card"><h3>Múltipla · 2 seleções</h3><p>Palmeiras + Manchester City</p><div class="price">Possível retorno: 3.350 CP</div></div></section>
+</main>
+
+<aside class="slip" id="desktopSlip"></aside>
+</div>
+
+<div class="mobileslip" id="mobileSlip">
+<div class="mobileSlipHead"><h3>Bilhete de Apostas</h3><button onclick="closeMobileSlip()">✕</button></div>
+<div class="slip" id="mobileSlipInner"></div>
+</div>
+
+<nav class="mobilebar">
+<button class="active" onclick="mobileNav('home',this)"><b>⌂</b>Início</button>
+<button onclick="mobileNav('live',this)"><b>◉</b>Ao Vivo</button>
+<button onclick="mobileNav('leagues',this)"><b>🏆</b>Ligas</button>
+<button onclick="openMobileSlip()"><b>▣</b>Apostas <span id="mobileCount"></span></button>
+<button onclick="mobileNav('store',this)"><b>🛍</b>Loja</button>
+</nav>
+
+<script>
+
+let currentMatch={home:"Palmeiras",away:"Flamengo"};
+const fullMarketData=[
+ {cat:"all",title:"Resultado Final",opts:[["Casa","1.95"],["Empate","3.40"],["Visitante","3.75"]]},
+ {cat:"goals",title:"Total de Gols",opts:[["Mais de 1.5","1.30"],["Mais de 2.5","1.88"],["Mais de 3.5","2.85"],["Menos de 1.5","3.20"],["Menos de 2.5","1.92"],["Menos de 3.5","1.40"]]},
+ {cat:"all",title:"Ambas as equipes marcam",opts:[["Sim","1.76"],["Não","1.98"]]},
+ {cat:"handicap",title:"Handicap Asiático",opts:[["Casa -0.5","1.96"],["Casa -1.0","2.70"],["Visitante +0.5","1.84"],["Visitante +1.0","1.45"]]},
+ {cat:"cards",title:"Cartões",opts:[["Mais de 3.5","1.55"],["Mais de 4.5","1.91"],["Menos de 4.5","1.82"],["Casa mais cartões","2.25"],["Empate","3.10"],["Visitante mais cartões","2.65"]]},
+ {cat:"corners",title:"Escanteios",opts:[["Mais de 8.5","1.72"],["Mais de 9.5","1.95"],["Mais de 10.5","2.25"],["Menos de 9.5","1.78"],["Casa mais escanteios","1.88"],["Visitante mais escanteios","2.10"]]}
+];
+
+function openMatch(home,away){
+ currentMatch={home,away};
+ document.getElementById("homeTeam").textContent=home;
+ document.getElementById("awayTeam").textContent=away;
+ renderFullMarkets("all");
+ showPage("match");
+}
+
+function marketTab(btn,cat){
+ document.querySelectorAll(".markettabs button").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");renderFullMarkets(cat);
+}
+
+function renderFullMarkets(cat){
+ const list=cat==="all"?fullMarketData.filter(x=>x.cat==="all"||x.title==="Resultado Final"):fullMarketData.filter(x=>x.cat===cat);
+ document.getElementById("fullMarkets").innerHTML=list.map(m=>`<div class="marketsection"><div class="markettitle">${m.title}</div><div class="marketoptions">${m.opts.map(o=>`<button class="marketoption" data-fullgame="${currentMatch.home} x ${currentMatch.away}" data-fullpick="${m.title}: ${o[0]}" data-fullodd="${o[1]}" onclick="toggleFullOdd(this)"><span>${o[0]}</span><b>${o[1]}</b></button>`).join("")}</div></div>`).join("");
+ document.querySelectorAll(".marketoption").forEach(syncFullButton);
+}
+
+function syncFullButton(b){
+ const k=b.dataset.fullgame+"|"+b.dataset.fullpick;
+ if(selections.has(k))b.classList.add("selected");
+}
+
+function toggleFullOdd(b){
+ const k=b.dataset.fullgame+"|"+b.dataset.fullpick;
+ if(selections.has(k)){selections.delete(k);b.classList.remove("selected")}
+ else{
+   selections.set(k,{game:b.dataset.fullgame,pick:b.dataset.fullpick,odd:+b.dataset.fullodd});
+   b.classList.add("selected");
+ }
+ renderSlip();
+}
+
+const data=[
+{name:"🇧🇷 BRASILEIRÃO SÉRIE A",games:[["Hoje 19:00","Palmeiras","Flamengo",[1.95,3.40,3.75],345],["Hoje 21:30","São Paulo","Corinthians",[2.20,3.25,3.30],342]]},
+{name:"🏴 PREMIER LEAGUE",games:[["Hoje 16:00","Manchester City","Chelsea",[1.72,4.00,4.80],341],["Hoje 18:30","Arsenal","Tottenham",[1.85,3.60,4.20],338]]},
+{name:"🇪🇸 LA LIGA",games:[["Hoje 17:00","Real Madrid","Barcelona",[2.30,3.60,2.90],330],["Hoje 19:30","Atlético de Madrid","Sevilla",[1.95,3.25,3.70],329]]}
+];
+
+const selections=new Map(), games=document.getElementById("games");
+
+function renderGames(){
+  games.innerHTML="";
+  data.forEach(L=>{
+    const box=document.createElement("div");box.className="league";
+    box.innerHTML=`<div class="leaguehead"><span>${L.name}</span><span>1</span><span>X</span><span>2</span><span></span></div>`+
+    L.games.map(g=>`<div class="game">
+      <div class="gameinfo"><div class="time">${g[0]}</div><div class="teams" onclick="openMatch(\`${g[1]}\`,\`${g[2]}\`)" style="cursor:pointer">${g[1]}<br>${g[2]}</div><div class="markets" onclick="openMatch(\`${g[1]}\`,\`${g[2]}\`)" style="cursor:pointer">+${g[4]}</div></div>
+      <button class="odd desktopOdd" data-game="${g[1]} x ${g[2]}" data-pick="${g[1]}" data-odd="${g[3][0]}">${g[3][0].toFixed(2)}</button>
+      <button class="odd desktopOdd" data-game="${g[1]} x ${g[2]}" data-pick="Empate" data-odd="${g[3][1]}">${g[3][1].toFixed(2)}</button>
+      <button class="odd desktopOdd" data-game="${g[1]} x ${g[2]}" data-pick="${g[2]}" data-odd="${g[3][2]}">${g[3][2].toFixed(2)}</button>
+      <button class="star" onclick="this.textContent=this.textContent==='☆'?'★':'☆'">☆</button>
+      <div class="oddsrow">
+        <button class="odd" data-game="${g[1]} x ${g[2]}" data-pick="${g[1]}" data-odd="${g[3][0]}">1&nbsp;&nbsp;${g[3][0].toFixed(2)}</button>
+        <button class="odd" data-game="${g[1]} x ${g[2]}" data-pick="Empate" data-odd="${g[3][1]}">X&nbsp;&nbsp;${g[3][1].toFixed(2)}</button>
+        <button class="odd" data-game="${g[1]} x ${g[2]}" data-pick="${g[2]}" data-odd="${g[3][2]}">2&nbsp;&nbsp;${g[3][2].toFixed(2)}</button>
+      </div>
+    </div>`).join("");
+    games.appendChild(box);
+  });
+  document.querySelectorAll(".odd[data-game]").forEach(b=>b.onclick=()=>toggleOdd(b));
+}
+
+function key(b){return b.dataset.game+"|"+b.dataset.pick}
+
+function toggleOdd(b){
+  const k=key(b);
+  if(selections.has(k)){
+    selections.delete(k);
+    document.querySelectorAll(".odd[data-game]").forEach(x=>{if(key(x)===k)x.classList.remove("selected")});
+  }else{
+    [...selections.keys()].filter(x=>x.startsWith(b.dataset.game+"|")).forEach(old=>{
+      selections.delete(old);
+      document.querySelectorAll(".odd[data-game]").forEach(x=>{if(key(x)===old)x.classList.remove("selected")});
+    });
+    selections.set(k,{game:b.dataset.game,pick:b.dataset.pick,odd:+b.dataset.odd});
+    document.querySelectorAll(".odd[data-game]").forEach(x=>{if(key(x)===k)x.classList.add("selected")});
+  }
+  renderSlip();
+}
+
+function renderSlip(){
+  const arr=[...selections.values()], total=arr.reduce((a,p)=>a*p.odd,1);
+  const body=arr.length?`
+    <div class="tabs"><button>Simples</button><button class="active">Múltipla</button></div>
+    ${arr.map((p,i)=>`<div class="pick"><button class="remove" onclick="removePick(${i})">✕</button><small>${p.game}</small><strong>${p.pick}<span style="float:right;color:#7bec9f">${p.odd.toFixed(2)}</span></strong><small>Resultado Final</small></div>`).join("")}
+    <div class="summary"><span>Cota total</span><b>${total.toFixed(2)}</b></div>
+    <div class="stake"><input type="number" value="1000" oninput="calc(this.value,${total})"></div>
+    <div class="chips"><button onclick="setStake(100)">+100</button><button onclick="setStake(500)">+500</button></div>
+    <div class="summary"><span>Possível retorno</span><b class="ret">${(1000*total).toFixed(0)} CP</b></div>
+    <button class="place" onclick="bet()">Fazer aposta</button>`
+    :`<div class="tabs"><button class="active">Simples</button><button>Múltipla</button></div><div class="empty"><div class="ico">▣</div><b>Seu bilhete está vazio</b><p>Selecione uma odd para adicionar uma aposta.</p></div>`;
+  const html=`<h3>Bilhete de Apostas</h3>${body}`;
+  desktopSlip.innerHTML=html;mobileSlipInner.innerHTML=html;
+  mobileCount.textContent=arr.length?`(${arr.length})`:"";
+}
+
+function removePick(i){
+  const k=[...selections.keys()][i];
+  selections.delete(k);
+  document.querySelectorAll(".odd[data-game]").forEach(x=>{if(key(x)===k)x.classList.remove("selected")});
+  renderSlip();
+}
+function calc(v,t){document.querySelectorAll(".ret").forEach(x=>x.textContent=((+v||0)*t).toFixed(0)+" CP")}
+function setStake(add){document.querySelectorAll('.stake input').forEach(inp=>{inp.value=(+inp.value||0)+add;inp.dispatchEvent(new Event('input'))})}
+function bet(){toast("Aposta de demonstração registrada ✓");selections.clear();document.querySelectorAll(".odd").forEach(x=>x.classList.remove("selected"));renderSlip();closeMobileSlip()}
+function showPage(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id)?.classList.add("active");if(btn){document.querySelectorAll(".topnav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active")}window.scrollTo({top:0,behavior:"smooth"})}
+function mobileNav(id,b){closeMobileSlip();showPage(id);document.querySelectorAll(".mobilebar button").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
+function openMobileSlip(){mobileSlip.classList.add("show")}
+function closeMobileSlip(){mobileSlip.classList.remove("show")}
+function toast(t){const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1700)}
+document.querySelectorAll(".filter").forEach(f=>f.onclick=()=>{f.parentElement.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));f.classList.add("active")});
+document.querySelectorAll(".mobiletabs button").forEach(f=>f.onclick=()=>{document.querySelectorAll(".mobiletabs button").forEach(x=>x.classList.remove("active"));f.classList.add("active")});
+
+const bannerRail=document.getElementById("mobileBanners");
+if(bannerRail){
+  bannerRail.addEventListener("scroll",()=>{
+    const cards=[...bannerRail.querySelectorAll(".mobilebanner")];
+    if(!cards.length)return;
+    const idx=Math.round(bannerRail.scrollLeft/(cards[0].offsetWidth+10));
+    document.querySelectorAll(".bannerdots i").forEach((d,i)=>{
+      d.style.width=i===idx?"17px":"5px";
+      d.style.background=i===idx?"#36d47c":"#3a4548";
+    });
+  },{passive:true});
+}
+
+renderGames();renderSlip();
+</script>
+</body>
+</html>
