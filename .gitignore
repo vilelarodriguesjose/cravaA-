@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+supabase/.temp/
+supabase-backup-before-v2.sql
+.DS_Store
