@@ -140,12 +140,48 @@ function mapFixtureStatus(
 /*
  * Faz chamadas para a API-Football.
  */
-async function apiFetch(path: string) {
+let lastApiRequestAt = 0;
+
+const MIN_API_INTERVAL_MS = 6500;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function apiFetch(path: string, attempt = 1): Promise<any> {
+  const elapsed = Date.now() - lastApiRequestAt;
+
+  if (elapsed < MIN_API_INTERVAL_MS) {
+    await sleep(MIN_API_INTERVAL_MS - elapsed);
+  }
+
+  lastApiRequestAt = Date.now();
+
   const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       "x-apisports-key": apiFootballKey!,
     },
   });
+
+  if (res.status === 429) {
+    if (attempt >= 4) {
+      const text = await res.text();
+
+      throw new Error(
+        `API-Football rate limit após ${attempt} tentativas: ${text}`,
+      );
+    }
+
+    const waitMs = attempt * 10000;
+
+    console.warn(
+      `[api] rate limit 429 em ${path}. Aguardando ${waitMs / 1000}s...`,
+    );
+
+    await sleep(waitMs);
+
+    return apiFetch(path, attempt + 1);
+  }
 
   if (!res.ok) {
     const text = await res.text();
